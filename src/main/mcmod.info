@@ -1,0 +1,25 @@
+[
+{
+  
+"modid": "yadokaris_status_hud_plus",
+
+"name": "yadokari's Status HUD Plus",
+"description": "ShotbowのAnnihilationにおいて主に戦闘面のステータスを表示します。",
+
+"version": "1.0",
+"mcversion": "1.10.x",
+"url": "",
+
+"updateUrl": "",
+
+"authorList": ["ヤドカリ"],
+
+"credits": "",
+"logoFile": "",
+
+"screenshots": [],
+
+"dependencies": []
+
+}
+]
