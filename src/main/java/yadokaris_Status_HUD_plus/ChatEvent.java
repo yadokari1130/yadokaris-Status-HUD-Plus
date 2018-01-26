@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ChatEvent {
 
 	static float killCountSword, killCountBow, deathCount;
-	static int xp, totalXp, nexusDamage, rankPoint;
+	static int xp, totalXp, rankPoint;
 	private final List<String> jobs = new ArrayList<String>(Arrays.asList("Acrobat", "Alchemist", "Archer", "Assassin", "Bard", "Berserker", "BloodMage", "Builder", "Civilian", "Dasher", "Defender", "Enchanter", "Engineer", "Farmer", "Handyman", "Healer", "Hunter", "IceMan", "Immobilizer", "Lumberjack", "Mercenary", "Miner", "Ninja", "Pyro", "RiftWalker", "RobinHood", "Scorpio", "Scout", "Sniper", "Spider", "Spy", "Succubus", "Swapper", "Thor", "Tinkerer", "Transporter", "Vampire", "Warrior", "Wizard"));
 	static String currentJob = "Civilian", rank;
 	private final List<String> ranks = new ArrayList<String>(Arrays.asList("Annihilator", "GrandMaster-III", "GrandMaster-II", "GrandMaster-I", "Master-III", "Master-II", "Master-I", "Gold-III", "Gold-II", "Gold-I", "Silver-III", "Silver-II", "Silver-I", "Novice-III", "Novice-II", "Novice-I"));

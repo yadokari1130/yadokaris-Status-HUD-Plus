@@ -31,7 +31,7 @@ public class Rendering{
 
 		if (Minecraft.getMinecraft().currentScreen == null && isRender) {
 			if (isRainbow && currentTick % 5 == 0) {
-				Thread createColor = new Thread(new Runnable() {
+				new Thread(new Runnable() {
 					@Override
 					public void run() {
 						//Rainbow
@@ -62,11 +62,10 @@ public class Rendering{
 
 						Status_HUD.color = Integer.parseInt(red + green + blue, 16);
 					}
-				});
-				createColor.start();
+				}).start();
 			}
 
-			String[] showTexts = {String.format(Status_HUD.text, player.getName()), new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)ChatEvent.killCountSword).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.KillCountBow", (int)ChatEvent.killCountBow).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.DeathCount", (int)ChatEvent.deathCount).getFormattedText(), /*new TextComponentTranslation("yadokaris_shp.render.NexusDamage", ChatEvent.nexusDamage).getUnformattedText(),*/ new TextComponentTranslation("yadokaris_shp.render.Rate", rate).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.TotalRate", totalRate).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.XP", ChatEvent.xp).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.TotalXP", (int)ChatEvent.totalXp).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.Rank", ChatEvent.rank).getUnformattedText(), new TextComponentTranslation("yadokaris_shp.render.RankPoint", ChatEvent.rankPoint).getUnformattedText(), new TextComponentTranslation("yadokaris_shp.render.CurrentJob", ChatEvent.currentJob).getFormattedText()};
+			String[] showTexts = {String.format(Status_HUD.text, player.getName()), new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)ChatEvent.killCountSword).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.KillCountBow", (int)ChatEvent.killCountBow).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.DeathCount", (int)ChatEvent.deathCount).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.Rate", rate).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.TotalRate", totalRate).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.XP", ChatEvent.xp).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.TotalXP", (int)ChatEvent.totalXp).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.Rank", ChatEvent.rank).getUnformattedText(), new TextComponentTranslation("yadokaris_shp.render.RankPoint", ChatEvent.rankPoint).getUnformattedText(), new TextComponentTranslation("yadokaris_shp.render.CurrentJob", ChatEvent.currentJob).getFormattedText()};
 			int showy = Status_HUD.y - 10;
 			for (int i = 0; i < showTexts.length; i++) {
 				if (showTexts[i].length() >= 1 && Status_HUD.isShow[i]) {
