@@ -19,6 +19,7 @@ public class Rendering{
 	private static int colorRed, colorGreen;
 	private static int colorBlue = 255;
 	private static int plusColor;
+	private static int fps;
 	private static long lastDeathTime;
 	static float totalRate, rate;
 	static int currentTick;
@@ -64,7 +65,7 @@ public class Rendering{
 				}).start();
 			}
 
-			String[] showTexts = {String.format(Status_HUD.text, player.getName()), new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)ChatEvent.killCountSword).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.KillCountBow", (int)ChatEvent.killCountBow).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.DeathCount", (int)ChatEvent.deathCount).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.Rate", rate).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.TotalRate", totalRate).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.XP", ChatEvent.xp).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.TotalXP", (int)ChatEvent.totalXp).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.Rank", ChatEvent.rank).getUnformattedText(), new TextComponentTranslation("yadokaris_shp.render.RankPoint", ChatEvent.rankPoint).getUnformattedText(), new TextComponentTranslation("yadokaris_shp.render.CurrentJob", ChatEvent.currentJob).getFormattedText()};
+			String[] showTexts = {String.format(Status_HUD.text, player.getName()), new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)ChatEvent.killCountSword).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.KillCountBow", (int)ChatEvent.killCountBow).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.DeathCount", (int)ChatEvent.deathCount).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.Rate", rate).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.TotalRate", totalRate).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.XP", ChatEvent.xp).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.TotalXP", (int)ChatEvent.totalXp).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.Rank", ChatEvent.rank).getUnformattedText(), new TextComponentTranslation("yadokaris_shp.render.RankPoint", ChatEvent.rankPoint).getUnformattedText(), new TextComponentTranslation("yadokaris_shp.render.CurrentJob", ChatEvent.currentJob).getFormattedText(), new TextComponentTranslation("yadokaris_shp.render.FPS", fps).getUnformattedText()};
 			int showy = Status_HUD.y - 10;
 			for (int i = 0; i < showTexts.length; i++) {
 				if (showTexts[i].length() >= 1 && Status_HUD.isShow[i]) {
@@ -113,6 +114,7 @@ public class Rendering{
 
 		else isDeath = false;
 
+		if (Status_HUD.isShow[11]) fps = Minecraft.getDebugFPS();
 		currentTick++;
 	}
 }

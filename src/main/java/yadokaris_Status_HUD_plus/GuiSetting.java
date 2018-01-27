@@ -2,10 +2,13 @@ package yadokaris_Status_HUD_plus;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -14,25 +17,26 @@ import javax.swing.border.EmptyBorder;
 
 import net.minecraft.util.text.TextComponentTranslation;
 
-public class GuiSetting extends JFrame {
+public class GuiSetting extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
-	static JCheckBox checkBox_isEnable = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isEnable").getUnformattedText());
-	static JCheckBox checkBox_isShowText = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowText").getUnformattedText());
-	static JCheckBox checkBox_isShowSword = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowSword").getUnformattedText());
-	static JCheckBox checkBox_isShowBow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowBow").getUnformattedText());
-	static JCheckBox checkBox_isShowDeath = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowDeath").getUnformattedText());
-	static JCheckBox checkBox_isShowRate = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRate").getUnformattedText());
-	static JCheckBox checkBox_isShowTotalRate = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowTotalRate").getUnformattedText());
-	static JCheckBox checkBox_isShowGetxp = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowGetxp").getUnformattedText());
-	static JCheckBox checkBox_isShowHavexp = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowHavexp").getUnformattedText());
-	static JCheckBox checkBox_isShowRank = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRank").getUnformattedText());
-	static JCheckBox checkBox_isShowRankPoint = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRankPoint").getUnformattedText());
-	static JCheckBox checkBox_isShowCurrentJob = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowCurrentJob").getUnformattedText());
-	static JSpinner spinner_x = new JSpinner();
-	static JSpinner spinner_y = new JSpinner();
-	static JTextField textField = new JTextField();
-	static JCheckBox checkBox_isRainbow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isRainbow").getUnformattedText());
+	private JCheckBox checkBox_isEnable = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isEnable").getUnformattedText());
+	private JCheckBox checkBox_isShowText = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowText").getUnformattedText());
+	private JCheckBox checkBox_isShowSword = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowSword").getUnformattedText());
+	private JCheckBox checkBox_isShowBow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowBow").getUnformattedText());
+	private JCheckBox checkBox_isShowDeath = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowDeath").getUnformattedText());
+	private JCheckBox checkBox_isShowRate = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRate").getUnformattedText());
+	private JCheckBox checkBox_isShowTotalRate = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowTotalRate").getUnformattedText());
+	private JCheckBox checkBox_isShowGetxp = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowGetxp").getUnformattedText());
+	private JCheckBox checkBox_isShowHavexp = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowHavexp").getUnformattedText());
+	private JCheckBox checkBox_isShowRank = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRank").getUnformattedText());
+	private JCheckBox checkBox_isShowRankPoint = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRankPoint").getUnformattedText());
+	private JCheckBox checkBox_isShowCurrentJob = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowCurrentJob").getUnformattedText());
+	private JCheckBox checkBox_isShowFPS = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowFPS").getUnformattedText());
+	private JSpinner spinner_x = new JSpinner();
+	private JSpinner spinner_y = new JSpinner();
+	private JTextField textField = new JTextField();
+	private JCheckBox checkBox_isRainbow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isRainbow").getUnformattedText());
 
 	public GuiSetting() {
 		setTitle("Status HUD Plus Settings");
@@ -109,6 +113,11 @@ public class GuiSetting extends JFrame {
 		checkBox_isShowCurrentJob.setBounds(22, 274, 151, 21);
 		contentPane.add(checkBox_isShowCurrentJob);
 
+		checkBox_isShowFPS.setSelected(Status_HUD.isShow[11]);
+		checkBox_isShowFPS.setBackground(Color.WHITE);
+		checkBox_isShowFPS.setBounds(22, 297, 151, 21);
+		contentPane.add(checkBox_isShowFPS);
+
 		spinner_x.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		spinner_x.setValue(Status_HUD.x);
 		spinner_x.setBounds(302, 151, 157, 27);
@@ -151,7 +160,52 @@ public class GuiSetting extends JFrame {
 
 		JButton button_set = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingSave").getUnformattedText());
 		button_set.setBounds(365, 325, 106, 27);
-		button_set.addActionListener(new SaveConfig());
+		button_set.addActionListener(this);
 		contentPane.add(button_set);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		Status_HUD.isShow[0] = checkBox_isShowText.isSelected();
+		Status_HUD.isShow[1] = checkBox_isShowSword.isSelected();
+		Status_HUD.isShow[2] = checkBox_isShowBow.isSelected();
+		Status_HUD.isShow[3] = checkBox_isShowDeath.isSelected();
+		Status_HUD.isShow[4] = checkBox_isShowRate.isSelected();
+		Status_HUD.isShow[5] = checkBox_isShowTotalRate.isSelected();
+		Status_HUD.isShow[6] = checkBox_isShowGetxp.isSelected();
+		Status_HUD.isShow[7] = checkBox_isShowHavexp.isSelected();
+		Status_HUD.isShow[8] = checkBox_isShowRank.isSelected();
+		Status_HUD.isShow[9] = checkBox_isShowRankPoint.isSelected();
+		Status_HUD.isShow[10] = checkBox_isShowCurrentJob.isSelected();
+		Status_HUD.isShow[11] = checkBox_isShowFPS.isSelected();
+		Status_HUD.text = textField.getText();
+		Status_HUD.x = (int) spinner_x.getValue();
+		Status_HUD.y = (int) spinner_y.getValue();
+		Rendering.isRainbow = checkBox_isRainbow.isSelected();
+
+		Status_HUD.cfg.get("render", "isShowText", true, "ステータスの一番上に表示するテキストの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[0]);
+		Status_HUD.cfg.get("render", "isShowSwordKill", true, "剣キルの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[1]) ;
+		Status_HUD.cfg.get("render", "isShowBowKill", true, "弓キルの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[2]);
+		Status_HUD.cfg.get("render", "isShowDeath", true, "デス数の表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[3]);
+		Status_HUD.cfg.get("render", "isShowRate", true, "K/Dレートの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[4]);
+		Status_HUD.cfg.get("render", "isShowTotalRate", true, "総合K/Dレートの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[5]);
+		Status_HUD.cfg.get("render", "isShowXP", true, "獲得xpの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[6]);
+		Status_HUD.cfg.get("render", "isShowTotalXP", true, "所持xpの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[7]);
+		Status_HUD.cfg.get("render", "isShowRank", true, "ランクの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[8]);
+		Status_HUD.cfg.get("render", "isShowRankPoint", true, "ランクポイントの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[9]);
+		Status_HUD.cfg.get("render", "isShowJob", true, "現在の職業の表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[10]);
+		Status_HUD.cfg.get("rendering", "isShowFPS", true, "FPSの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[11]);
+		Status_HUD.cfg.get("render", "text", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。").set(Status_HUD.text);
+		Status_HUD.cfg.get("render", "x", 2, "ステータスの画面上のx座標を設定します。", 0, Integer.MAX_VALUE).set(Status_HUD.x);
+		Status_HUD.cfg.get("render", "y", 2, "ステータスの画面上のy座標を設定します。", 0, Integer.MAX_VALUE).set(Status_HUD.y);
+		Status_HUD.cfg.get("render", "isRainbow", false, "ステータスの文字を虹色にする(true) / しない(false)を設定します。").set(Rendering.isRainbow);
+		Status_HUD.cfg.get("render", "isRenderWhenStart", true, "起動時のステータスの表示(true) / 非表示(false)を設定します。").set(checkBox_isEnable.isSelected());
+		Status_HUD.cfg.get("render", "color", 0xFF0000, "文字の色を設定します。16進数で指定してください。").set("0x" + Integer.toHexString(ColorSetting.colorcash));
+
+		Status_HUD.color = ColorSetting.colorcash;
+
+		Status_HUD.cfg.save();
+
+		JOptionPane.showMessageDialog(new GuiSetting(), new TextComponentTranslation("yadokaris_shp.setting.save").getUnformattedText());
 	}
 }

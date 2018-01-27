@@ -2,7 +2,6 @@ package yadokaris_Status_HUD_plus;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +26,7 @@ public class Status_HUD {
 	static String cfgFile;
 	static Properties prop = new Properties();
 	static int color, x, y;
-	static boolean[] isShow = new boolean[11];
+	static boolean[] isShow = new boolean[12];
 	static String text = "";
 	static Configuration cfg;
 
@@ -47,6 +46,8 @@ public class Status_HUD {
 		if (color > 16777215) color = 16777215;
 		else if (color < 0) color = 0;
 
+		ColorSetting.colorcash = color;
+
 		isShow[0] = cfg.getBoolean("isShowText", "render", true, "ステータスの一番上に表示するテキストの表示(true) / 非表示(false)を設定します。");
 		isShow[1] = cfg.getBoolean("isShowSwordKill", "render", true, "剣キルの表示(true) / 非表示(false)を設定します。");
 		isShow[2] = cfg.getBoolean("isShowBowKill", "render", true, "弓キルの表示(true) / 非表示(false)を設定します。");
@@ -58,6 +59,7 @@ public class Status_HUD {
 		isShow[8] = cfg.getBoolean("isShowRank", "render", true, "ランクの表示(true) / 非表示(false)を設定します。");
 		isShow[9] = cfg.getBoolean("isShowRankPoint", "render", true, "ランクポイントの表示(true) / 非表示(false)を設定します。");
 		isShow[10] = cfg.getBoolean("isShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
+		isShow[11] = cfg.getBoolean("isShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
 		text = cfg.getString("text", "render", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。");
 		x = cfg.getInt("x", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のx座標を設定します。");
 		y = cfg.getInt("y", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のy座標を設定します。");
@@ -69,8 +71,8 @@ public class Status_HUD {
 
 		File conf = new File(cfgFile);
 		if (!conf.exists()) {
-			prop.setProperty("killCount", "" + (0f));
-			prop.setProperty("deathCount", "" + (0f));
+			prop.setProperty("killCount", "0");
+			prop.setProperty("deathCount", "0");
 
 			OutputStream writer = null;
 			try {
@@ -99,8 +101,6 @@ public class Status_HUD {
 				reader = new FileInputStream(cfgFile);
 				prop.loadFromXML(reader);
 			}
-			catch (FileNotFoundException fnfe) {}
-			catch (NullPointerException nurupo) {}
 			catch (IOException e) {
 				e.printStackTrace();
 				return;
@@ -123,11 +123,8 @@ public class Status_HUD {
 			}
         }
 
-		try {
-			totalKillCount = Float.valueOf(prop.getProperty("killCount"));
-			totalDeathCount = Float.valueOf(prop.getProperty("deathCount"));
-		}
-		catch (NullPointerException nurupo) {}
+		totalKillCount = Float.valueOf(prop.getProperty("killCount", "0"));
+		totalDeathCount = Float.valueOf(prop.getProperty("deathCount", "0"));
 
 	}
 

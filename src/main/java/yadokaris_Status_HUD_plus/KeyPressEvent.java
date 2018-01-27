@@ -47,8 +47,7 @@ public class KeyPressEvent {
 				@Override
 				public void run() {
 					try {
-						GuiSetting frame = new GuiSetting();
-						frame.setVisible(true);
+						new GuiSetting().setVisible(true);
 					}
 					catch (Exception e) {
 						e.printStackTrace();
