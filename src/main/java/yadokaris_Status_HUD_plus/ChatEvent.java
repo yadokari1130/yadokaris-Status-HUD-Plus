@@ -1,6 +1,5 @@
 package yadokaris_Status_HUD_plus;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -71,7 +70,6 @@ public class ChatEvent {
 					Status_HUD.prop.storeToXML(writer, "Comment");
 					writer.flush();
 				}
-				catch (FileNotFoundException fnfe) {}
 				catch (IOException ioe) {
 					ioe.printStackTrace();
 				}

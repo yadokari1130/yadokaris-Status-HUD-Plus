@@ -78,7 +78,6 @@ public class Status_HUD {
 				prop.storeToXML(writer, "Comment");
 				writer.flush();
 			}
-			catch (FileNotFoundException fnfe) {}
 			catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
