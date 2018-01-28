@@ -19,24 +19,24 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 public class GuiSetting extends JFrame implements ActionListener{
 
-	private JPanel contentPane;
-	private JCheckBox checkBox_isEnable = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isEnable").getUnformattedText());
-	private JCheckBox checkBox_isShowText = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowText").getUnformattedText());
-	private JCheckBox checkBox_isShowSword = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowSword").getUnformattedText());
-	private JCheckBox checkBox_isShowBow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowBow").getUnformattedText());
-	private JCheckBox checkBox_isShowDeath = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowDeath").getUnformattedText());
-	private JCheckBox checkBox_isShowRate = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRate").getUnformattedText());
-	private JCheckBox checkBox_isShowTotalRate = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowTotalRate").getUnformattedText());
-	private JCheckBox checkBox_isShowGetxp = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowGetxp").getUnformattedText());
-	private JCheckBox checkBox_isShowHavexp = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowHavexp").getUnformattedText());
-	private JCheckBox checkBox_isShowRank = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRank").getUnformattedText());
-	private JCheckBox checkBox_isShowRankPoint = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRankPoint").getUnformattedText());
-	private JCheckBox checkBox_isShowCurrentJob = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowCurrentJob").getUnformattedText());
-	private JCheckBox checkBox_isShowFPS = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowFPS").getUnformattedText());
-	private JSpinner spinner_x = new JSpinner();
-	private JSpinner spinner_y = new JSpinner();
-	private JTextField textField = new JTextField();
-	private JCheckBox checkBox_isRainbow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isRainbow").getUnformattedText());
+	private final JPanel contentPane;
+	private final JCheckBox checkBox_isEnable = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isEnable").getUnformattedText());
+	private final JCheckBox checkBox_isShowText = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowText").getUnformattedText());
+	private final JCheckBox checkBox_isShowSword = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowSword").getUnformattedText());
+	private final JCheckBox checkBox_isShowBow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowBow").getUnformattedText());
+	private final JCheckBox checkBox_isShowDeath = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowDeath").getUnformattedText());
+	private final JCheckBox checkBox_isShowRate = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRate").getUnformattedText());
+	private final JCheckBox checkBox_isShowTotalRate = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowTotalRate").getUnformattedText());
+	private final JCheckBox checkBox_isShowGetxp = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowGetxp").getUnformattedText());
+	private final JCheckBox checkBox_isShowHavexp = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowHavexp").getUnformattedText());
+	private final JCheckBox checkBox_isShowRank = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRank").getUnformattedText());
+	private final JCheckBox checkBox_isShowRankPoint = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRankPoint").getUnformattedText());
+	private final JCheckBox checkBox_isShowCurrentJob = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowCurrentJob").getUnformattedText());
+	private final JCheckBox checkBox_isShowFPS = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowFPS").getUnformattedText());
+	private final JSpinner spinner_x = new JSpinner();
+	private final JSpinner spinner_y = new JSpinner();
+	private final JTextField textField = new JTextField();
+	private final JCheckBox checkBox_isRainbow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isRainbow").getUnformattedText());
 
 	public GuiSetting() {
 		setTitle("Status HUD Plus Settings");
