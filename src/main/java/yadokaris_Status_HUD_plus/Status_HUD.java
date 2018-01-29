@@ -26,7 +26,7 @@ public class Status_HUD {
 	static String cfgFile;
 	static Properties prop = new Properties();
 	static int color, x, y;
-	static boolean[] isShow = new boolean[12];
+	static boolean[] isShow = new boolean[13];
 	static String text = "";
 	static Configuration cfg;
 
@@ -54,12 +54,13 @@ public class Status_HUD {
 		isShow[3] = cfg.getBoolean("isShowDeath", "render", true, "デス数の表示(true) / 非表示(false)を設定します。");
 		isShow[4] = cfg.getBoolean("isShowRate", "render", true, "K/Dレートの表示(true) / 非表示(false)を設定します。");
 		isShow[5] = cfg.getBoolean("isShowTotalRate", "render", true, "総合K/Dレートの表示(true) / 非表示(false)を設定します。");
-		isShow[6] = cfg.getBoolean("isShowXP", "render", true, "獲得xpの表示(true) / 非表示(false)を設定します。");
-		isShow[7] = cfg.getBoolean("isShowTotalXP", "render", true, "所持xpの表示(true) / 非表示(false)を設定します。");
-		isShow[8] = cfg.getBoolean("isShowRank", "render", true, "ランクの表示(true) / 非表示(false)を設定します。");
-		isShow[9] = cfg.getBoolean("isShowRankPoint", "render", true, "ランクポイントの表示(true) / 非表示(false)を設定します。");
-		isShow[10] = cfg.getBoolean("isShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
-		isShow[11] = cfg.getBoolean("isShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
+		isShow[6] = cfg.getBoolean("isShowNexusDamage", "render", true, "ネクサスダメージの表示(true) / 非表示(false)を設定します。");
+		isShow[7] = cfg.getBoolean("isShowXP", "render", true, "獲得xpの表示(true) / 非表示(false)を設定します。");
+		isShow[8] = cfg.getBoolean("isShowTotalXP", "render", true, "所持xpの表示(true) / 非表示(false)を設定します。");
+		isShow[9] = cfg.getBoolean("isShowRank", "render", true, "ランクの表示(true) / 非表示(false)を設定します。");
+		isShow[10] = cfg.getBoolean("isShowRankPoint", "render", true, "ランクポイントの表示(true) / 非表示(false)を設定します。");
+		isShow[11] = cfg.getBoolean("isShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
+		isShow[12] = cfg.getBoolean("isShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
 		text = cfg.getString("text", "render", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。");
 		x = cfg.getInt("x", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のx座標を設定します。");
 		y = cfg.getInt("y", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のy座標を設定します。");
