@@ -25,6 +25,7 @@ public class KeyPressEvent {
 			ChatEvent.killCountBow = 0;
 			ChatEvent.deathCount = 0;
 			ChatEvent.xp = 0;
+			ChatEvent.nexusDamage = 0;
 			Rendering.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
 			Rendering.rate = (ChatEvent.killCountSword + ChatEvent.killCountBow) / (ChatEvent.deathCount + 1f);
 			Rendering.player.addChatMessage(new TextComponentTranslation("yadokaris_shp.render.Reset"));
