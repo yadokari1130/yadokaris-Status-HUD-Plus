@@ -53,7 +53,7 @@ public class NexusBreakEvent {
 			Map<UUID, BossInfoLerping> mapBossInfos = (Map<UUID, BossInfoLerping>) bossField.get(bossOverlay);
 
 			for (BossInfoLerping bIL : mapBossInfos.values())
-				names.add(bIL.getName().getUnformattedText());
+				names.add(bIL.getName().getFormattedText());
 		}
 
 		return names;
