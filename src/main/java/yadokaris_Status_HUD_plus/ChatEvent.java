@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -18,8 +22,15 @@ public class ChatEvent {
 
 	static float killCountSword, killCountBow, deathCount;
 	static int xp, totalXp, rankPoint, nexusDamage;
-	private final List<String> jobs = new ArrayList<String>(Arrays.asList("Acrobat", "Alchemist", "Archer", "Assassin", "Bard", "Berserker", "BloodMage", "Builder", "Civilian", "Dasher", "Defender", "Enchanter", "Engineer", "Farmer", "Handyman", "Healer", "Hunter", "IceMan", "Immobilizer", "Lumberjack", "Mercenary", "Miner", "Ninja", "Pyro", "RiftWalker", "RobinHood", "Scorpio", "Scout", "Sniper", "Spider", "Spy", "Succubus", "Swapper", "Thor", "Tinkerer", "Transporter", "Vampire", "Warrior", "Wizard"));
-	static String currentJob = "Civilian", rank;
+	private final Set<String> jobs = new HashSet<String>(Arrays.asList("Acrobat", "Alchemist", "Archer", "Assassin", "Bard", "Berserker", "BloodMage", "Builder", "Civilian", "Dasher", "Defender", "Enchanter", "Engineer", "Farmer", "Handyman", "Healer", "Hunter", "IceMan", "Immobilizer", "Lumberjack", "Mercenary", "Miner", "Ninja", "Pyro", "RiftWalker", "RobinHood", "Scorpio", "Scout", "Sniper", "Spider", "Spy", "Succubus", "Swapper", "Thor", "Tinkerer", "Transporter", "Vampire", "Warrior", "Wizard"));
+	final Map<String, Integer> teams = new HashMap<String, Integer>(){{
+		put("Red", 0xFF0000);
+		put("Green", 0x00FF00);
+		put("Blue", 0x0000FF);
+		put("Yellow", 0xFFFF00);
+	}};
+	static String currentJob = "Civilian", rank = "不明", team = "不明";
+	private static boolean isJoin;
 	private final List<String> ranks = new ArrayList<String>(Arrays.asList("Annihilator", "GrandMaster-III", "GrandMaster-II", "GrandMaster-I", "Master-III", "Master-II", "Master-I", "Gold-III", "Gold-II", "Gold-I", "Silver-III", "Silver-II", "Silver-I", "Novice-III", "Novice-II", "Novice-I"));
 
 	@SideOnly(Side.CLIENT)
@@ -42,12 +53,10 @@ public class ChatEvent {
 
 				chat = chat.replaceAll(Rendering.player.getName(), "");
 				rankPoint = Integer.parseInt(chat.replaceAll("[^0-9]", ""));
-
-				return;
 			}
 
 			//Kill
-			if (chat.matches(".*" + playername + ".*\\([A-Z]{3}\\).*\\([A-Z]{3}\\).*")) {
+			else if (chat.matches(".*" + playername + ".*\\([A-Z]{3}\\).*\\([A-Z]{3}\\).*")) {
 				if (chat.contains("killed")) {
 					killCountSword += 1f;
 					Status_HUD.totalKillCount += 1f;
@@ -83,8 +92,9 @@ public class ChatEvent {
 						}
 					}
 				}
-				return;
 			}
+
+			return;
 		}
 
 		else if (!chat.contains(playername)) {
@@ -117,33 +127,62 @@ public class ChatEvent {
 						}
 					}
 				}
-
-				return;
 			}
 
 			//Job
-			if (chat.contains("selected")) {
+			else if (chat.contains("selected")) {
 				for (String job : jobs) {
 					if (chat.contains(job)) {
 						if (chat.indexOf(job) < chat.indexOf("selected")) currentJob = job;
 					}
 				}
-				return;
 			}
 
 			//XP
-			if (chat.matches(".*\\+[0-9] Shotbow Xp")) {
+			else if (chat.matches(".*\\+[0-9] Shotbow Xp")) {
 				int getxp = 0;
 				getxp = Integer.parseInt(chat.replaceAll("[^0-9]",""));
 				if (getxp != 0) {
 					xp += getxp;
 					totalXp += getxp;
 					if (new NexusBreakEvent().isNexusBreak()) nexusDamage++;
-					return;
 				}
 			}
 
-			if (chat.matches(".*You have [0-9]{1,}xp.*")) totalXp = Integer.parseInt(chat.replaceAll("[^0-9]",""));
+			else if (chat.matches(".*You have [0-9]{1,}xp.*")) totalXp = Integer.parseInt(chat.replaceAll("[^0-9]",""));
+
+			else if (chat.matches(".*You have joined the.*")) {
+				isJoin = true;
+				new Thread (new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(500);
+						}
+						catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						isJoin = false;
+					}
+				}).start();
+			}
+
+			else if (chat.matches(".*team.*") && isJoin) {
+				for (String team : teams.keySet()) {
+					if (chat.contains(team)) {
+						this.team = team;
+						if (Rendering.isChangeTeamColor) Status_HUD.color = teams.get(team);
+						break;
+					}
+				}
+				isJoin = false;
+			}
+
+			else if (chat.matches(".*You have been removed from your team") || chat.matches(".*Connecting you to hub")) {
+				team = "不明";
+				if (Rendering.isChangeTeamColor)Status_HUD.color = ColorSetting.colorcash;
+			}
+
 		}
 	}
 
