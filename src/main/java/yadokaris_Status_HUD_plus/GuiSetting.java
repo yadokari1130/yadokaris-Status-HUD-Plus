@@ -34,6 +34,8 @@ public class GuiSetting extends JFrame implements ActionListener{
 	private final JCheckBox checkBoxIsShowRankPoint = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowRankPoint").getUnformattedText());
 	private final JCheckBox checkBoxIsShowCurrentJob = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowCurrentJob").getUnformattedText());
 	private final JCheckBox checkBoxIsShowFPS = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowFPS").getUnformattedText());
+	private final JCheckBox checkBox_isShowTeam = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isShowTeam").getUnformattedText());
+	private final JCheckBox checkBox_isChangeTeamColor = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isChangeTeamColor").getUnformattedText());
 	private final JSpinner spinner_x = new JSpinner();
 	private final JSpinner spinner_y = new JSpinner();
 	private final JTextField textField = new JTextField();
@@ -42,7 +44,7 @@ public class GuiSetting extends JFrame implements ActionListener{
 	public GuiSetting() {
 		setTitle("Status HUD Plus Settings");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 500, 400);
+		setBounds(100, 100, 500, 430);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -91,7 +93,7 @@ public class GuiSetting extends JFrame implements ActionListener{
 
 		checkBoxIsShowNexusDamage.setSelected(Status_HUD.isShow[6]);
 		checkBoxIsShowNexusDamage.setBackground(Color.WHITE);
-		checkBoxIsShowNexusDamage.setBounds(22, 182, 151, 21);
+		checkBoxIsShowNexusDamage.setBounds(22, 182, 213, 21);
 		contentPane.add(checkBoxIsShowNexusDamage);
 
 		checkBoxIsShowGetxp.setBackground(Color.WHITE);
@@ -124,6 +126,11 @@ public class GuiSetting extends JFrame implements ActionListener{
 		checkBoxIsShowFPS.setBounds(22, 320, 151, 21);
 		contentPane.add(checkBoxIsShowFPS);
 
+		checkBox_isShowTeam.setSelected(Status_HUD.isShow[13]);
+		checkBox_isShowTeam.setBackground(Color.WHITE);
+		checkBox_isShowTeam.setBounds(22, 343, 151, 21);
+		contentPane.add(checkBox_isShowTeam);
+
 		spinner_x.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		spinner_x.setValue(Status_HUD.x);
 		spinner_x.setBounds(302, 151, 157, 27);
@@ -141,8 +148,13 @@ public class GuiSetting extends JFrame implements ActionListener{
 
 		checkBoxIsRainbow.setBackground(Color.WHITE);
 		checkBoxIsRainbow.setSelected(Rendering.isRainbow);
-		checkBoxIsRainbow.setBounds(315, 288, 151, 21);
+		checkBoxIsRainbow.setBounds(252, 288, 151, 21);
 		contentPane.add(checkBoxIsRainbow);
+
+		checkBox_isChangeTeamColor.setSelected(Rendering.isChangeTeamColor);
+		checkBox_isChangeTeamColor.setBackground(Color.WHITE);
+		checkBox_isChangeTeamColor.setBounds(252, 311, 220, 21);
+		contentPane.add(checkBox_isChangeTeamColor);
 
 		JTextPane textPane = new JTextPane();
 		textPane.setText(new TextComponentTranslation("yadokaris_shp.setting.settingText").getUnformattedText());
@@ -165,13 +177,15 @@ public class GuiSetting extends JFrame implements ActionListener{
 		contentPane.add(txtpnY);
 
 		JButton button_set = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingSave").getUnformattedText());
-		button_set.setBounds(365, 325, 106, 27);
+		button_set.setBounds(366, 355, 106, 27);
 		button_set.addActionListener(this);
 		contentPane.add(button_set);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
+		Status_HUD.color = ColorSetting.colorcash;
+
 		Status_HUD.isShow[0] = checkBoxIsShowText.isSelected();
 		Status_HUD.isShow[1] = checkBoxIsShowSword.isSelected();
 		Status_HUD.isShow[2] = checkBoxIsShowBow.isSelected();
@@ -185,10 +199,13 @@ public class GuiSetting extends JFrame implements ActionListener{
 		Status_HUD.isShow[10] = checkBoxIsShowRankPoint.isSelected();
 		Status_HUD.isShow[11] = checkBoxIsShowCurrentJob.isSelected();
 		Status_HUD.isShow[12] = checkBoxIsShowFPS.isSelected();
+		Status_HUD.isShow[13] = checkBox_isShowTeam.isSelected();
 		Status_HUD.text = textField.getText();
 		Status_HUD.x = (int) spinner_x.getValue();
 		Status_HUD.y = (int) spinner_y.getValue();
 		Rendering.isRainbow = checkBoxIsRainbow.isSelected();
+		Rendering.isChangeTeamColor = checkBox_isChangeTeamColor.isSelected();
+		if (Rendering.isChangeTeamColor) Status_HUD.color = new ChatEvent().teams.get(ChatEvent.team);
 
 		Status_HUD.cfg.get("render", "isShowText", true, "ステータスの一番上に表示するテキストの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[0]);
 		Status_HUD.cfg.get("render", "isShowSwordKill", true, "剣キルの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[1]) ;
@@ -203,14 +220,14 @@ public class GuiSetting extends JFrame implements ActionListener{
 		Status_HUD.cfg.get("render", "isShowRankPoint", true, "ランクポイントの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[10]);
 		Status_HUD.cfg.get("render", "isShowJob", true, "現在の職業の表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[11]);
 		Status_HUD.cfg.get("render", "isShowFPS", true, "FPSの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[12]);
+		Status_HUD.cfg.get("render", "isShowTeam", true, "所属チームの表示(true) / 非表示(false)を設定します。").set(Status_HUD.isShow[13]);
 		Status_HUD.cfg.get("render", "text", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。").set(Status_HUD.text);
 		Status_HUD.cfg.get("render", "x", 2, "ステータスの画面上のx座標を設定します。", 0, Integer.MAX_VALUE).set(Status_HUD.x);
 		Status_HUD.cfg.get("render", "y", 2, "ステータスの画面上のy座標を設定します。", 0, Integer.MAX_VALUE).set(Status_HUD.y);
 		Status_HUD.cfg.get("render", "isRainbow", false, "ステータスの文字を虹色にする(true) / しない(false)を設定します。").set(Rendering.isRainbow);
+		Status_HUD.cfg.get("render", "isChangeTeamColor", false, "テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。").set(Rendering.isChangeTeamColor);;
 		Status_HUD.cfg.get("render", "isRenderWhenStart", true, "起動時のステータスの表示(true) / 非表示(false)を設定します。").set(checkBoxIsEnable.isSelected());
 		Status_HUD.cfg.get("render", "color", 0xFF0000, "文字の色を設定します。16進数で指定してください。").set("0x" + Integer.toHexString(ColorSetting.colorcash));
-
-		Status_HUD.color = ColorSetting.colorcash;
 
 		Status_HUD.cfg.save();
 

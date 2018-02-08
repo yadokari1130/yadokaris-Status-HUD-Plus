@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 
-@Mod (modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.2")
+@Mod (modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.4")
 public class Status_HUD {
 
 	private static File confFile;
@@ -26,7 +26,7 @@ public class Status_HUD {
 	static String cfgFile;
 	static Properties prop = new Properties();
 	static int color, x, y;
-	static boolean[] isShow = new boolean[13];
+	static boolean[] isShow = new boolean[14];
 	static String text = "";
 	static Configuration cfg;
 
@@ -61,11 +61,13 @@ public class Status_HUD {
 		isShow[10] = cfg.getBoolean("isShowRankPoint", "render", true, "ランクポイントの表示(true) / 非表示(false)を設定します。");
 		isShow[11] = cfg.getBoolean("isShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
 		isShow[12] = cfg.getBoolean("isShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
+		isShow[13] = cfg.getBoolean("isShowTeam", "render", true, "所属チームの表示(true) / 非表示(false)を設定します。");
 		text = cfg.getString("text", "render", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。");
 		x = cfg.getInt("x", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のx座標を設定します。");
 		y = cfg.getInt("y", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のy座標を設定します。");
 		Rendering.isRender = cfg.getBoolean("isRenderWhenStart", "render", true, "起動時のステータスの表示(true) / 非表示(false)を設定します。");
 		Rendering.isRainbow = cfg.getBoolean("isRainbow", "render", false, "ステータスの文字を虹色にする(true) / しない(false)を設定します。");
+		Rendering.isChangeTeamColor = cfg.getBoolean("isChangeTeamColor", "render", false, "テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。");
 		cfg.save();
 
 		Rendering.totalRate = totalKillCount / (totalDeathCount + 1f);
