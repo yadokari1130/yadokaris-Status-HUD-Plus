@@ -24,14 +24,14 @@ public class NexusBreakEvent {
 		}
 
 		for (String bossName : bossNames) {
-			if (bossName.contains(Rendering.player.getName())) return true;
+			if (bossName.contains(Status_HUD.player.getName())) return true;
 		}
 
 		return false;
 	}
 
-
-	public static List<String> getBossBarNames(Minecraft minecraft) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public static List<String> getBossBarNames(Minecraft minecraft)
+			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 
 		GuiBossOverlay bossOverlay = minecraft.ingameGUI.getBossOverlay();
 

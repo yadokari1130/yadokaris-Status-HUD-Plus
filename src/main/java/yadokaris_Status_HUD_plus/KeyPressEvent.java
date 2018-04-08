@@ -21,29 +21,22 @@ public class KeyPressEvent {
 	@SubscribeEvent
 	public void KeyHandlingEvent(KeyInputEvent event) {
 		if (resetKey.isPressed()) {
-			ChatEvent.killCountSword = 0;
-			ChatEvent.killCountBow = 0;
-			ChatEvent.deathCount = 0;
-			ChatEvent.xp = 0;
-			ChatEvent.nexusDamage = 0;
-			Rendering.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
-			Rendering.rate = (ChatEvent.killCountSword + ChatEvent.killCountBow) / (ChatEvent.deathCount + 1f);
-			Rendering.player.addChatMessage(new TextComponentTranslation("yadokaris_shp.render.Reset"));
+			Status_HUD.killCountSword = 0;
+			Status_HUD.killCountBow = 0;
+			Status_HUD.deathCount = 0;
+			Status_HUD.xp = 0;
+			Status_HUD.nexusDamage = 0;
+			Status_HUD.rate = 0f;
+			Status_HUD.player.addChatMessage(new TextComponentTranslation("yadokaris_shp.render.Reset"));
+			Rendering.updateAllText();
 		}
 
 		else if (displayKey.isPressed()) {
-			if (Rendering.isRender) {
-				Rendering.isRender = false;
-				Rendering.player.addChatMessage(new TextComponentTranslation("yadokaris_shp.render.Hide"));
-			}
-			else {
-				Rendering.isRender = true;
-				Rendering.player.addChatMessage(new TextComponentTranslation("yadokaris_shp.render.Show"));
-			}
+			Status_HUD.isRender = !Status_HUD.isRender;
+			Status_HUD.player.addChatMessage(new TextComponentTranslation(Status_HUD.isRender ? "yadokaris_shp.render.Show" : "yadokaris_shp.render.Hide"));
 		}
 
 		else if (settingKey.isPressed()) {
-
 			EventQueue.invokeLater(new Runnable() {
 				@Override
 				public void run() {
