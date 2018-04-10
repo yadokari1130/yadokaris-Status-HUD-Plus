@@ -38,7 +38,7 @@ public class ChatEvent {
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void onKill(ClientChatReceivedEvent event) {
+	public void onChatReceived(ClientChatReceivedEvent event) {
 
 		String chat = event.getMessage().getUnformattedText();
 
