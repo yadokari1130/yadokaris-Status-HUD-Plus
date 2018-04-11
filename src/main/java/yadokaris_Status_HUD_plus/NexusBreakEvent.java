@@ -1,9 +1,9 @@
 package yadokaris_Status_HUD_plus;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
@@ -11,12 +11,12 @@ import net.minecraft.client.gui.GuiBossOverlay;
 import net.minecraft.world.BossInfoLerping;
 
 public class NexusBreakEvent {
-	static List<String> bossNames = new ArrayList<String>();
+	static Set<String> bossNames = new HashSet<>();
 
 	public boolean isNexusBreak() {
 
 		try {
-			bossNames = getBossBarNames(Minecraft.getMinecraft());
+			bossNames = getBossNames(Minecraft.getMinecraft());
 		}
 		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
@@ -30,30 +30,28 @@ public class NexusBreakEvent {
 		return false;
 	}
 
-	public static List<String> getBossBarNames(Minecraft minecraft)
-			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public static Set<String> getBossNames(Minecraft minecraft) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 
 		GuiBossOverlay bossOverlay = minecraft.ingameGUI.getBossOverlay();
 
-		String nameAfter = null;
+		String mapName = null;
 
-		for (Field s : GuiBossOverlay.class.getDeclaredFields()) {
-			if (s.getType().getName().equals("java.util.Map")) {
-				nameAfter = s.getName();
+		for (Field field : GuiBossOverlay.class.getDeclaredFields()) {
+			if (field.getType().getName().equals("java.util.Map")) {
+				mapName = field.getName();
 				break;
 			}
 		}
 
-		List<String> names = new ArrayList<String>();
+		Set<String> names = new HashSet<String>();
 
-		if (nameAfter != null) {
-			Field bossField = GuiBossOverlay.class.getDeclaredField(nameAfter);
+		if (mapName != null) {
+			Field bossField = GuiBossOverlay.class.getDeclaredField(mapName);
 			bossField.setAccessible(true);
 
-			Map<UUID, BossInfoLerping> mapBossInfos = (Map<UUID, BossInfoLerping>) bossField.get(bossOverlay);
+			Map<UUID, BossInfoLerping> bossInfos = (Map<UUID, BossInfoLerping>) bossField.get(bossOverlay);
 
-			for (BossInfoLerping bIL : mapBossInfos.values())
-				names.add(bIL.getName().getFormattedText());
+			for (BossInfoLerping info : bossInfos.values()) names.add(info.getName().getFormattedText());
 		}
 
 		return names;
