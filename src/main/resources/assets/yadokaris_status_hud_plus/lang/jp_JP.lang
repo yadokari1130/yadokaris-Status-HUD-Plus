@@ -1,9 +1,11 @@
-﻿
+
 yadokaris_shp.key.Reset=リセットキー
 yadokaris_shp.key.Display=表示 / 非表示 切り替えキー
 yadokaris_shp.key.Setting=設定キー
 yadokaris_shp.render.KillCountSword=剣キル：%d
 yadokaris_shp.render.KillCountBow=弓キル：%d
+yadokaris_shp.render.AttackingKillCount=ネクサスキル：%d
+yadokaris_shp.render.DefendingKillCount=防衛キル：%d
 yadokaris_shp.render.DeathCount=デス数：%d
 yadokaris_shp.render.Rate=K/Dレート：%d
 yadokaris_shp.render.TotalRate=総合K/Dレート：%d
@@ -21,6 +23,8 @@ yadokaris_shp.render.Show=表示しました。
 yadokaris_shp.setting.isEnable=起動時のステータスの表示
 yadokaris_shp.setting.isShowSword=剣キルの表示
 yadokaris_shp.setting.isShowBow=弓キルの表示
+yadokaris_shp.setting.isShowAttackingKill=ネクサスキルの表示
+yadokaris_shp.setting.isShowDefendingKill=防衛キルの表示
 yadokaris_shp.setting.isShowDeath=デス数の表示
 yadokaris_shp.setting.isShowRate=K/Dレートの表示
 yadokaris_shp.setting.isShowTotalRate=総合K/Dレートの表示

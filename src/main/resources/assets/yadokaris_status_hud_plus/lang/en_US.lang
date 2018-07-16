@@ -1,9 +1,11 @@
-﻿
+
 yadokaris_shp.key.Reset=Reset Key
 yadokaris_shp.key.Display=Switch Show / Hide Key
 yadokaris_shp.key.Setting=Setting Key
 yadokaris_shp.render.KillCountSword=Kills by Sword : %d
 yadokaris_shp.render.KillCountBow=Kills by Bow : %d
+yadokaris_shp.render.AttackingKillCount=Kills of Attacking Nexus : %d
+yadokaris_shp.render.DefendingKillCount=Kills of Defending Nexus : %d
 yadokaris_shp.render.DeathCount=Deaths : %d
 yadokaris_shp.render.Rate=K/D Rate : %d
 yadokaris_shp.render.TotalRate=Total K/D Rate : %d
@@ -21,6 +23,8 @@ yadokaris_shp.render.Show=Show.
 yadokaris_shp.setting.isEnable=Is render when start
 yadokaris_shp.setting.isShowSword=Is show Kill by Sword
 yadokaris_shp.setting.isShowBow=Is show Kill by Bow
+yadokaris_shp.setting.isShowAttackingKill=Is show Kills of Attacking Nexus
+yadokaris_shp.setting.isShowDefendingKill=Is show Kills of Defending Nexus
 yadokaris_shp.setting.isShowDeath=Is show Death Count
 yadokaris_shp.setting.isShowRate=Is show K/D Rate
 yadokaris_shp.setting.isShowTotalRate=Is show Total K/D Rate

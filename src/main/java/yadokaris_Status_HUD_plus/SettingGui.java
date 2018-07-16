@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 import net.minecraft.util.text.TextComponentTranslation;
 
-public class GuiSetting extends JFrame implements ActionListener {
+public class SettingGui extends JFrame implements ActionListener {
 
 	private final JPanel contentPane;
 	private final JCheckBox checkBoxIsEnable = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isEnable").getUnformattedText());
@@ -41,7 +41,7 @@ public class GuiSetting extends JFrame implements ActionListener {
 	private final JTextField textField = new JTextField();
 	private final JCheckBox checkBoxIsRainbow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isRainbow").getUnformattedText());
 
-	public GuiSetting() {
+	public SettingGui() {
 		setTitle("Status HUD Plus Settings");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 500, 430);
@@ -230,8 +230,8 @@ public class GuiSetting extends JFrame implements ActionListener {
 		Status_HUD.conf.get("render", "color", 0xFF0000, "文字の色を設定します。16進数で指定してください。").set("0x" + Integer.toHexString(Status_HUD.colorCash));
 
 		Status_HUD.conf.save();
-		Rendering.updateAllText();
+		Rendering.updateAllTexts();
 
-		JOptionPane.showMessageDialog(new GuiSetting(), new TextComponentTranslation("yadokaris_shp.setting.save").getUnformattedText());
+		JOptionPane.showMessageDialog(new SettingGui(), new TextComponentTranslation("yadokaris_shp.setting.save").getUnformattedText());
 	}
 }

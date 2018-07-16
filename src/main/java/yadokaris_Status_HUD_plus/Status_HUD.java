@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Properties;
 
@@ -17,7 +19,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.4.1")
+@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.5")
 public class Status_HUD {
 
 	private static String propFilePath;
@@ -25,10 +27,10 @@ public class Status_HUD {
 	static Properties prop = new Properties();
 	static String playerName;
 	static EntityPlayer player;
-	static float totalKillCount, totalDeathCount, totalRate, ratekill, CountSword, killCountBow, deathCount, rate, killCountSword;
+	static float totalKillCount, totalDeathCount, totalRate, ratekill, CountSword, killCountBow, deathCount, rate, killCountSword, attackingKillCount, defendingKillCount;
 	static int xp, totalXp, rankPoint, nexusDamage;
 	static int color, colorCash, x, y;
-	static boolean[] isShow = new boolean[14];
+	static boolean[] isShow = new boolean[16];
 	static boolean isRender, isRainbow, isChangeTeamColor;
 	static String currentJob = "Civilian", rank = "UnKnown", team = "UnKnown", text = "";
 	
@@ -52,17 +54,19 @@ public class Status_HUD {
 		isShow[0] = conf.getBoolean("isShowText", "render", true, "ステータスの一番上に表示するテキストの表示(true) / 非表示(false)を設定します。");
 		isShow[1] = conf.getBoolean("isShowSwordKill", "render", true, "剣キルの表示(true) / 非表示(false)を設定します。");
 		isShow[2] = conf.getBoolean("isShowBowKill", "render", true, "弓キルの表示(true) / 非表示(false)を設定します。");
-		isShow[3] = conf.getBoolean("isShowDeath", "render", true, "デス数の表示(true) / 非表示(false)を設定します。");
-		isShow[4] = conf.getBoolean("isShowRate", "render", true, "K/Dレートの表示(true) / 非表示(false)を設定します。");
-		isShow[5] = conf.getBoolean("isShowTotalRate", "render", true, "総合K/Dレートの表示(true) / 非表示(false)を設定します。");
-		isShow[6] = conf.getBoolean("isShowNexusDamage", "render", true, "ネクサスダメージの表示(true) / 非表示(false)を設定します。");
-		isShow[7] = conf.getBoolean("isShowXP", "render", true, "獲得xpの表示(true) / 非表示(false)を設定します。");
-		isShow[8] = conf.getBoolean("isShowTotalXP", "render", true, "所持xpの表示(true) / 非表示(false)を設定します。");
-		isShow[9] = conf.getBoolean("isShowRank", "render", true, "ランクの表示(true) / 非表示(false)を設定します。");
-		isShow[10] = conf.getBoolean("isShowRankPoint", "render", true, "ランクポイントの表示(true) / 非表示(false)を設定します。");
-		isShow[11] = conf.getBoolean("isShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
-		isShow[12] = conf.getBoolean("isShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
-		isShow[13] = conf.getBoolean("isShowTeam", "render", true, "所属チームの表示(true) / 非表示(false)を設定します。");
+		isShow[3] = conf.getBoolean("isShowAttackingKill", "render", true, "ネクサスキルの表示(true) / 非表示(false)を設定します。");
+		isShow[4] = conf.getBoolean("isShowDefendingKill", "render", true, "防衛キルの表示(true) / 非表示(false)を設定します。");
+		isShow[5] = conf.getBoolean("isShowDeath", "render", true, "デス数の表示(true) / 非表示(false)を設定します。");
+		isShow[6] = conf.getBoolean("isShowRate", "render", true, "K/Dレートの表示(true) / 非表示(false)を設定します。");
+		isShow[7] = conf.getBoolean("isShowTotalRate", "render", true, "総合K/Dレートの表示(true) / 非表示(false)を設定します。");
+		isShow[8] = conf.getBoolean("isShowNexusDamage", "render", true, "ネクサスダメージの表示(true) / 非表示(false)を設定します。");
+		isShow[9] = conf.getBoolean("isShowXP", "render", true, "獲得xpの表示(true) / 非表示(false)を設定します。");
+		isShow[10] = conf.getBoolean("isShowTotalXP", "render", true, "所持xpの表示(true) / 非表示(false)を設定します。");
+		isShow[11] = conf.getBoolean("isShowRank", "render", true, "ランクの表示(true) / 非表示(false)を設定します。");
+		isShow[12] = conf.getBoolean("isShowRankPoint", "render", true, "ランクポイントの表示(true) / 非表示(false)を設定します。");
+		isShow[13] = conf.getBoolean("isShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
+		isShow[14] = conf.getBoolean("isShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
+		isShow[15] = conf.getBoolean("isShowTeam", "render", true, "所属チームの表示(true) / 非表示(false)を設定します。");
 		text = conf.getString("text", "render", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。");
 		x = conf.getInt("x", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のx座標を設定します。");
 		y = conf.getInt("y", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のy座標を設定します。");
@@ -80,8 +84,8 @@ public class Status_HUD {
 			writeProperty();
 		}
 		else {
-			try {
-				prop.loadFromXML(new FileInputStream(propFile));
+			try (InputStream reader = new FileInputStream(propFile)) {
+				prop.loadFromXML(reader);
 			}
 			catch (IOException e) {
 				e.printStackTrace();
@@ -104,23 +108,12 @@ public class Status_HUD {
 	}
 	
 	public static void writeProperty() {
-		OutputStream writer = null;
-		try {
-			writer = new FileOutputStream(propFilePath);
+		try (OutputStream writer = new FileOutputStream(propFilePath)) {
 			prop.storeToXML(writer, "Comment");
 			writer.flush();
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
-		}
-		finally {
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 }

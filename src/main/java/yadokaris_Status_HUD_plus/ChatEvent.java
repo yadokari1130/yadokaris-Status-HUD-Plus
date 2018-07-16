@@ -49,18 +49,20 @@ public class ChatEvent {
 				for (int i = 0; i < RANKS.size(); i++) {
 					if (chat.indexOf(RANKS.get(i)) > 30) {
 						Status_HUD.rank = RANKS.get(++i);
-						Rendering.updateText(9);
+						Rendering.updateText(11);
 						break;
 					}
 				}
 
 				Status_HUD.rankPoint = Integer.parseInt(chat.replace(Status_HUD.player.getName(), "").replaceAll("[^0-9]", ""));
-				Rendering.updateText(10);
+				Rendering.updateText(12);
 			}
 
 			// Kill
 			else if (chat.matches(".*" + Status_HUD.playerName + ".*\\([A-Z]{3}\\).*\\([A-Z]{3}\\).*")) {
 				if (chat.contains("killed")) {
+					if (chat.contains("attacking")) Status_HUD.attackingKillCount++;
+					else if (chat.contains("defending")) Status_HUD.defendingKillCount++;
 					Status_HUD.killCountSword++;
 					Status_HUD.totalKillCount++;
 					Status_HUD.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
@@ -68,13 +70,15 @@ public class ChatEvent {
 					Status_HUD.prop.setProperty("killCount", "" + Status_HUD.totalKillCount);
 				}
 				else if (chat.contains("shot")) {
+					if (chat.contains("attacking")) Status_HUD.attackingKillCount++;
+					else if (chat.contains("defending")) Status_HUD.defendingKillCount++;
 					Status_HUD.killCountBow++;
 					Status_HUD.totalKillCount++;
 					Status_HUD.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
 					Status_HUD.rate = (Status_HUD.killCountSword + Status_HUD.killCountBow) / (Status_HUD.deathCount + 1f);
 					Status_HUD.prop.setProperty("killCount", "" + Status_HUD.totalKillCount);
 				}
-				Rendering.updateAllText();
+				Rendering.updateAllTexts();
 				Status_HUD.writeProperty();
 			}
 		}
@@ -90,7 +94,7 @@ public class ChatEvent {
 				Status_HUD.rate = (Status_HUD.killCountSword + Status_HUD.killCountBow) / (Status_HUD.deathCount + 1f);
 				Status_HUD.prop.setProperty("deathCount", "" + Status_HUD.totalDeathCount);
 				Status_HUD.writeProperty();
-				Rendering.updateAllText();
+				Rendering.updateTexts(5, 6, 7);
 			}
 
 			// Job
@@ -99,49 +103,46 @@ public class ChatEvent {
 					if (chat.contains(job)) {
 						if (chat.indexOf(job) < chat.indexOf("selected")) {
 							Status_HUD.currentJob = job;
-							Rendering.updateText(11);
+							Rendering.updateText(13);
 						}
 					}
 				}
 			}
 
 			// XP
-			else if (chat.matches(".*\\+[0-9] Shotbow Xp")) {
+			else if (chat.matches(".*\\+[0-9]* Shotbow Xp")) {
 				int getxp = Integer.parseInt(chat.replaceAll("[^0-9]", ""));
 				if (getxp != 0) {
 					if (new NexusBreakEvent().isNexusBreak()) Status_HUD.nexusDamage++;
 					Status_HUD.xp += getxp;
 					Status_HUD.totalXp += getxp;
 				}
-				Rendering.updateAllText();
+				Rendering.updateTexts(9, 10);
 			}
 
-			else if (chat.matches(".*You have [0-9]{1,}xp.*")) { 
+			else if (chat.matches(".*You have [0-9]*xp.*")) { 
 				Status_HUD.totalXp = Integer.parseInt(chat.replaceAll("[^0-9]", ""));
-				Rendering.updateText(8);
+				Rendering.updateText(10);
 			}
 
 			else if (chat.matches(".*You have joined the.*")) {
 				isJoin = true;
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							Thread.sleep(500);
-						}
-						catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						isJoin = false;
+				new Thread(() -> {
+					try {
+						Thread.sleep(500);
 					}
+					catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					isJoin = false;
 				}).start();
 			}
-
+			
 			else if (chat.matches(".*team.*") && isJoin) {
 				for (String team : TEAMS.keySet()) {
 					if (chat.contains(team)) {
 						Status_HUD.team = team;
-						Rendering.updateText(13);
+						Rendering.updateText(15);
 						if (Status_HUD.isChangeTeamColor) Status_HUD.color = TEAMS.get(team);
 						break;
 					}
@@ -151,7 +152,7 @@ public class ChatEvent {
 
 			else if (chat.matches(".*You have been removed from your team") || chat.matches(".*Reset your password by visiting.*")) {
 				Status_HUD.team = "UnKnown";
-				Rendering.updateText(13);
+				Rendering.updateText(15);
 				if (Status_HUD.isChangeTeamColor) Status_HUD.color = Status_HUD.colorCash;
 			}
 		}

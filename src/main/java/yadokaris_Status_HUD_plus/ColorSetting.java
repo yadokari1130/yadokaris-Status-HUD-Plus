@@ -11,7 +11,7 @@ public class ColorSetting implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 
-		Color color = new JColorChooser().showDialog(new GuiSetting(), "Color", Color.white);
+		Color color = new JColorChooser().showDialog(new SettingGui(), "Color", Color.white);
 
 		if (color != null) {
 			String red = Integer.toHexString(color.getRed());

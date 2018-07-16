@@ -28,7 +28,7 @@ public class KeyPressEvent {
 			Status_HUD.nexusDamage = 0;
 			Status_HUD.rate = 0f;
 			Status_HUD.player.addChatMessage(new TextComponentTranslation("yadokaris_shp.render.Reset"));
-			Rendering.updateAllText();
+			Rendering.updateAllTexts();
 		}
 
 		else if (displayKey.isPressed()) {
@@ -41,7 +41,7 @@ public class KeyPressEvent {
 				@Override
 				public void run() {
 					try {
-						new GuiSetting().setVisible(true);
+						new SettingGui().setVisible(true);
 					}
 					catch (Exception e) {
 						e.printStackTrace();
