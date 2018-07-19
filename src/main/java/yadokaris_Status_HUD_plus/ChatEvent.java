@@ -143,7 +143,7 @@ public class ChatEvent {
 					if (chat.contains(team)) {
 						Status_HUD.team = team;
 						Rendering.updateText(15);
-						if (Status_HUD.isChangeTeamColor) Status_HUD.color = TEAMS.get(team);
+						if (Status_HUD.doRender) Status_HUD.color = TEAMS.get(team);
 						break;
 					}
 				}
@@ -153,7 +153,7 @@ public class ChatEvent {
 			else if (chat.matches(".*You have been removed from your team") || chat.matches(".*Reset your password by visiting.*")) {
 				Status_HUD.team = "UnKnown";
 				Rendering.updateText(15);
-				if (Status_HUD.isChangeTeamColor) Status_HUD.color = Status_HUD.colorCash;
+				if (Status_HUD.doRender) Status_HUD.color = Status_HUD.colorCash;
 			}
 		}
 	}

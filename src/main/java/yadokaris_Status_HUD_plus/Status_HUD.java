@@ -30,8 +30,8 @@ public class Status_HUD {
 	static float totalKillCount, totalDeathCount, totalRate, ratekill, CountSword, killCountBow, deathCount, rate, killCountSword, attackingKillCount, defendingKillCount;
 	static int xp, totalXp, rankPoint, nexusDamage;
 	static int color, colorCash, x, y;
-	static boolean[] isShow = new boolean[16];
-	static boolean isRender, isRainbow, isChangeTeamColor;
+	static boolean[] doShow = new boolean[16];
+	static boolean doRender, isRainbow, doChangeTeamColor;
 	static String currentJob = "Civilian", rank = "UnKnown", team = "UnKnown", text = "";
 	
 
@@ -39,7 +39,7 @@ public class Status_HUD {
 	public void preInit(FMLPreInitializationEvent event) {
 		conf = new Configuration(event.getSuggestedConfigurationFile());
 		conf.load();
-		String colors = conf.getString("color", "render", "0x000000", "文字の色を設定します。16進法で指定してください。");
+		String colors = conf.getString("color", "render", "0xFFFFFF", "文字の色を設定します。16進法で指定してください。");
 
 		try {
 			color = Integer.decode(colors);
@@ -51,28 +51,28 @@ public class Status_HUD {
 		else if (color < 0) color = 0;
 		colorCash = color;
 
-		isShow[0] = conf.getBoolean("isShowText", "render", true, "ステータスの一番上に表示するテキストの表示(true) / 非表示(false)を設定します。");
-		isShow[1] = conf.getBoolean("isShowSwordKill", "render", true, "剣キルの表示(true) / 非表示(false)を設定します。");
-		isShow[2] = conf.getBoolean("isShowBowKill", "render", true, "弓キルの表示(true) / 非表示(false)を設定します。");
-		isShow[3] = conf.getBoolean("isShowAttackingKill", "render", true, "ネクサスキルの表示(true) / 非表示(false)を設定します。");
-		isShow[4] = conf.getBoolean("isShowDefendingKill", "render", true, "防衛キルの表示(true) / 非表示(false)を設定します。");
-		isShow[5] = conf.getBoolean("isShowDeath", "render", true, "デス数の表示(true) / 非表示(false)を設定します。");
-		isShow[6] = conf.getBoolean("isShowRate", "render", true, "K/Dレートの表示(true) / 非表示(false)を設定します。");
-		isShow[7] = conf.getBoolean("isShowTotalRate", "render", true, "総合K/Dレートの表示(true) / 非表示(false)を設定します。");
-		isShow[8] = conf.getBoolean("isShowNexusDamage", "render", true, "ネクサスダメージの表示(true) / 非表示(false)を設定します。");
-		isShow[9] = conf.getBoolean("isShowXP", "render", true, "獲得xpの表示(true) / 非表示(false)を設定します。");
-		isShow[10] = conf.getBoolean("isShowTotalXP", "render", true, "所持xpの表示(true) / 非表示(false)を設定します。");
-		isShow[11] = conf.getBoolean("isShowRank", "render", true, "ランクの表示(true) / 非表示(false)を設定します。");
-		isShow[12] = conf.getBoolean("isShowRankPoint", "render", true, "ランクポイントの表示(true) / 非表示(false)を設定します。");
-		isShow[13] = conf.getBoolean("isShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
-		isShow[14] = conf.getBoolean("isShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
-		isShow[15] = conf.getBoolean("isShowTeam", "render", true, "所属チームの表示(true) / 非表示(false)を設定します。");
+		doShow[0] = conf.getBoolean("doShowText", "render", true, "ステータスの一番上に表示するテキストの表示(true) / 非表示(false)を設定します。");
+		doShow[1] = conf.getBoolean("doShowSwordKill", "render", true, "剣キルの表示(true) / 非表示(false)を設定します。");
+		doShow[2] = conf.getBoolean("doShowBowKill", "render", true, "弓キルの表示(true) / 非表示(false)を設定します。");
+		doShow[3] = conf.getBoolean("doShowAttackingKill", "render", true, "ネクサスキルの表示(true) / 非表示(false)を設定します。");
+		doShow[4] = conf.getBoolean("doShowDefendingKill", "render", true, "防衛キルの表示(true) / 非表示(false)を設定します。");
+		doShow[5] = conf.getBoolean("doShowDeath", "render", true, "デス数の表示(true) / 非表示(false)を設定します。");
+		doShow[6] = conf.getBoolean("doShowRate", "render", true, "K/Dレートの表示(true) / 非表示(false)を設定します。");
+		doShow[7] = conf.getBoolean("doShowTotalRate", "render", true, "総合K/Dレートの表示(true) / 非表示(false)を設定します。");
+		doShow[8] = conf.getBoolean("doShowNexusDamage", "render", true, "ネクサスダメージの表示(true) / 非表示(false)を設定します。");
+		doShow[9] = conf.getBoolean("doShowXP", "render", true, "獲得xpの表示(true) / 非表示(false)を設定します。");
+		doShow[10] = conf.getBoolean("doShowTotalXP", "render", true, "所持xpの表示(true) / 非表示(false)を設定します。");
+		doShow[11] = conf.getBoolean("doShowRank", "render", true, "ランクの表示(true) / 非表示(false)を設定します。");
+		doShow[12] = conf.getBoolean("doShowRankPoint", "render", true, "ランクポイントの表示(true) / 非表示(false)を設定します。");
+		doShow[13] = conf.getBoolean("doShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
+		doShow[14] = conf.getBoolean("doShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
+		doShow[15] = conf.getBoolean("doShowTeam", "render", true, "所属チームの表示(true) / 非表示(false)を設定します。");
 		text = conf.getString("text", "render", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。");
 		x = conf.getInt("x", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のx座標を設定します。");
 		y = conf.getInt("y", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のy座標を設定します。");
-		isRender = conf.getBoolean("isRenderWhenStart", "render", true, "起動時のステータスの表示(true) / 非表示(false)を設定します。");
+		doRender = conf.getBoolean("doRenderWhenStart", "render", true, "起動時のステータスの表示(true) / 非表示(false)を設定します。");
 		isRainbow = conf.getBoolean("isRainbow", "render", false, "ステータスの文字を虹色にする(true) / しない(false)を設定します。");
-		isChangeTeamColor = conf.getBoolean("isChangeTeamColor", "render", false, "テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。");
+		doChangeTeamColor = conf.getBoolean("doChangeTeamColor", "render", false, "テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。");
 		conf.save();
 		
 		propFilePath = conf.getConfigFile().getParent() + "\\Status_HUD_Plus.xml";

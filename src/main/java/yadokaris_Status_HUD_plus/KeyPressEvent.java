@@ -23,6 +23,8 @@ public class KeyPressEvent {
 		if (resetKey.isPressed()) {
 			Status_HUD.killCountSword = 0;
 			Status_HUD.killCountBow = 0;
+			Status_HUD.attackingKillCount = 0;
+			Status_HUD.defendingKillCount = 0;
 			Status_HUD.deathCount = 0;
 			Status_HUD.xp = 0;
 			Status_HUD.nexusDamage = 0;
@@ -32,20 +34,17 @@ public class KeyPressEvent {
 		}
 
 		else if (displayKey.isPressed()) {
-			Status_HUD.isRender = !Status_HUD.isRender;
-			Status_HUD.player.addChatMessage(new TextComponentTranslation(Status_HUD.isRender ? "yadokaris_shp.render.Show" : "yadokaris_shp.render.Hide"));
+			Status_HUD.doRender = !Status_HUD.doRender;
+			Status_HUD.player.addChatMessage(new TextComponentTranslation(Status_HUD.doRender ? "yadokaris_shp.render.Show" : "yadokaris_shp.render.Hide"));
 		}
 
 		else if (settingKey.isPressed()) {
-			EventQueue.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						new SettingGui().setVisible(true);
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
+			EventQueue.invokeLater(() -> {
+				try {
+					new SettingGui().setVisible(true);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
 				}
 			});
 		}

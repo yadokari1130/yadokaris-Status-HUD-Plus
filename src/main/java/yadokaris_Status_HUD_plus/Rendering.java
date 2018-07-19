@@ -38,7 +38,7 @@ public class Rendering {
 
 		if (currentTick == 20) currentTick = 0;
 
-		if (Minecraft.getMinecraft().currentScreen == null && Status_HUD.isRender) {
+		if (Minecraft.getMinecraft().currentScreen == null && Status_HUD.doRender) {
 			if (Status_HUD.isRainbow && currentTick % 5 == 0) {
 				new Thread(() -> {
 					// Rainbow
@@ -73,7 +73,7 @@ public class Rendering {
 			
 			int showy = Status_HUD.y - 10;
 			for (int i = 0; i < TEXTS.length; i++) {
-				if (TEXTS[i].length() >= 1 && Status_HUD.isShow[i]) {
+				if (TEXTS[i].length() >= 1 && Status_HUD.doShow[i]) {
 					showy += 10;
 					Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(TEXTS[i], Status_HUD.x, showy, Status_HUD.color);
 				}
@@ -97,7 +97,7 @@ public class Rendering {
 		}
 		else isDeath = false;
 
-		if (Status_HUD.isShow[14]) {
+		if (Status_HUD.doShow[14]) {
 			fps = Minecraft.getDebugFPS();
 			updateText(14);
 		}
