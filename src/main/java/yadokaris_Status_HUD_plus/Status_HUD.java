@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Properties;
 
@@ -30,10 +29,10 @@ public class Status_HUD {
 	static float totalKillCount, totalDeathCount, totalRate, ratekill, CountSword, killCountBow, deathCount, rate, killCountSword, attackingKillCount, defendingKillCount;
 	static int xp, totalXp, rankPoint, nexusDamage;
 	static int color, colorCash, x, y;
-	static boolean[] doShow = new boolean[16];
+	static boolean[] doShow = new boolean[17];
 	static boolean doRender, isRainbow, doChangeTeamColor;
 	static String currentJob = "Civilian", rank = "UnKnown", team = "UnKnown", text = "";
-	
+
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -66,7 +65,8 @@ public class Status_HUD {
 		doShow[12] = conf.getBoolean("doShowRankPoint", "render", true, "ランクポイントの表示(true) / 非表示(false)を設定します。");
 		doShow[13] = conf.getBoolean("doShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
 		doShow[14] = conf.getBoolean("doShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
-		doShow[15] = conf.getBoolean("doShowTeam", "render", true, "所属チームの表示(true) / 非表示(false)を設定します。");
+		doShow[15] = conf.getBoolean("doShowCPS", "render", true, "CPSの表示(true) / 非表示(false)を設定します。");
+		doShow[16] = conf.getBoolean("doShowTeam", "render", true, "所属チームの表示(true) / 非表示(false)を設定します。");
 		text = conf.getString("text", "render", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。");
 		x = conf.getInt("x", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のx座標を設定します。");
 		y = conf.getInt("y", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のy座標を設定します。");
@@ -74,10 +74,10 @@ public class Status_HUD {
 		isRainbow = conf.getBoolean("isRainbow", "render", false, "ステータスの文字を虹色にする(true) / しない(false)を設定します。");
 		doChangeTeamColor = conf.getBoolean("doChangeTeamColor", "render", false, "テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。");
 		conf.save();
-		
+
 		propFilePath = conf.getConfigFile().getParent() + "\\Status_HUD_Plus.xml";
 		File propFile = new File(propFilePath);
-		
+
 		if (!propFile.exists()) {
 			prop.setProperty("killCount", "0");
 			prop.setProperty("deathCount", "0");
@@ -99,14 +99,14 @@ public class Status_HUD {
 
 	@EventHandler
 	public void Init(FMLInitializationEvent event) {
-		ClientRegistry.registerKeyBinding(KeyPressEvent.resetKey);
-		ClientRegistry.registerKeyBinding(KeyPressEvent.displayKey);
-		ClientRegistry.registerKeyBinding(KeyPressEvent.settingKey);
-		FMLCommonHandler.instance().bus().register(new KeyPressEvent());
+		ClientRegistry.registerKeyBinding(DevicePressEvent.resetKey);
+		ClientRegistry.registerKeyBinding(DevicePressEvent.displayKey);
+		ClientRegistry.registerKeyBinding(DevicePressEvent.settingKey);
+		FMLCommonHandler.instance().bus().register(new DevicePressEvent());
 		MinecraftForge.EVENT_BUS.register(new Rendering());
 		MinecraftForge.EVENT_BUS.register(new ChatEvent());
 	}
-	
+
 	public static void writeProperty() {
 		try (OutputStream writer = new FileOutputStream(propFilePath)) {
 			prop.storeToXML(writer, "Comment");

@@ -12,7 +12,7 @@ public class Rendering {
 	private static int colorRed, colorGreen;
 	private static int colorBlue = 255;
 	private static int plusColor;
-	private static int fps;
+	private static int fps, cps;
 	private static int currentTick;
 	private static final String[] TEXTS = {
 		String.format(Status_HUD.text, Status_HUD.playerName),
@@ -30,6 +30,7 @@ public class Rendering {
 		new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.FPS", fps).getFormattedText(),
+		new TextComponentTranslation("yadokaris_shp.render.CPS", cps).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team).getFormattedText()
 	};
 
@@ -70,7 +71,7 @@ public class Rendering {
 					Status_HUD.color = Integer.parseInt(red + green + blue, 16);
 				}).start();
 			}
-			
+
 			int showy = Status_HUD.y - 10;
 			for (int i = 0; i < TEXTS.length; i++) {
 				if (TEXTS[i].length() >= 1 && Status_HUD.doShow[i]) {
@@ -101,13 +102,19 @@ public class Rendering {
 			fps = Minecraft.getDebugFPS();
 			updateText(14);
 		}
-		
+
+		if (Status_HUD.doShow[15]) {
+			if (DevicePressEvent.clicks.size() != 0 && System.nanoTime() - (long)DevicePressEvent.clicks.get(0) > 1000000000l) DevicePressEvent.clicks.remove(0);
+			cps = (int)(DevicePressEvent.clicks.size() * 1.25f);
+			updateText(15);
+		}
+
 		currentTick++;
 	}
 
 	public static void updateText(int number) {
 		if (number > TEXTS.length - 1) return;
-		
+
 		TextComponentTranslation[] translations = {
 				new TextComponentTranslation("Dummy!"),
 				new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
@@ -124,15 +131,16 @@ public class Rendering {
 				new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
 				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
 				new TextComponentTranslation("yadokaris_shp.render.FPS", fps),
+				new TextComponentTranslation("yadokaris_shp.render.CPS", cps),
 				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
 		};
-		
+
 		if (number == 0) TEXTS[0] = String.format(Status_HUD.text, Status_HUD.playerName);
 		else TEXTS[number] = translations[number].getFormattedText();
 	}
-	
+
 	public static void updateTexts(int... numbers) {
-		
+
 		TextComponentTranslation[] translations = {
 				new TextComponentTranslation("Dummy!"),
 				new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
@@ -149,17 +157,18 @@ public class Rendering {
 				new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
 				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
 				new TextComponentTranslation("yadokaris_shp.render.FPS", fps),
+				new TextComponentTranslation("yadokaris_shp.render.CPS", cps),
 				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
 			};
-		
+
 		for (int number : numbers) {
 			if (number > TEXTS.length - 1) continue;
-			
+
 			if (number == 0) TEXTS[0] = String.format(Status_HUD.text, Status_HUD.playerName);
 			else TEXTS[number] = translations[number].getFormattedText();
 		}
 	}
-	
+
 	public static void updateAllTexts() {
 		TextComponentTranslation[] translations = {
 				new TextComponentTranslation("Dummy!"),
@@ -177,9 +186,10 @@ public class Rendering {
 				new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
 				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
 				new TextComponentTranslation("yadokaris_shp.render.FPS", fps),
+				new TextComponentTranslation("yadokaris_shp.render.CPS", cps),
 				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
 		};
-		
+
 		TEXTS[0] = String.format(Status_HUD.text, Status_HUD.playerName);
 		for (int i = 1; i < TEXTS.length; i++) TEXTS[i] = translations[i].getFormattedText();
 	}

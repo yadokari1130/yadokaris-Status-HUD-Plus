@@ -1,4 +1,4 @@
-
+﻿
 yadokaris_shp.key.Reset=リセットキー
 yadokaris_shp.key.Display=表示 / 非表示 切り替えキー
 yadokaris_shp.key.Setting=設定キー
@@ -16,6 +16,7 @@ yadokaris_shp.render.Rank=ランク：%s
 yadokaris_shp.render.RankPoint=必要なランクポイント：%d
 yadokaris_shp.render.CurrentJob=現在の職業：%s
 yadokaris_shp.render.FPS=FPS：%d
+yadokaris_shp.render.CPS=CPS：%d
 yadokaris_shp.render.Team=所属チーム：%s
 yadokaris_shp.render.Reset=リセットしました。
 yadokaris_shp.render.Hide=非表示にしました。
@@ -36,6 +37,7 @@ yadokaris_shp.setting.doShowRank=ランクの表示
 yadokaris_shp.setting.doShowRankPoint=ランクポイントの表示
 yadokaris_shp.setting.doShowCurrentJob=現在の職業の表示
 yadokaris_shp.setting.doShowFPS=FPSの表示
+yadokaris_shp.setting.doShowCPS=CPSの表示
 yadokaris_shp.setting.doShowTeam=所属チームの表示
 yadokaris_shp.setting.isRainbow=レインボーにするか
 yadokaris_shp.setting.doChangeTeamColor=文字の色をチームの色にするか

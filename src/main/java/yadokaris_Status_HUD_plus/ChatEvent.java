@@ -34,8 +34,8 @@ public class ChatEvent {
 			"GrandMaster-II", "GrandMaster-I", "Master-III", "Master-II", "Master-I", "Gold-III", "Gold-II", "Gold-I",
 			"Silver-III", "Silver-II", "Silver-I", "Novice-III", "Novice-II", "Novice-I"));
 	private static boolean isJoin;
-	
-	
+
+
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onChatReceived(ClientChatReceivedEvent event) {
@@ -83,7 +83,7 @@ public class ChatEvent {
 			}
 		}
 
-		
+
 		else if (!chat.contains(Status_HUD.playerName)) {
 
 			// ./killの時はカウントしない
@@ -120,7 +120,7 @@ public class ChatEvent {
 				Rendering.updateTexts(9, 10);
 			}
 
-			else if (chat.matches(".*You have [0-9]*xp.*")) { 
+			else if (chat.matches(".*You have [0-9]*xp.*")) {
 				Status_HUD.totalXp = Integer.parseInt(chat.replaceAll("[^0-9]", ""));
 				Rendering.updateText(10);
 			}
@@ -137,12 +137,12 @@ public class ChatEvent {
 					isJoin = false;
 				}).start();
 			}
-			
+
 			else if (chat.matches(".*team.*") && isJoin) {
 				for (String team : TEAMS.keySet()) {
 					if (chat.contains(team)) {
 						Status_HUD.team = team;
-						Rendering.updateText(15);
+						Rendering.updateText(16);
 						if (Status_HUD.doRender) Status_HUD.color = TEAMS.get(team);
 						break;
 					}
@@ -152,7 +152,7 @@ public class ChatEvent {
 
 			else if (chat.matches(".*You have been removed from your team") || chat.matches(".*Reset your password by visiting.*")) {
 				Status_HUD.team = "UnKnown";
-				Rendering.updateText(15);
+				Rendering.updateText(16);
 				if (Status_HUD.doRender) Status_HUD.color = Status_HUD.colorCash;
 			}
 		}
