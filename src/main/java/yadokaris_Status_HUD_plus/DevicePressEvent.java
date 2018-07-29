@@ -58,6 +58,6 @@ public class DevicePressEvent {
 	@SubscribeEvent
 	public void onMouseClicked(MouseEvent e) {
 		if (!e.isButtonstate() || e.getButton() != 0) return;
-		clicks.add(e.getNanoseconds());
+		clicks.add(System.nanoTime());
 	}
 }

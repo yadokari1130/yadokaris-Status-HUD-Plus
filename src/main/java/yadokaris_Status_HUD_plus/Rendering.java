@@ -103,9 +103,12 @@ public class Rendering {
 			updateText(14);
 		}
 
-		if (Status_HUD.doShow[15]) {
-			if (DevicePressEvent.clicks.size() != 0 && System.nanoTime() - (long)DevicePressEvent.clicks.get(0) > 1000000000l) DevicePressEvent.clicks.remove(0);
-			cps = (int)(DevicePressEvent.clicks.size() * 1.25f);
+		if (Status_HUD.doShow[15] && DevicePressEvent.clicks.size() > 0) {
+			while (System.nanoTime() - (long)DevicePressEvent.clicks.get(0) > 1000000000l) {
+				DevicePressEvent.clicks.remove(0);
+				if (DevicePressEvent.clicks.size() < 1) break;
+			}
+			cps = DevicePressEvent.clicks.size();
 			updateText(15);
 		}
 
