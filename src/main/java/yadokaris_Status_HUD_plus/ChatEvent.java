@@ -117,7 +117,7 @@ public class ChatEvent {
 					Status_HUD.xp += getxp;
 					Status_HUD.totalXp += getxp;
 				}
-				Rendering.updateTexts(9, 10);
+				Rendering.updateTexts(8, 9, 10);
 			}
 
 			else if (chat.matches(".*You have [0-9]*xp.*")) {
@@ -125,7 +125,7 @@ public class ChatEvent {
 				Rendering.updateText(10);
 			}
 
-			else if (chat.matches(".*You have joined the.*")) {
+			else if (chat.contains("You have joined the")) {
 				isJoin = true;
 				new Thread(() -> {
 					try {
@@ -138,7 +138,23 @@ public class ChatEvent {
 				}).start();
 			}
 
-			else if (chat.matches(".*team.*") && isJoin) {
+			//Rank
+			else if (chat.contains("Current rank:")) {
+				for (int i = 0; i < RANKS.size(); i++) {
+					if (chat.contains(RANKS.get(i))) {
+						Status_HUD.rank = RANKS.get(++i);
+						Rendering.updateText(11);
+						break;
+					}
+				}
+			}
+
+			else if (chat.contains("Points required:")) {
+				Status_HUD.rankPoint = Integer.parseInt(chat.replaceAll("[^0-9]", ""));
+				Rendering.updateText(12);
+			}
+
+			else if (chat.contains("team") && isJoin) {
 				for (String team : TEAMS.keySet()) {
 					if (chat.contains(team)) {
 						Status_HUD.team = team;
@@ -150,7 +166,7 @@ public class ChatEvent {
 				isJoin = false;
 			}
 
-			else if (chat.matches(".*You have been removed from your team") || chat.matches(".*Reset your password by visiting.*")) {
+			else if (chat.contains("You have been removed from your team") || chat.contains("Reset your password by visiting")) {
 				Status_HUD.team = "UnKnown";
 				Rendering.updateText(16);
 				if (Status_HUD.doRender) Status_HUD.color = Status_HUD.colorCash;

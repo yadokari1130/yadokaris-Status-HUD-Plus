@@ -14,6 +14,7 @@ public class Rendering {
 	private static int plusColor;
 	private static int fps, cps;
 	private static int currentTick;
+	private static long deathTime = System.currentTimeMillis();
 	private static final String[] TEXTS = {
 		String.format(Status_HUD.text, Status_HUD.playerName),
 		new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword).getFormattedText(),
@@ -82,8 +83,9 @@ public class Rendering {
 		}
 
 		if (Minecraft.getMinecraft().currentScreen instanceof GuiGameOver) {
-			if (!isDeath) {
+			if (!isDeath && System.currentTimeMillis() - deathTime > 500) {
 				isDeath = true;
+				deathTime = System.currentTimeMillis();
 				Status_HUD.deathCount += 1f;
 				Status_HUD.totalDeathCount += 1f;
 				Status_HUD.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
