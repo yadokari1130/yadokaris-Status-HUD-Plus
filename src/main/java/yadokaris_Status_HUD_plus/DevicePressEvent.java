@@ -32,14 +32,15 @@ public class DevicePressEvent {
 			Status_HUD.deathCount = 0;
 			Status_HUD.xp = 0;
 			Status_HUD.nexusDamage = 0;
+			Status_HUD.repairPoint = 0;
 			Status_HUD.rate = 0f;
-			Status_HUD.player.addChatMessage(new TextComponentTranslation("yadokaris_shp.render.Reset"));
+			Status_HUD.player.sendMessage(new TextComponentTranslation("yadokaris_shp.render.Reset"));
 			Rendering.updateAllTexts();
 		}
 
 		else if (displayKey.isPressed()) {
 			Status_HUD.doRender = !Status_HUD.doRender;
-			Status_HUD.player.addChatMessage(new TextComponentTranslation(Status_HUD.doRender ? "yadokaris_shp.render.Show" : "yadokaris_shp.render.Hide"));
+			Status_HUD.player.sendMessage(new TextComponentTranslation(Status_HUD.doRender ? "yadokaris_shp.render.Show" : "yadokaris_shp.render.Hide"));
 		}
 
 		else if (settingKey.isPressed()) {

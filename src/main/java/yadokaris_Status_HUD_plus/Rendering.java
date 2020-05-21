@@ -2,6 +2,7 @@ package yadokaris_Status_HUD_plus;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGameOver;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -25,8 +26,9 @@ public class Rendering {
 		new TextComponentTranslation("yadokaris_shp.render.Rate", Status_HUD.rate).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.TotalRate", Status_HUD.totalRate).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage).getFormattedText(),
+		new TextComponentTranslation("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.XP", Status_HUD.xp).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.TotalXP", (int)Status_HUD.totalXp).getFormattedText(),
+		new TextComponentTranslation("yadokaris_shp.render.TotalXP", Status_HUD.totalXp).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.Rank", Status_HUD.rank).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob).getFormattedText(),
@@ -37,6 +39,7 @@ public class Rendering {
 
 	@SubscribeEvent
 	public void onRender(TickEvent.RenderTickEvent event) {
+		GlStateManager.scale(Status_HUD.fontSize, Status_HUD.fontSize, Status_HUD.fontSize);
 
 		if (currentTick == 20) currentTick = 0;
 
@@ -77,32 +80,14 @@ public class Rendering {
 			for (int i = 0; i < TEXTS.length; i++) {
 				if (TEXTS[i].length() >= 1 && Status_HUD.doShow[i]) {
 					showy += 10;
-					Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(TEXTS[i], Status_HUD.x, showy, Status_HUD.color);
+					Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(TEXTS[i], Status_HUD.x, showy, Status_HUD.color);
 				}
 			}
 		}
 
-		if (Minecraft.getMinecraft().currentScreen instanceof GuiGameOver) {
-			if (!isDeath && System.currentTimeMillis() - deathTime > 500) {
-				isDeath = true;
-				deathTime = System.currentTimeMillis();
-				Status_HUD.deathCount += 1f;
-				Status_HUD.totalDeathCount += 1f;
-				Status_HUD.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
-				Status_HUD.rate = (Status_HUD.killCountSword + Status_HUD.killCountBow) / (Status_HUD.deathCount + 1f);
-				updateTexts(5, 6, 7);
-
-				new Thread(() -> {
-					Status_HUD.prop.setProperty("deathCount", "" + Status_HUD.totalDeathCount);
-					Status_HUD.writeProperty();
-				}).start();
-			}
-		}
-		else isDeath = false;
-
 		if (Status_HUD.doShow[14]) {
 			fps = Minecraft.getDebugFPS();
-			updateText(14);
+			updateText(Status.FPS);
 		}
 
 		if (Status_HUD.doShow[15] && DevicePressEvent.clicks.size() > 0) {
@@ -111,15 +96,34 @@ public class Rendering {
 				if (DevicePressEvent.clicks.size() < 1) break;
 			}
 			cps = DevicePressEvent.clicks.size();
-			updateText(15);
+			updateText(Status.CPS);
 		}
 
 		currentTick++;
 	}
 
-	public static void updateText(int number) {
-		if (number > TEXTS.length - 1) return;
+	@SubscribeEvent
+	public void onTick(TickEvent event) {
+		if (Minecraft.getMinecraft().currentScreen instanceof GuiGameOver) {
+			if (!isDeath && System.currentTimeMillis() - deathTime > 500) {
+				isDeath = true;
+				deathTime = System.currentTimeMillis();
+				Status_HUD.deathCount += 1f;
+				Status_HUD.totalDeathCount += 1f;
+				Status_HUD.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
+				Status_HUD.rate = (Status_HUD.killCountSword + Status_HUD.killCountBow) / (Status_HUD.deathCount + 1f);
+				updateTexts(Status.DeathCount, Status.Rate, Status.TotalRate);
 
+				new Thread(() -> {
+					Status_HUD.prop.setProperty("deathCount", "" + Status_HUD.totalDeathCount);
+					Status_HUD.writeProperty();
+				}).start();
+			}
+		}
+		else isDeath = false;
+	}
+
+	public static void updateText(Status status) {
 		TextComponentTranslation[] translations = {
 				new TextComponentTranslation("Dummy!"),
 				new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
@@ -130,8 +134,9 @@ public class Rendering {
 				new TextComponentTranslation("yadokaris_shp.render.Rate", Status_HUD.rate),
 				new TextComponentTranslation("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
 				new TextComponentTranslation("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
+				new TextComponentTranslation("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
 				new TextComponentTranslation("yadokaris_shp.render.XP", Status_HUD.xp),
-				new TextComponentTranslation("yadokaris_shp.render.TotalXP", (int)Status_HUD.totalXp),
+				new TextComponentTranslation("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
 				new TextComponentTranslation("yadokaris_shp.render.Rank", Status_HUD.rank),
 				new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
 				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
@@ -140,11 +145,11 @@ public class Rendering {
 				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
 		};
 
-		if (number == 0) TEXTS[0] = String.format(Status_HUD.text, Status_HUD.playerName);
-		else TEXTS[number] = translations[number].getFormattedText();
+		if (status == Status.Text) TEXTS[0] = String.format(Status_HUD.text, Status_HUD.playerName);
+		else TEXTS[status.ordinal()] = translations[status.ordinal()].getFormattedText();
 	}
 
-	public static void updateTexts(int... numbers) {
+	public static void updateTexts(Status... statuses) {
 
 		TextComponentTranslation[] translations = {
 				new TextComponentTranslation("Dummy!"),
@@ -156,21 +161,20 @@ public class Rendering {
 				new TextComponentTranslation("yadokaris_shp.render.Rate", Status_HUD.rate),
 				new TextComponentTranslation("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
 				new TextComponentTranslation("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
+				new TextComponentTranslation("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
 				new TextComponentTranslation("yadokaris_shp.render.XP", Status_HUD.xp),
-				new TextComponentTranslation("yadokaris_shp.render.TotalXP", (int)Status_HUD.totalXp),
+				new TextComponentTranslation("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
 				new TextComponentTranslation("yadokaris_shp.render.Rank", Status_HUD.rank),
 				new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
 				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
 				new TextComponentTranslation("yadokaris_shp.render.FPS", fps),
 				new TextComponentTranslation("yadokaris_shp.render.CPS", cps),
 				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
-			};
+		};
 
-		for (int number : numbers) {
-			if (number > TEXTS.length - 1) continue;
-
-			if (number == 0) TEXTS[0] = String.format(Status_HUD.text, Status_HUD.playerName);
-			else TEXTS[number] = translations[number].getFormattedText();
+		for (Status status : statuses) {
+			if (status == Status.Text) TEXTS[0] = String.format(Status_HUD.text, Status_HUD.playerName);
+			else TEXTS[status.ordinal()] = translations[status.ordinal()].getFormattedText();
 		}
 	}
 
@@ -185,8 +189,9 @@ public class Rendering {
 				new TextComponentTranslation("yadokaris_shp.render.Rate", Status_HUD.rate),
 				new TextComponentTranslation("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
 				new TextComponentTranslation("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
+				new TextComponentTranslation("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
 				new TextComponentTranslation("yadokaris_shp.render.XP", Status_HUD.xp),
-				new TextComponentTranslation("yadokaris_shp.render.TotalXP", (int)Status_HUD.totalXp),
+				new TextComponentTranslation("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
 				new TextComponentTranslation("yadokaris_shp.render.Rank", Status_HUD.rank),
 				new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
 				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),

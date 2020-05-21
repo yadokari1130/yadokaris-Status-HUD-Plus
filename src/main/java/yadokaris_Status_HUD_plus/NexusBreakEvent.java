@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiBossOverlay;
-import net.minecraft.world.BossInfoLerping;
+import net.minecraft.world.BossInfo;
 
 public class NexusBreakEvent {
 	static Set<String> bossNames = new HashSet<>();
@@ -49,9 +49,9 @@ public class NexusBreakEvent {
 			Field bossField = GuiBossOverlay.class.getDeclaredField(mapName);
 			bossField.setAccessible(true);
 
-			Map<UUID, BossInfoLerping> bossInfos = (Map<UUID, BossInfoLerping>) bossField.get(bossOverlay);
+			Map<UUID, BossInfo> bossInfos = (Map<UUID, BossInfo>) bossField.get(bossOverlay);
 
-			for (BossInfoLerping info : bossInfos.values()) names.add(info.getName().getFormattedText());
+			for (BossInfo info : bossInfos.values()) names.add(info.getName().getFormattedText());
 		}
 
 		return names;
