@@ -1,0 +1,31 @@
+{ 
+        "homepage": "https://forum.civa.jp/viewtopic.php?f=3&t=44", 
+        "promos": { 
+                "1.12.2-latest": "1.6.6"
+        }, 
+        "1.12.2": {
+                "1.6.4": "回復したネクサスポイント表示の追加、/dadoコマンド実行時にネクサスに関する情報を更新するように変更、一部の設定が反映されないバグを修正 / Added the display of recovered nexus points, changed to update nexus information when executing /dado command, fixed a bug where some settings were not reflected.",
+                "1.6.5": "チームによって文字の色を変える設定を有効にした時に保存が出来なかったバグを修正 / Fixed a bug that could not be saved when changing the color of text by team is enabled.",
+                "1.6.6": "アップデート通知機能の追加 / Update notification function added."
+        }, 
+        "1.12": {
+                "1.6": "現在の職業が反映されないバグを修正 / Fixed a bug where the current job is not reflected. \n 対応バージョンを1.12.xのみに変更 / Changed the supported version to 1.12.x only.",
+                "1.6.1": "使えない機能があったバグを修正 / Fixed a bug that prevented some features from working.",
+                "1.6.2": "/killコマンドを実行したときもデス数にカウントされていたバグを修正 / Fixed a bug where the death count was also counted when executing the /kill command.",
+                "1.6.3": "ネクサスダメージがカウントされないバグを修正 / Fixed a bug where nexus damage was not counted. \n 対応バージョンを1.12.2のみに変更 / Changed the supported version to 1.12.2 only.",
+        },
+        "1.10.2": {
+                "1.0": "MODをリリース / MOD is released.",
+                "1.1": "設定用GUIの追加、虹色の隠しコードの廃止、いらない機能の削除 / Added GUI for configuration, removed hidden code for rainbow colors, and removed unnecessary functions.",
+                "1.2": "ランク表示の追加、色の設定のバグを修正 / Added a rank display, fixed a bug in the color setting.", 
+                "1.2.1": "FPS表示の追加、バグ修正 / Added FPS display, fixed bugs.",
+                "1.3": "ネクサスダメージ表示を試験的に追加 / Nexus damage display added on a trial basis.",
+                "1.4": "所属チームの表示、チームによって文字の色を変える機能の追加 / Added team's name display and the ability to change the color of the text depending on the team. \n 1.11~1.12.xに対応 / Compatible with 1.11~1.12.x",
+                "1.4.1": "表示処理の最適化 / Optimizing the display process.",
+                "1.5": "ネクサスキル、防衛キル表示の追加、取得XPが反映されないバグを修正 / Added Nexus kill and Defense Kill display, fixed a bug that did not reflect XP acquisition. \n Javaの対応バージョンを7から8に変更 / Changed the support version of Java from 7 to 8.",
+                "1.5.1": "簡易的なCPS表示を追加 / Added a simple CPS display.",
+                "1.5.2": "CPSカウンターの精度を改善 / Improved accuracy of CPS counters.",
+                "1.5.3": "/rankコマンド実行時にランクを更新するように変更 / Changed to update the rank when the /rank command is executed.",
+                "1.5.4": "ネクサスダメージが更新されないバグを修正 / Fixed a bug that prevented nexus damage from being updated.",
+        }
+} 
