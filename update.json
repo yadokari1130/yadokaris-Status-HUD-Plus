@@ -12,7 +12,7 @@
                 "1.6": "現在の職業が反映されないバグを修正 / Fixed a bug where the current job is not reflected. \n 対応バージョンを1.12.xのみに変更 / Changed the supported version to 1.12.x only.",
                 "1.6.1": "使えない機能があったバグを修正 / Fixed a bug that prevented some features from working.",
                 "1.6.2": "/killコマンドを実行したときもデス数にカウントされていたバグを修正 / Fixed a bug where the death count was also counted when executing the /kill command.",
-                "1.6.3": "ネクサスダメージがカウントされないバグを修正 / Fixed a bug where nexus damage was not counted. \n 対応バージョンを1.12.2のみに変更 / Changed the supported version to 1.12.2 only.",
+                "1.6.3": "ネクサスダメージがカウントされないバグを修正 / Fixed a bug where nexus damage was not counted. \n 対応バージョンを1.12.2のみに変更 / Changed the supported version to 1.12.2 only."
         },
         "1.10.2": {
                 "1.0": "MODをリリース / MOD is released.",
@@ -26,6 +26,6 @@
                 "1.5.1": "簡易的なCPS表示を追加 / Added a simple CPS display.",
                 "1.5.2": "CPSカウンターの精度を改善 / Improved accuracy of CPS counters.",
                 "1.5.3": "/rankコマンド実行時にランクを更新するように変更 / Changed to update the rank when the /rank command is executed.",
-                "1.5.4": "ネクサスダメージが更新されないバグを修正 / Fixed a bug that prevented nexus damage from being updated.",
+                "1.5.4": "ネクサスダメージが更新されないバグを修正 / Fixed a bug that prevented nexus damage from being updated."
         }
 } 
