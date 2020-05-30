@@ -1,5 +1,7 @@
 package yadokaris_Status_HUD_plus;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,7 +10,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
+
+import com.google.gson.Gson;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -193,9 +205,43 @@ public class ChatEvent {
 	@SubscribeEvent
 	public void onJoinWorld(EntityJoinWorldEvent event) {
 		if (Status_HUD.player == null && Minecraft.getMinecraft().player != null) {
-			Status_HUD.player = Minecraft.getMinecraft().player;
+			EntityPlayer player = Minecraft.getMinecraft().player;
+			Status_HUD.player = player;
 			Status_HUD.playerName = Status_HUD.player.getName();
 			Rendering.updateText(Status.Text);
+
+			String update = null;
+			try {
+				update = IOUtils.toString(new URL("https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json"), "UTF-8");
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			Gson gson = new Gson();
+			Map map = gson.fromJson(update, Map.class);
+
+			String latest = ((Map<String, String>) map.get("promos")).get("1.12.2-latest");
+
+			if (!latest.equals(Status_HUD.version)) {
+				new Thread(() -> {
+					try {
+						Thread.sleep(5000);
+					}
+					catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					ClickEvent linkClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, (String)map.get("homepage"));
+					Style clickableStyle = new Style().setClickEvent(linkClickEvent).setColor(TextFormatting.BLUE);
+					Style color = new Style().setColor(TextFormatting.GREEN);
+					player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.message1").setStyle(color));
+					player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.message2").setStyle(clickableStyle));
+					player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.infomation"));
+					player.sendMessage(new TextComponentString("----------------------------------------------------------------------"));
+					player.sendMessage(new TextComponentString(((Map<String, String>) map.get("1.12.2")).get(latest)));
+					player.sendMessage(new TextComponentString("----------------------------------------------------------------------"));
+				}).start();
+			}
 		}
 	}
 }

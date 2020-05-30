@@ -49,3 +49,6 @@ yadokaris_shp.setting.settingFontSize=文字サイズの設定
 yadokaris_shp.setting.settingSave=保存
 yadokaris_shp.setting.colorButton=文字の色
 yadokaris_shp.setting.save=保存しました。
+yadokaris_shp.update.message1=yadokari's Status HUD Plusのアップデートがあります！
+yadokaris_shp.update.message2=クリックしてダウンロード
+yadokaris_shp.update.infomation=アップデート情報
