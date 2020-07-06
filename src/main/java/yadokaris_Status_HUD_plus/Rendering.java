@@ -1,7 +1,13 @@
 package yadokaris_Status_HUD_plus;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGameOver;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -14,6 +20,7 @@ public class Rendering {
 	private static int colorBlue = 255;
 	private static int plusColor;
 	private static int fps, cps;
+	private static String ping = "0ms";
 	private static int currentTick;
 	private static long deathTime = System.currentTimeMillis();
 	private static final String[] TEXTS = {
@@ -34,6 +41,7 @@ public class Rendering {
 		new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.FPS", fps).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.CPS", cps).getFormattedText(),
+		new TextComponentTranslation("yadokaris_shp.render.Ping", ping).getFormattedText(),
 		new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team).getFormattedText()
 	};
 
@@ -41,7 +49,48 @@ public class Rendering {
 	public void onRender(TickEvent.RenderTickEvent event) {
 		GlStateManager.scale(Status_HUD.fontSize, Status_HUD.fontSize, Status_HUD.fontSize);
 
-		if (currentTick == 20) currentTick = 0;
+		if (currentTick == 240) {
+			currentTick = 0;
+
+			ServerData server = Minecraft.getMinecraft().getCurrentServerData();
+			if (server != null) {
+				new Thread(() -> {
+					try {
+						String address = server.serverIP.contains(":") ? server.serverIP.substring(0, server.serverIP.indexOf(":")) : server.serverIP;
+						InetAddress target = InetAddress.getByName(address);
+
+						if (Status_HUD.osName.startsWith("windows")) {
+							String command[] = {"cmd", "/c", "chcp", "437", "&&", "ping", "-n", "1", "-w", "1000", target.getHostAddress()};
+							Process process = new ProcessBuilder(command).start();
+
+							try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+								String line;
+								while ((line = r.readLine()) != null) {
+									if (line.contains("Average = ")) ping = line.substring(line.lastIndexOf("= ") + 2);
+								}
+							}
+						}
+
+						if (Status_HUD.osName.startsWith("linux") || Status_HUD.osName.startsWith("mac")) {
+							String[] command = {"ping", "-c", "1", "-t", "255", target.getHostAddress()};
+							Process process = new ProcessBuilder(command).start();
+
+							try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+								String line;
+								while ((line = r.readLine()) != null) {
+									if (line.contains("time=")) ping = line.substring(line.lastIndexOf("=") + 1);
+								}
+							}
+						}
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}
+				}).start();
+
+				updateText(Status.Ping);
+			}
+		}
 
 		if (Minecraft.getMinecraft().currentScreen == null && Status_HUD.doRender) {
 			if (Status_HUD.isRainbow && currentTick % 5 == 0) {
@@ -142,6 +191,7 @@ public class Rendering {
 				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
 				new TextComponentTranslation("yadokaris_shp.render.FPS", fps),
 				new TextComponentTranslation("yadokaris_shp.render.CPS", cps),
+				new TextComponentTranslation("yadokaris_shp.render.Ping", ping),
 				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
 		};
 
@@ -169,6 +219,7 @@ public class Rendering {
 				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
 				new TextComponentTranslation("yadokaris_shp.render.FPS", fps),
 				new TextComponentTranslation("yadokaris_shp.render.CPS", cps),
+				new TextComponentTranslation("yadokaris_shp.render.Ping", ping),
 				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
 		};
 
@@ -197,6 +248,7 @@ public class Rendering {
 				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
 				new TextComponentTranslation("yadokaris_shp.render.FPS", fps),
 				new TextComponentTranslation("yadokaris_shp.render.CPS", cps),
+				new TextComponentTranslation("yadokaris_shp.render.Ping", ping),
 				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
 		};
 

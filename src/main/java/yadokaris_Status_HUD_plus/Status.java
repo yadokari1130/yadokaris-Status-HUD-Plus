@@ -18,5 +18,6 @@ public enum Status {
 	CurrentJob,
 	FPS,
 	CPS,
+	Ping,
 	Team
 }

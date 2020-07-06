@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.6.7", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
+@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.6.8", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
 public class Status_HUD {
 
 	private static String propFilePath;
@@ -32,12 +32,13 @@ public class Status_HUD {
 	static float totalKillCount, totalDeathCount, totalRate, ratekill, CountSword, killCountBow, deathCount, rate, killCountSword, attackingKillCount, defendingKillCount;
 	static int xp, totalXp, rankPoint, nexusDamage, repairPoint;
 	static int color, colorCash, x, y;
-	static boolean[] doShow = new boolean[18];
+	static boolean[] doShow = new boolean[19];
 	static boolean doRender, isRainbow, doChangeTeamColor;
 	static String currentJob = "Civilian", rank = "UnKnown", team = "UnKnown", text = "";
 	static double fontSize;
 	private static Field overlayMessageField = null;
-	static final String version = "1.6.7";
+	static final String version = "1.6.8";
+	static final String osName = System.getProperty("os.name").toLowerCase();
 
 
 	@EventHandler
@@ -73,6 +74,7 @@ public class Status_HUD {
 		doShow[Status.CurrentJob.ordinal()] = conf.getBoolean("doShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
 		doShow[Status.FPS.ordinal()] = conf.getBoolean("doShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
 		doShow[Status.CPS.ordinal()] = conf.getBoolean("doShowCPS", "render", true, "CPSの表示(true) / 非表示(false)を設定します。");
+		doShow[Status.Ping.ordinal()] = conf.getBoolean("doShowPing", "render", true, "Pingの表示(true) / 非表示(false)を設定します。");
 		doShow[Status.Team.ordinal()] = conf.getBoolean("doShowTeam", "render", true, "所属チームの表示(true) / 非表示(false)を設定します。");
 		text = conf.getString("text", "render", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。");
 		x = conf.getInt("x", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のx座標を設定します。");

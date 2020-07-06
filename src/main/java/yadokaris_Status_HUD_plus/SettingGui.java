@@ -39,6 +39,7 @@ public class SettingGui extends JFrame implements ActionListener {
 	private final JCheckBox checkBoxDoShowCurrentJob = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doShowCurrentJob").getUnformattedText());
 	private final JCheckBox checkBoxDoShowFPS = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doShowFPS").getUnformattedText());
 	private final JCheckBox checkBoxDoShowCPS = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doShowCPS").getUnformattedText());
+	private final JCheckBox checkBoxDoShowPing = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doShowPing").getUnformattedText());
 	private final JCheckBox checkBoxDoShowTeam = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doShowTeam").getUnformattedText());
 	private final JCheckBox checkBoxDoChangeTeamColor = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doChangeTeamColor").getUnformattedText());
 	private final JSpinner spinner_x = new JSpinner();
@@ -50,7 +51,7 @@ public class SettingGui extends JFrame implements ActionListener {
 	public SettingGui() {
 		setTitle("Status HUD Plus Settings");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 500, 500);
+		setBounds(100, 100, 500, 520);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -152,9 +153,14 @@ public class SettingGui extends JFrame implements ActionListener {
 		checkBoxDoShowCPS.setBounds(22, 397, 151, 21);
 		contentPane.add(checkBoxDoShowCPS);
 
+		checkBoxDoShowPing.setSelected(Status_HUD.doShow[Status.Ping.ordinal()]);
+		checkBoxDoShowPing.setBackground(Color.WHITE);
+		checkBoxDoShowPing.setBounds(22, 420, 151, 21);
+		contentPane.add(checkBoxDoShowPing);
+
 		checkBoxDoShowTeam.setSelected(Status_HUD.doShow[Status.Team.ordinal()]);
 		checkBoxDoShowTeam.setBackground(Color.WHITE);
-		checkBoxDoShowTeam.setBounds(22, 420, 151, 21);
+		checkBoxDoShowTeam.setBounds(22, 444, 151, 21);
 		contentPane.add(checkBoxDoShowTeam);
 
 		spinner_x.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
@@ -209,7 +215,7 @@ public class SettingGui extends JFrame implements ActionListener {
 		contentPane.add(txtpnY);
 
 		JButton button_set = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingSave").getUnformattedText());
-		button_set.setBounds(353, 424, 106, 27);
+		button_set.setBounds(354, 444, 106, 27);
 		button_set.addActionListener(this);
 		contentPane.add(button_set);
 
@@ -239,6 +245,7 @@ public class SettingGui extends JFrame implements ActionListener {
 		Status_HUD.doShow[Status.CurrentJob.ordinal()] = checkBoxDoShowCurrentJob.isSelected();
 		Status_HUD.doShow[Status.FPS.ordinal()] = checkBoxDoShowFPS.isSelected();
 		Status_HUD.doShow[Status.CPS.ordinal()] = checkBoxDoShowCPS.isSelected();
+		Status_HUD.doShow[Status.Ping.ordinal()] = checkBoxDoShowPing.isSelected();
 		Status_HUD.doShow[Status.Team.ordinal()] = checkBoxDoShowTeam.isSelected();
 		Status_HUD.text = textField.getText();
 		Status_HUD.x = (int)spinner_x.getValue();
@@ -266,6 +273,7 @@ public class SettingGui extends JFrame implements ActionListener {
 		Status_HUD.conf.get("render", "doShowJob", true, "現在の職業の表示(true) / 非表示(false)を設定します。").set(Status_HUD.doShow[Status.CurrentJob.ordinal()]);
 		Status_HUD.conf.get("render", "doShowFPS", true, "FPSの表示(true) / 非表示(false)を設定します。").set(Status_HUD.doShow[Status.FPS.ordinal()]);
 		Status_HUD.conf.get("render", "doShowCPS", true, "CPSの表示(true) / 非表示(false)を設定します。").set(Status_HUD.doShow[Status.CPS.ordinal()]);
+		Status_HUD.conf.get("render", "doShowPing", true, "Pingの表示(true) / 非表示(false)を設定します。").set(Status_HUD.doShow[Status.Ping.ordinal()]);
 		Status_HUD.conf.get("render", "doShowTeam", true, "所属チームの表示(true) / 非表示(false)を設定します。").set(Status_HUD.doShow[Status.Team.ordinal()]);
 		Status_HUD.conf.get("render", "text", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。").set(Status_HUD.text);
 		Status_HUD.conf.get("render", "x", 2, "ステータスの画面上のx座標を設定します。", 0, Integer.MAX_VALUE).set(Status_HUD.x);

@@ -1,13 +1,14 @@
 { 
         "homepage": "https://forum.civa.jp/viewtopic.php?f=3&t=44", 
         "promos": { 
-                "1.12.2-latest": "1.6.7"
+                "1.12.2-latest": "1.6.8"
         }, 
         "1.12.2": {
                 "1.6.4": "回復したネクサスポイント表示の追加、/dadoコマンド実行時にネクサスに関する情報を更新するように変更、一部の設定が反映されないバグを修正\nAdded the display of recovered nexus points, changed to update nexus information when executing /dado command, fixed a bug where some settings were not reflected.",
                 "1.6.5": "チームによって文字の色を変える設定を有効にした時に保存が出来なかったバグを修正\nFixed a bug that could not be saved when changing the color of text by team is enabled.",
                 "1.6.6": "アップデート通知機能の追加\nUpdate notification function added.",
-                "1.6.7": "チャットでもアップデート通知をするように変更\nChanged to provide update notifications in chat as well."
+                "1.6.7": "チャットでもアップデート通知をするように変更\nChanged to provide update notifications in chat as well.",
+                "1.6.8": "Ping表示の追加\nAdded the display of Ping."
         }, 
         "1.12": {
                 "1.6": "現在の職業が反映されないバグを修正\nFixed a bug where the current job is not reflected.\n対応バージョンを1.12.xのみに変更\nChanged the supported version to 1.12.x only.",
