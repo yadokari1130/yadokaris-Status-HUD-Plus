@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.Gson;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
@@ -128,13 +129,15 @@ public class ChatEvent {
 
 			// XP
 			else if (chat.matches(".*\\+[0-9]* Shotbow Xp")) {
-				int getxp = Integer.parseInt(chat.replaceAll("[^0-9]", ""));
-				if (getxp != 0) {
+				int getXP = Integer.parseInt(chat.replaceAll("[^0-9]", ""));
+				if (getXP != 0) {
 					if (Status_HUD.getActionbar().contains(Status_HUD.playerName)) Status_HUD.nexusDamage++;
-					Status_HUD.xp += getxp;
-					Status_HUD.totalXp += getxp;
+					Status_HUD.xp += getXP;
+					Status_HUD.totalXp += getXP;
+					Status_HUD.rankPoint -= (int)((float)getXP / Status_HUD.serverMultiple / Status_HUD.multiple);
+					if (Status_HUD.rankPoint <= 0) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/rank");
 				}
-				Rendering.updateTexts(Status.NexusDamage, Status.XP, Status.TotalXP);
+				Rendering.updateTexts(Status.NexusDamage, Status.XP, Status.TotalXP, Status.RankPoint);
 			}
 
 			else if (chat.matches(".*You have [0-9]*xp.*")) {
@@ -181,13 +184,21 @@ public class ChatEvent {
 					}
 				}
 				isJoin = false;
+
+				Status_HUD.isCheck = true;
+				((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
 			}
 
 			else if (chat.contains("You have been removed from your team") || chat.contains("Reset your password by visiting")) {
 				Status_HUD.team = "UnKnown";
 				Status_HUD.currentJob = "Civilian";
+				Status_HUD.isCheck = false;
 				Rendering.updateTexts(Status.CurrentJob, Status.Team);
 				if (Status_HUD.doRender) Status_HUD.color = Status_HUD.colorCash;
+			}
+
+			else if (chat.contains("Current Multiplier:")) {
+				Status_HUD.multiple = Float.parseFloat(chat.replaceAll("[^0-9].", ""));
 			}
 
 			if (chat.contains("T") && chat.contains("R") && chat.contains("G") && chat.contains("B") && chat.contains("Y")) {
@@ -210,38 +221,43 @@ public class ChatEvent {
 			Status_HUD.playerName = Status_HUD.player.getName();
 			Rendering.updateText(Status.Text);
 
-			String update = null;
-			try {
-				update = IOUtils.toString(new URL("https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json"), "UTF-8");
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
 
-			Gson gson = new Gson();
-			Map map = gson.fromJson(update, Map.class);
+			new Thread(() -> {
+				String update = null;
+				try {
+					update = IOUtils.toString(new URL("https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json"), "UTF-8");
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 
-			String latest = ((Map<String, String>) map.get("promos")).get("1.12.2-latest");
+				Gson gson = new Gson();
+				Map map = gson.fromJson(update, Map.class);
 
-			if (!latest.equals(Status_HUD.version)) {
-				new Thread(() -> {
-					try {
-						Thread.sleep(5000);
-					}
-					catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					ClickEvent linkClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, (String)map.get("homepage"));
-					Style clickableStyle = new Style().setClickEvent(linkClickEvent).setColor(TextFormatting.BLUE);
-					Style color = new Style().setColor(TextFormatting.GREEN);
-					player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.message1").setStyle(color));
-					player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.message2").setStyle(clickableStyle));
-					player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.infomation"));
-					player.sendMessage(new TextComponentString("----------------------------------------------------------------------"));
-					player.sendMessage(new TextComponentString(((Map<String, String>) map.get("1.12.2")).get(latest)));
-					player.sendMessage(new TextComponentString("----------------------------------------------------------------------"));
-				}).start();
-			}
+				String latest = ((Map<String, String>) map.get("promos")).get("1.12.2-latest");
+
+				if (!latest.equals(Status_HUD.version)) {
+					new Thread(() -> {
+						try {
+							Thread.sleep(5000);
+						}
+						catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						ClickEvent linkClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, (String)map.get("homepage"));
+						Style clickableStyle = new Style().setClickEvent(linkClickEvent).setColor(TextFormatting.BLUE);
+						Style color = new Style().setColor(TextFormatting.GREEN);
+						player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.message1").setStyle(color));
+						player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.message2").setStyle(clickableStyle));
+						player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.infomation"));
+						player.sendMessage(new TextComponentString("----------------------------------------------------------------------"));
+						player.sendMessage(new TextComponentString(((Map<String, String>) map.get("1.12.2")).get(latest)));
+						player.sendMessage(new TextComponentString("----------------------------------------------------------------------"));
+					}).start();
+				}
+
+				Status_HUD.serverMultiple = Float.parseFloat((String) map.get("serverMultiple"));
+			}).start();
 		}
 	}
 }

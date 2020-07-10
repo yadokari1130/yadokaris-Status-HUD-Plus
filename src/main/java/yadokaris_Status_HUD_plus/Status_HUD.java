@@ -8,8 +8,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,7 +24,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.6.8", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
+@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.6.9", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
 public class Status_HUD {
 
 	private static String propFilePath;
@@ -37,9 +40,10 @@ public class Status_HUD {
 	static String currentJob = "Civilian", rank = "UnKnown", team = "UnKnown", text = "";
 	static double fontSize;
 	private static Field overlayMessageField = null;
-	static final String version = "1.6.8";
+	static final String version = "1.6.9";
 	static final String osName = System.getProperty("os.name").toLowerCase();
-
+	static float multiple = 1, serverMultiple = 1;
+	static boolean isCheck = false;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -118,6 +122,17 @@ public class Status_HUD {
 		MinecraftForge.EVENT_BUS.register(new DevicePressEvent());
 		MinecraftForge.EVENT_BUS.register(new Rendering());
 		MinecraftForge.EVENT_BUS.register(new ChatEvent());
+
+		Timer timer = new Timer();
+		TimerTask checkTask = new TimerTask() {
+
+			@Override
+			public void run() {
+				if (isCheck) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
+			}
+		};
+
+		timer.scheduleAtFixedRate(checkTask, 1000, 5 * 1000 * 60);
 	}
 
 	public static void writeProperty() {
