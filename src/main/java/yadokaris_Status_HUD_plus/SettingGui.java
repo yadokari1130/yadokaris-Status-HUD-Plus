@@ -16,6 +16,7 @@ import javax.swing.JTextPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.text.TextComponentTranslation;
 
 public class SettingGui extends JFrame implements ActionListener {
@@ -286,6 +287,7 @@ public class SettingGui extends JFrame implements ActionListener {
 
 		Status_HUD.conf.save();
 		Rendering.updateAllTexts();
+		if (Status_HUD.doShow[Status.RankPoint.ordinal()] && Status_HUD.player != null) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
 
 		JOptionPane.showMessageDialog(new SettingGui(), new TextComponentTranslation("yadokaris_shp.setting.save").getUnformattedText());
 	}

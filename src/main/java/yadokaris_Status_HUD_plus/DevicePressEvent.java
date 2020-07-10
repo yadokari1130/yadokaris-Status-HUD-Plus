@@ -40,6 +40,7 @@ public class DevicePressEvent {
 
 		else if (displayKey.isPressed()) {
 			Status_HUD.doRender = !Status_HUD.doRender;
+			Status_HUD.doCheck = Status_HUD.doRender;
 			Status_HUD.player.sendMessage(new TextComponentTranslation(Status_HUD.doRender ? "yadokaris_shp.render.Show" : "yadokaris_shp.render.Hide"));
 		}
 

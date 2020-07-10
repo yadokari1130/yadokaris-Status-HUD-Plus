@@ -185,14 +185,14 @@ public class ChatEvent {
 				}
 				isJoin = false;
 
-				Status_HUD.isCheck = true;
-				((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
+				Status_HUD.doCheck = true;
+				if (Status_HUD.doShow[Status.RankPoint.ordinal()]) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
 			}
 
 			else if (chat.contains("You have been removed from your team") || chat.contains("Reset your password by visiting")) {
 				Status_HUD.team = "UnKnown";
 				Status_HUD.currentJob = "Civilian";
-				Status_HUD.isCheck = false;
+				Status_HUD.doCheck = false;
 				Rendering.updateTexts(Status.CurrentJob, Status.Team);
 				if (Status_HUD.doRender) Status_HUD.color = Status_HUD.colorCash;
 			}
@@ -245,7 +245,7 @@ public class ChatEvent {
 							e.printStackTrace();
 						}
 						ClickEvent linkClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, (String)map.get("homepage"));
-						Style clickableStyle = new Style().setClickEvent(linkClickEvent).setColor(TextFormatting.BLUE);
+						Style clickableStyle = new Style().setClickEvent(linkClickEvent).setColor(TextFormatting.AQUA);
 						Style color = new Style().setColor(TextFormatting.GREEN);
 						player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.message1").setStyle(color));
 						player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.message2").setStyle(clickableStyle));

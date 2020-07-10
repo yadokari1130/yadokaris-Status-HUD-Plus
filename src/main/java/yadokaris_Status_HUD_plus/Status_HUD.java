@@ -43,7 +43,7 @@ public class Status_HUD {
 	static final String version = "1.6.9";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
-	static boolean isCheck = false;
+	static boolean doCheck = false;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -128,7 +128,7 @@ public class Status_HUD {
 
 			@Override
 			public void run() {
-				if (isCheck) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
+				if (doCheck && doShow[Status.RankPoint.ordinal()]) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
 			}
 		};
 
