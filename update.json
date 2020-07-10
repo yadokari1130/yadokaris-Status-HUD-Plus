@@ -1,5 +1,6 @@
 { 
         "homepage": "https://forum.civa.jp/viewtopic.php?f=3&t=44", 
+        "serverMultiple": "2",
         "promos": { 
                 "1.12.2-latest": "1.6.8"
         }, 
