@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.6.9", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
+@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.6.10", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
 public class Status_HUD {
 
 	private static String propFilePath;
@@ -40,7 +40,7 @@ public class Status_HUD {
 	static String currentJob = "Civilian", rank = "UnKnown", team = "UnKnown", text = "";
 	static double fontSize;
 	private static Field overlayMessageField = null;
-	static final String version = "1.6.9";
+	static final String version = "1.6.10";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;

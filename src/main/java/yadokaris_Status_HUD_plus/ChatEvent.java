@@ -162,7 +162,7 @@ public class ChatEvent {
 			else if (chat.contains("Current rank:")) {
 				for (int i = 0; i < RANKS.size(); i++) {
 					if (chat.contains(RANKS.get(i))) {
-						Status_HUD.rank = RANKS.get(++i);
+						Status_HUD.rank = RANKS.get(i);
 						Rendering.updateText(Status.Rank);
 						break;
 					}
