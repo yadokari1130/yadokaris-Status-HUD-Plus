@@ -2,8 +2,12 @@
         "homepage": "https://forum.civa.jp/viewtopic.php?f=3&t=44", 
         "serverMultiple": "1",
         "promos": { 
-                "1.12.2-latest": "1.6.10"
+                "1.12.2-latest": "1.7",
+                "1.16.1-latest": "1.7"
         }, 
+        "1.16.1": {
+                "1.7": "軽微なプログラム修正、1.16.1に対応"
+        },
         "1.12.2": {
                 "1.6.4": "回復したネクサスポイント表示の追加、/dadoコマンド実行時にネクサスに関する情報を更新するように変更、一部の設定が反映されないバグを修正\nAdded the recovered nexus points display, changed to update nexus information when executing /dado command, fixed a bug where some settings were not reflected.",
                 "1.6.5": "チームによって文字の色を変える設定を有効にした時に保存が出来なかったバグを修正\nFixed a bug that could not be saved when changing the color of text by team is enabled.",

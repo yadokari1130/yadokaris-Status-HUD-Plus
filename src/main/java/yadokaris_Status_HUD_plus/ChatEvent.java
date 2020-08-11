@@ -66,7 +66,7 @@ public class ChatEvent {
 					}
 				}
 
-				Status_HUD.rankPoint = Integer.parseInt(chat.replace(Status_HUD.player.getName(), "").replaceAll("[^0-9]", ""));
+				Status_HUD.rankPoint = Integer.parseInt(chat.replace(Status_HUD.playerName, "").replaceAll("[^0-9]", ""));
 				Rendering.updateTexts(Status.Rank, Status.RankPoint);
 			}
 
