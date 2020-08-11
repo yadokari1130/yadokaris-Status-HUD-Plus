@@ -15,19 +15,20 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.Gson;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ChatEvent {
 
 	private final Set<String> JOBS = new HashSet<String>(Arrays.asList("Acrobat", "Alchemist", "Archer", "Assassin",
@@ -48,12 +49,11 @@ public class ChatEvent {
 			"Silver-III", "Silver-II", "Silver-I", "Novice-III", "Novice-II", "Novice-I"));
 	private static boolean isJoin;
 
-
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public void onChatReceived(ClientChatReceivedEvent event) {
 
-		String chat = event.getMessage().getUnformattedText();
+		String chat = event.getMessage().getString();
 
 		if (chat.contains(Status_HUD.playerName)) {
 
@@ -66,7 +66,7 @@ public class ChatEvent {
 					}
 				}
 
-				Status_HUD.rankPoint = Integer.parseInt(chat.replace(Status_HUD.playerName, "").replaceAll("[^0-9]", ""));
+				Status_HUD.rankPoint = Integer.parseInt(chat.replace(Status_HUD.player.getName().getString(), "").replaceAll("[^0-9]", ""));
 				Rendering.updateTexts(Status.Rank, Status.RankPoint);
 			}
 
@@ -135,7 +135,7 @@ public class ChatEvent {
 					Status_HUD.xp += getXP;
 					Status_HUD.totalXp += getXP;
 					Status_HUD.rankPoint -= (int)((float)getXP / Status_HUD.serverMultiple / Status_HUD.multiple);
-					if (Status_HUD.rankPoint <= 0) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/rank");
+					if (Status_HUD.rankPoint <= 0) (Status_HUD.player).sendChatMessage("/rank");
 				}
 				Rendering.updateTexts(Status.NexusDamage, Status.XP, Status.TotalXP, Status.RankPoint);
 			}
@@ -179,14 +179,14 @@ public class ChatEvent {
 					if (chat.contains(team)) {
 						Status_HUD.team = team;
 						Rendering.updateText(Status.Team);
-						if (Status_HUD.doRender) Status_HUD.color = TEAMS.get(team);
+						if (SHPConfig.doRender.get()) Status_HUD.color = TEAMS.get(team);
 						break;
 					}
 				}
 				isJoin = false;
 
 				Status_HUD.doCheck = true;
-				if (Status_HUD.doShow[Status.RankPoint.ordinal()]) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
+				if (SHPConfig.doShow[Status.RankPoint.ordinal()].get()) Status_HUD.player.sendChatMessage("/multiplier");
 			}
 
 			else if (chat.contains("You have been removed from your team") || chat.contains("Reset your password by visiting")) {
@@ -194,7 +194,7 @@ public class ChatEvent {
 				Status_HUD.currentJob = "Civilian";
 				Status_HUD.doCheck = false;
 				Rendering.updateTexts(Status.CurrentJob, Status.Team);
-				if (Status_HUD.doRender) Status_HUD.color = Status_HUD.colorCash;
+				if (SHPConfig.doRender.get()) Status_HUD.color = Status_HUD.colorCash;
 			}
 
 			else if (chat.contains("Current Multiplier:")) {
@@ -212,15 +212,14 @@ public class ChatEvent {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public void onJoinWorld(EntityJoinWorldEvent event) {
-		if (Status_HUD.player == null && Minecraft.getMinecraft().player != null) {
-			EntityPlayer player = Minecraft.getMinecraft().player;
+		if (Status_HUD.player == null && Minecraft.getInstance().player != null) {
+			ClientPlayerEntity player = Minecraft.getInstance().player;
 			Status_HUD.player = player;
-			Status_HUD.playerName = Status_HUD.player.getName();
-			Rendering.updateText(Status.Text);
-
+			Status_HUD.playerName = Status_HUD.player.getName().getString();
+			Rendering.updateAllTexts();
 
 			new Thread(() -> {
 				String update = null;
@@ -234,7 +233,7 @@ public class ChatEvent {
 				Gson gson = new Gson();
 				Map map = gson.fromJson(update, Map.class);
 
-				String latest = ((Map<String, String>) map.get("promos")).get("1.12.2-latest");
+				String latest = ((Map<String, String>) map.get("promos")).get("1.16.1-latest");
 
 				if (!latest.equals(Status_HUD.version)) {
 					new Thread(() -> {
@@ -245,14 +244,14 @@ public class ChatEvent {
 							e.printStackTrace();
 						}
 						ClickEvent linkClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, (String)map.get("homepage"));
-						Style clickableStyle = new Style().setClickEvent(linkClickEvent).setColor(TextFormatting.AQUA);
-						Style color = new Style().setColor(TextFormatting.GREEN);
-						player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.message1").setStyle(color));
-						player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.message2").setStyle(clickableStyle));
-						player.sendMessage(new TextComponentTranslation("yadokaris_shp.update.infomation"));
-						player.sendMessage(new TextComponentString("----------------------------------------------------------------------"));
-						player.sendMessage(new TextComponentString(((Map<String, String>) map.get("1.12.2")).get(latest)));
-						player.sendMessage(new TextComponentString("----------------------------------------------------------------------"));
+						Style clickableStyle = Style.field_240709_b_.func_240715_a_(linkClickEvent).func_240712_a_(TextFormatting.AQUA);
+						Style color = Style.field_240709_b_.func_240712_a_(TextFormatting.GREEN);
+						player.sendMessage(new TranslationTextComponent("yadokaris_shp.update.message1").func_230530_a_(color), null);
+						player.sendMessage(new TranslationTextComponent("yadokaris_shp.update.message2").func_230530_a_(clickableStyle), null);
+						player.sendMessage(new TranslationTextComponent("yadokaris_shp.update.infomation"), null);
+						player.sendMessage(new StringTextComponent("----------------------------------------------------------------------"), null);
+						player.sendMessage(new StringTextComponent(((Map<String, String>) map.get("1.16.1")).get(latest)), null);
+						player.sendMessage(new StringTextComponent("----------------------------------------------------------------------"), null);
 					}).start();
 				}
 

@@ -5,14 +5,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGameOver;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.DeathScreen;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Rendering {
 
 	private static boolean isDeath;
@@ -24,35 +28,35 @@ public class Rendering {
 	private static int currentTick;
 	private static long deathTime = System.currentTimeMillis();
 	private static final String[] TEXTS = {
-		String.format(Status_HUD.text, Status_HUD.playerName),
-		new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.Rate", Status_HUD.rate).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.TotalRate", Status_HUD.totalRate).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.XP", Status_HUD.xp).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.TotalXP", Status_HUD.totalXp).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.Rank", Status_HUD.rank).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.FPS", fps).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.CPS", cps).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.Ping", ping).getFormattedText(),
-		new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team).getFormattedText()
+		String.format(SHPConfig.text.get(), Status_HUD.playerName),
+		new TranslationTextComponent("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.Rate", Status_HUD.rate).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.TotalRate", Status_HUD.totalRate).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.XP", Status_HUD.xp).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.TotalXP", Status_HUD.totalXp).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.Rank", Status_HUD.rank).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.FPS", fps).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.CPS", cps).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.Ping", ping).getString(),
+		new TranslationTextComponent("yadokaris_shp.render.Team", Status_HUD.team).getString()
 	};
 
 	@SubscribeEvent
 	public void onRender(TickEvent.RenderTickEvent event) {
-		GlStateManager.scale(Status_HUD.fontSize, Status_HUD.fontSize, Status_HUD.fontSize);
+		GlStateManager.scaled(SHPConfig.fontSize.get().doubleValue(), SHPConfig.fontSize.get().doubleValue(), SHPConfig.fontSize.get().doubleValue());
 
 		if (currentTick == 240) {
 			currentTick = 0;
 
-			ServerData server = Minecraft.getMinecraft().getCurrentServerData();
+			ServerData server = Minecraft.getInstance().getCurrentServerData();
 			if (server != null) {
 				new Thread(() -> {
 					try {
@@ -92,8 +96,8 @@ public class Rendering {
 			}
 		}
 
-		if (Minecraft.getMinecraft().currentScreen == null && Status_HUD.doRender) {
-			if (Status_HUD.isRainbow && currentTick % 5 == 0) {
+		if (Minecraft.getInstance().currentScreen == null && SHPConfig.doRender.get()) {
+			if (SHPConfig.isRainbow.get() && currentTick % 5 == 0) {
 				new Thread(() -> {
 					// Rainbow
 					switch (plusColor) {
@@ -125,21 +129,20 @@ public class Rendering {
 				}).start();
 			}
 
-			int showy = Status_HUD.y - 10;
+			float showy = SHPConfig.y.get().floatValue() - 10;
 			for (int i = 0; i < TEXTS.length; i++) {
-				if (TEXTS[i].length() >= 1 && Status_HUD.doShow[i]) {
+				if (TEXTS[i].length() >= 1 && SHPConfig.doShow[i].get()) {
 					showy += 10;
-					Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(TEXTS[i], Status_HUD.x, showy, Status_HUD.color);
+					Minecraft.getInstance().fontRenderer.func_238405_a_(new MatrixStack(), TEXTS[i], SHPConfig.x.get().floatValue(), showy, Status_HUD.color);
 				}
 			}
 		}
 
-		if (Status_HUD.doShow[14]) {
-			fps = Minecraft.getDebugFPS();
+		if (SHPConfig.doShow[Status.FPS.ordinal()].get()) {
 			updateText(Status.FPS);
 		}
 
-		if (Status_HUD.doShow[15] && DevicePressEvent.clicks.size() > 0) {
+		if (SHPConfig.doShow[Status.CPS.ordinal()].get() && DevicePressEvent.clicks.size() > 0) {
 			while (System.nanoTime() - (long)DevicePressEvent.clicks.get(0) > 1000000000l) {
 				DevicePressEvent.clicks.remove(0);
 				if (DevicePressEvent.clicks.size() < 1) break;
@@ -153,7 +156,7 @@ public class Rendering {
 
 	@SubscribeEvent
 	public void onTick(TickEvent event) {
-		if (Minecraft.getMinecraft().currentScreen instanceof GuiGameOver) {
+		if (Minecraft.getInstance().currentScreen instanceof DeathScreen) {
 			if (!isDeath && System.currentTimeMillis() - deathTime > 500) {
 				isDeath = true;
 				deathTime = System.currentTimeMillis();
@@ -173,86 +176,86 @@ public class Rendering {
 	}
 
 	public static void updateText(Status status) {
-		TextComponentTranslation[] translations = {
-				new TextComponentTranslation("Dummy!"),
-				new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
-				new TextComponentTranslation("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow),
-				new TextComponentTranslation("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount),
-				new TextComponentTranslation("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount),
-				new TextComponentTranslation("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount),
-				new TextComponentTranslation("yadokaris_shp.render.Rate", Status_HUD.rate),
-				new TextComponentTranslation("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
-				new TextComponentTranslation("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
-				new TextComponentTranslation("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
-				new TextComponentTranslation("yadokaris_shp.render.XP", Status_HUD.xp),
-				new TextComponentTranslation("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
-				new TextComponentTranslation("yadokaris_shp.render.Rank", Status_HUD.rank),
-				new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
-				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
-				new TextComponentTranslation("yadokaris_shp.render.FPS", fps),
-				new TextComponentTranslation("yadokaris_shp.render.CPS", cps),
-				new TextComponentTranslation("yadokaris_shp.render.Ping", ping),
-				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
+		TranslationTextComponent[] translations = {
+				new TranslationTextComponent("Dummy!"),
+				new TranslationTextComponent("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
+				new TranslationTextComponent("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow),
+				new TranslationTextComponent("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount),
+				new TranslationTextComponent("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount),
+				new TranslationTextComponent("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount),
+				new TranslationTextComponent("yadokaris_shp.render.Rate", Status_HUD.rate),
+				new TranslationTextComponent("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
+				new TranslationTextComponent("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
+				new TranslationTextComponent("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
+				new TranslationTextComponent("yadokaris_shp.render.XP", Status_HUD.xp),
+				new TranslationTextComponent("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
+				new TranslationTextComponent("yadokaris_shp.render.Rank", Status_HUD.rank),
+				new TranslationTextComponent("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
+				new TranslationTextComponent("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
+				new TranslationTextComponent("yadokaris_shp.render.FPS", Status_HUD.getFPS()),
+				new TranslationTextComponent("yadokaris_shp.render.CPS", cps),
+				new TranslationTextComponent("yadokaris_shp.render.Ping", ping),
+				new TranslationTextComponent("yadokaris_shp.render.Team", Status_HUD.team)
 		};
 
-		if (status == Status.Text) TEXTS[0] = String.format(Status_HUD.text, Status_HUD.playerName);
-		else TEXTS[status.ordinal()] = translations[status.ordinal()].getFormattedText();
+		if (status == Status.Text) TEXTS[0] = String.format(SHPConfig.text.get(), Status_HUD.playerName);
+		else TEXTS[status.ordinal()] = translations[status.ordinal()].getString();
 	}
 
 	public static void updateTexts(Status... statuses) {
 
-		TextComponentTranslation[] translations = {
-				new TextComponentTranslation("Dummy!"),
-				new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
-				new TextComponentTranslation("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow),
-				new TextComponentTranslation("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount),
-				new TextComponentTranslation("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount),
-				new TextComponentTranslation("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount),
-				new TextComponentTranslation("yadokaris_shp.render.Rate", Status_HUD.rate),
-				new TextComponentTranslation("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
-				new TextComponentTranslation("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
-				new TextComponentTranslation("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
-				new TextComponentTranslation("yadokaris_shp.render.XP", Status_HUD.xp),
-				new TextComponentTranslation("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
-				new TextComponentTranslation("yadokaris_shp.render.Rank", Status_HUD.rank),
-				new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
-				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
-				new TextComponentTranslation("yadokaris_shp.render.FPS", fps),
-				new TextComponentTranslation("yadokaris_shp.render.CPS", cps),
-				new TextComponentTranslation("yadokaris_shp.render.Ping", ping),
-				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
+		TranslationTextComponent[] translations = {
+				new TranslationTextComponent("Dummy!"),
+				new TranslationTextComponent("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
+				new TranslationTextComponent("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow),
+				new TranslationTextComponent("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount),
+				new TranslationTextComponent("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount),
+				new TranslationTextComponent("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount),
+				new TranslationTextComponent("yadokaris_shp.render.Rate", Status_HUD.rate),
+				new TranslationTextComponent("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
+				new TranslationTextComponent("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
+				new TranslationTextComponent("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
+				new TranslationTextComponent("yadokaris_shp.render.XP", Status_HUD.xp),
+				new TranslationTextComponent("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
+				new TranslationTextComponent("yadokaris_shp.render.Rank", Status_HUD.rank),
+				new TranslationTextComponent("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
+				new TranslationTextComponent("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
+				new TranslationTextComponent("yadokaris_shp.render.FPS", Status_HUD.getFPS()),
+				new TranslationTextComponent("yadokaris_shp.render.CPS", cps),
+				new TranslationTextComponent("yadokaris_shp.render.Ping", ping),
+				new TranslationTextComponent("yadokaris_shp.render.Team", Status_HUD.team)
 		};
 
 		for (Status status : statuses) {
-			if (status == Status.Text) TEXTS[0] = String.format(Status_HUD.text, Status_HUD.playerName);
-			else TEXTS[status.ordinal()] = translations[status.ordinal()].getFormattedText();
+			if (status == Status.Text) TEXTS[0] = String.format(SHPConfig.text.get(), Status_HUD.playerName);
+			else TEXTS[status.ordinal()] = translations[status.ordinal()].getString();
 		}
 	}
 
 	public static void updateAllTexts() {
-		TextComponentTranslation[] translations = {
-				new TextComponentTranslation("Dummy!"),
-				new TextComponentTranslation("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
-				new TextComponentTranslation("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow),
-				new TextComponentTranslation("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount),
-				new TextComponentTranslation("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount),
-				new TextComponentTranslation("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount),
-				new TextComponentTranslation("yadokaris_shp.render.Rate", Status_HUD.rate),
-				new TextComponentTranslation("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
-				new TextComponentTranslation("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
-				new TextComponentTranslation("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
-				new TextComponentTranslation("yadokaris_shp.render.XP", Status_HUD.xp),
-				new TextComponentTranslation("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
-				new TextComponentTranslation("yadokaris_shp.render.Rank", Status_HUD.rank),
-				new TextComponentTranslation("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
-				new TextComponentTranslation("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
-				new TextComponentTranslation("yadokaris_shp.render.FPS", fps),
-				new TextComponentTranslation("yadokaris_shp.render.CPS", cps),
-				new TextComponentTranslation("yadokaris_shp.render.Ping", ping),
-				new TextComponentTranslation("yadokaris_shp.render.Team", Status_HUD.team)
+		TranslationTextComponent[] translations = {
+				new TranslationTextComponent("Dummy!"),
+				new TranslationTextComponent("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
+				new TranslationTextComponent("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow),
+				new TranslationTextComponent("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount),
+				new TranslationTextComponent("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount),
+				new TranslationTextComponent("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount),
+				new TranslationTextComponent("yadokaris_shp.render.Rate", Status_HUD.rate),
+				new TranslationTextComponent("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
+				new TranslationTextComponent("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
+				new TranslationTextComponent("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
+				new TranslationTextComponent("yadokaris_shp.render.XP", Status_HUD.xp),
+				new TranslationTextComponent("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
+				new TranslationTextComponent("yadokaris_shp.render.Rank", Status_HUD.rank),
+				new TranslationTextComponent("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
+				new TranslationTextComponent("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
+				new TranslationTextComponent("yadokaris_shp.render.FPS", Status_HUD.getFPS()),
+				new TranslationTextComponent("yadokaris_shp.render.CPS", cps),
+				new TranslationTextComponent("yadokaris_shp.render.Ping", ping),
+				new TranslationTextComponent("yadokaris_shp.render.Team", Status_HUD.team)
 		};
 
-		TEXTS[0] = String.format(Status_HUD.text, Status_HUD.playerName);
-		for (int i = 1; i < TEXTS.length; i++) TEXTS[i] = translations[i].getFormattedText();
+		TEXTS[0] = String.format(SHPConfig.text.get(), Status_HUD.playerName);
+		for (int i = 1; i < TEXTS.length; i++) TEXTS[i] = translations[i].getString();
 	}
 }

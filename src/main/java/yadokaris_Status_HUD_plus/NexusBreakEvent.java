@@ -1,17 +1,7 @@
 package yadokaris_Status_HUD_plus;
 
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiBossOverlay;
-import net.minecraft.world.BossInfo;
-
 public class NexusBreakEvent {
-	static Set<String> bossNames = new HashSet<>();
+	/*static Set<String> bossNames = new HashSet<>();
 
 	public boolean isNexusBreak() {
 
@@ -55,5 +45,5 @@ public class NexusBreakEvent {
 		}
 
 		return names;
-	}
+	}*/
 }
