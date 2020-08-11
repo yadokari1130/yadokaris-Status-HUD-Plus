@@ -6,7 +6,7 @@
                 "1.16.1-latest": "1.7"
         }, 
         "1.16.1": {
-                "1.7": "軽微なプログラム修正、1.16.1に対応"
+                "1.7": "軽微なプログラム修正、1.16.1に対応\nMinor program modifications, support for 1.16.1"
         },
         "1.12.2": {
                 "1.6.4": "回復したネクサスポイント表示の追加、/dadoコマンド実行時にネクサスに関する情報を更新するように変更、一部の設定が反映されないバグを修正\nAdded the recovered nexus points display, changed to update nexus information when executing /dado command, fixed a bug where some settings were not reflected.",
@@ -16,7 +16,7 @@
                 "1.6.8": "Ping表示の追加\nAdded the Ping display.",
                 "1.6.9": "ランクポイントを取得したときに必要なランクポイント表示も更新するように変更\nChanged to update the required rank point display when you get a rank point.",
                 "1.6.10": "/rankコマンド実行時に現在のランクが正しく認識されないバグを修正\nFixed a bug where the current rank is not recognized correctly when executing the /rank command.",
-                "1.7": "軽微なプログラム修正、1.16.1に対応"
+                "1.7": "軽微なプログラム修正、1.16.1に対応\nMinor program modifications, support for 1.16.1"
         }, 
         "1.12": {
                 "1.6": "現在の職業が反映されないバグを修正\nFixed a bug where the current job is not reflected.\n対応バージョンを1.12.xのみに変更\nChanged the supported version to 1.12.x only.",
