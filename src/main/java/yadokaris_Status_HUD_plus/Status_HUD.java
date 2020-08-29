@@ -2,29 +2,37 @@ package yadokaris_Status_HUD_plus;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.IngameGui;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 @Mod("yadokaris_status_hud_plus")
@@ -36,36 +44,24 @@ public class Status_HUD {
 	static Properties prop = new Properties();
 	static String playerName;
 	static ClientPlayerEntity player;
-	static float totalKillCount, totalDeathCount, totalRate, ratekill, killCountBow, deathCount, rate, killCountSword=0, attackingKillCount, defendingKillCount;
-	static int xp, totalXp, rankPoint, nexusDamage, repairPoint;
 	static int color, colorCash;
-	static String currentJob = "Civilian", rank = "UnKnown", team = "UnKnown";
 	private static Field overlayMessageField = null;
 	private static Field fpsField = null;
-	static final String version = "1.7";
+	static final String version = "1.7.1";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;
 	public static final Logger LOGGER = LogManager.getLogger("yadokaris_status_hud_plus");
+	public static float totalKillCount, totalDeathCount;
 
-	@SubscribeEvent
-	public void preInit(final FMLCommonSetupEvent event) {
+	public Status_HUD() {
 
-		LOGGER.info("yadokari's Status HUD Plus loading");
-
-		String colors = SHPConfig.colors.get();
-
-		try {
-			color = Integer.decode(colors);
-		}
-		catch (NumberFormatException e) {
-			color = 0;
-		}
-		if (color > 16777215) color = 16777215;
-		else if (color < 0) color = 0;
-		colorCash = color;
+		LOGGER.info("yadokari's Status HUD Plus loading.");
+		System.setProperty("java.awt.headless", "false");
+		Config.loadConfig(FMLPaths.CONFIGDIR.get().resolve("yadokaris_shp.toml").toString());
 
 		propFilePath = FMLPaths.CONFIGDIR.get().resolve("Status_HUD_Plus.xml").toString();
+		EditGroupGUI.path = FMLPaths.CONFIGDIR.get().resolve("SHPGroups.xml").toString();
 		File propFile = new File(propFilePath);
 
 		if (!propFile.exists()) {
@@ -82,20 +78,62 @@ public class Status_HUD {
 			}
 		}
 
+		Document doc = null;
+		DocumentBuilder builder = null;
+		try {
+			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			try {
+				doc = builder.parse(EditGroupGUI.path);
+			}
+			catch (FileNotFoundException e) {
+				doc = builder.newDocument();
+				e.printStackTrace();
+			}
+			catch (IOException | SAXException e) {
+				e.printStackTrace();
+			}
+		}
+		catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+
+		Element root = doc.getDocumentElement();
+		if (root != null) {
+			NodeList rootList = root.getChildNodes();
+
+			for (int i = 0; i < rootList.getLength(); i++) {
+				NodeList childList = rootList.item(i).getChildNodes();
+				String name = childList.item(0).getTextContent();
+				float x = Float.parseFloat(childList.item(1).getTextContent());
+				float y = Float.parseFloat(childList.item(2).getTextContent());
+				boolean doShowName = Boolean.parseBoolean(childList.item(3).getTextContent());
+				NodeList idList = childList.item(4).getChildNodes();
+				List<String> ids = new ArrayList<>();
+				for (int k = 0; k < idList.getLength(); k++) {
+					ids.add(idList.item(k).getTextContent());
+				}
+
+				Rendering.groups.put(name, new StatusGroup(name, x, y, ids, doShowName));
+			}
+		}
+
 		totalKillCount = Float.valueOf(prop.getProperty("killCount", "0"));
 		totalDeathCount = Float.valueOf(prop.getProperty("deathCount", "0"));
-		totalRate = totalKillCount / (totalDeathCount + 1f);
+		float totalRate = totalKillCount / (totalDeathCount + 1f);
+		Status.TotalRate.value = totalRate;
+		Status.Text.text = SHPConfig.text.get();
 
-		overlayMessageField = ObfuscationReflectionHelper.findField(IngameGui.class, "field_73838_g");
-		fpsField = ObfuscationReflectionHelper.findField(Minecraft.class, "field_71470_ab");
-		//overlayMessageField = ObfuscationReflectionHelper.findField(IngameGui.class, "overlayMessage");
-		//fpsField = ObfuscationReflectionHelper.findField(Minecraft.class, "debugFPS");
-	}
+		String colors = SHPConfig.colors.get();
 
-	public Status_HUD() {
-		System.setProperty("java.awt.headless", "false");
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::preInit);
-		Config.loadConfig(FMLPaths.CONFIGDIR.get().resolve("yadokaris_shp.toml").toString());
+		try {
+			color = Integer.decode(colors);
+		}
+		catch (NumberFormatException e) {
+			color = 0;
+		}
+		if (color > 16777215) color = 16777215;
+		else if (color < 0) color = 0;
+		colorCash = color;
 
 		ClientRegistry.registerKeyBinding(DevicePressEvent.resetKey);
 		ClientRegistry.registerKeyBinding(DevicePressEvent.displayKey);
@@ -110,7 +148,7 @@ public class Status_HUD {
 
 			@Override
 			public void run() {
-				if (doCheck && SHPConfig.doShow[Status.RankPoint.ordinal()].get()) Status_HUD.player.sendChatMessage("/multiplier");
+				if (doCheck) Status_HUD.player.sendChatMessage("/multiplier");
 			}
 		};
 
@@ -119,7 +157,10 @@ public class Status_HUD {
 		//for (Field f: Minecraft.class.getDeclaredFields()) System.out.println(f.getName());
 		//for (Field f: IngameGui.class.getDeclaredFields()) System.out.println(f.getName());
 
-		System.out.println(Minecraft.getInstance().getVersion());
+		overlayMessageField = ObfuscationReflectionHelper.findField(IngameGui.class, "field_73838_g");
+		fpsField = ObfuscationReflectionHelper.findField(Minecraft.class, "field_71470_ab");
+		//overlayMessageField = ObfuscationReflectionHelper.findField(IngameGui.class, "overlayMessage");
+		//fpsField = ObfuscationReflectionHelper.findField(Minecraft.class, "debugFPS");
 	}
 
 	public static void writeProperty() {

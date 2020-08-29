@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -11,7 +13,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,31 +24,9 @@ public class Rendering {
 	private static int colorRed, colorGreen;
 	private static int colorBlue = 255;
 	private static int plusColor;
-	private static int fps, cps;
-	private static String ping = "0ms";
 	private static int currentTick;
 	private static long deathTime = System.currentTimeMillis();
-	private static final String[] TEXTS = {
-		String.format(SHPConfig.text.get(), Status_HUD.playerName),
-		new TranslationTextComponent("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.Rate", Status_HUD.rate).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.TotalRate", Status_HUD.totalRate).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.XP", Status_HUD.xp).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.TotalXP", Status_HUD.totalXp).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.Rank", Status_HUD.rank).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.FPS", fps).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.CPS", cps).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.Ping", ping).getString(),
-		new TranslationTextComponent("yadokaris_shp.render.Team", Status_HUD.team).getString()
-	};
+	public static Map<String, StatusGroup> groups = new HashMap<>();
 
 	@SubscribeEvent
 	public void onRender(TickEvent.RenderTickEvent event) {
@@ -70,7 +49,7 @@ public class Rendering {
 							try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
 								String line;
 								while ((line = r.readLine()) != null) {
-									if (line.contains("Average = ")) ping = line.substring(line.lastIndexOf("= ") + 2);
+									if (line.contains("Average = ")) Status.Ping.value = line.substring(line.lastIndexOf("= ") + 2);
 								}
 							}
 						}
@@ -82,7 +61,7 @@ public class Rendering {
 							try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
 								String line;
 								while ((line = r.readLine()) != null) {
-									if (line.contains("time=")) ping = line.substring(line.lastIndexOf("=") + 1);
+									if (line.contains("time=")) Status.Ping.value = line.substring(line.lastIndexOf("=") + 1);
 								}
 							}
 						}
@@ -91,9 +70,8 @@ public class Rendering {
 						e.printStackTrace();
 					}
 				}).start();
-
-				updateText(Status.Ping);
 			}
+			else Status.Ping.value = "0ms";
 		}
 
 		if (Minecraft.getInstance().currentScreen == null && SHPConfig.doRender.get()) {
@@ -129,26 +107,27 @@ public class Rendering {
 				}).start();
 			}
 
-			float showy = SHPConfig.y.get().floatValue() - 10;
-			for (int i = 0; i < TEXTS.length; i++) {
-				if (TEXTS[i].length() >= 1 && SHPConfig.doShow[i].get()) {
-					showy += 10;
-					Minecraft.getInstance().fontRenderer.func_238405_a_(new MatrixStack(), TEXTS[i], SHPConfig.x.get().floatValue(), showy, Status_HUD.color);
+			for (StatusGroup group : groups.values()) {
+				float showy = group.y - 10f;
+				if (group.doShowName) {
+					showy += 10f;
+					Minecraft.getInstance().fontRenderer.func_238405_a_(new MatrixStack(), group.name, group.x, showy, Status_HUD.color);
+				}
+				for (String id : group.statusIDs) {
+					showy += 10f;
+					Minecraft.getInstance().fontRenderer.func_238405_a_(new MatrixStack(), Status.getStatus(id).getString(), group.x, showy, Status_HUD.color);
 				}
 			}
 		}
 
-		if (SHPConfig.doShow[Status.FPS.ordinal()].get()) {
-			updateText(Status.FPS);
-		}
+		Status.FPS.value = Status_HUD.getFPS();
 
-		if (SHPConfig.doShow[Status.CPS.ordinal()].get() && DevicePressEvent.clicks.size() > 0) {
+		if (DevicePressEvent.clicks.size() > 0) {
 			while (System.nanoTime() - (long)DevicePressEvent.clicks.get(0) > 1000000000l) {
 				DevicePressEvent.clicks.remove(0);
 				if (DevicePressEvent.clicks.size() < 1) break;
 			}
-			cps = DevicePressEvent.clicks.size();
-			updateText(Status.CPS);
+			Status.CPS.value = (float)DevicePressEvent.clicks.size();
 		}
 
 		currentTick++;
@@ -160,11 +139,10 @@ public class Rendering {
 			if (!isDeath && System.currentTimeMillis() - deathTime > 500) {
 				isDeath = true;
 				deathTime = System.currentTimeMillis();
-				Status_HUD.deathCount += 1f;
+				Status.DeathCount.increment();
 				Status_HUD.totalDeathCount += 1f;
-				Status_HUD.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
-				Status_HUD.rate = (Status_HUD.killCountSword + Status_HUD.killCountBow) / (Status_HUD.deathCount + 1f);
-				updateTexts(Status.DeathCount, Status.Rate, Status.TotalRate);
+				Status.TotalRate.value = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
+				Status.Rate.value = ((float)(Status.KillCountSword.value) + (float)Status.KillCountBow.value) / ((float)Status.DeathCount.value + 1f);
 
 				new Thread(() -> {
 					Status_HUD.prop.setProperty("deathCount", "" + Status_HUD.totalDeathCount);
@@ -173,89 +151,5 @@ public class Rendering {
 			}
 		}
 		else isDeath = false;
-	}
-
-	public static void updateText(Status status) {
-		TranslationTextComponent[] translations = {
-				new TranslationTextComponent("Dummy!"),
-				new TranslationTextComponent("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
-				new TranslationTextComponent("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow),
-				new TranslationTextComponent("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount),
-				new TranslationTextComponent("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount),
-				new TranslationTextComponent("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount),
-				new TranslationTextComponent("yadokaris_shp.render.Rate", Status_HUD.rate),
-				new TranslationTextComponent("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
-				new TranslationTextComponent("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
-				new TranslationTextComponent("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
-				new TranslationTextComponent("yadokaris_shp.render.XP", Status_HUD.xp),
-				new TranslationTextComponent("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
-				new TranslationTextComponent("yadokaris_shp.render.Rank", Status_HUD.rank),
-				new TranslationTextComponent("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
-				new TranslationTextComponent("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
-				new TranslationTextComponent("yadokaris_shp.render.FPS", Status_HUD.getFPS()),
-				new TranslationTextComponent("yadokaris_shp.render.CPS", cps),
-				new TranslationTextComponent("yadokaris_shp.render.Ping", ping),
-				new TranslationTextComponent("yadokaris_shp.render.Team", Status_HUD.team)
-		};
-
-		if (status == Status.Text) TEXTS[0] = String.format(SHPConfig.text.get(), Status_HUD.playerName);
-		else TEXTS[status.ordinal()] = translations[status.ordinal()].getString();
-	}
-
-	public static void updateTexts(Status... statuses) {
-
-		TranslationTextComponent[] translations = {
-				new TranslationTextComponent("Dummy!"),
-				new TranslationTextComponent("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
-				new TranslationTextComponent("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow),
-				new TranslationTextComponent("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount),
-				new TranslationTextComponent("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount),
-				new TranslationTextComponent("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount),
-				new TranslationTextComponent("yadokaris_shp.render.Rate", Status_HUD.rate),
-				new TranslationTextComponent("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
-				new TranslationTextComponent("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
-				new TranslationTextComponent("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
-				new TranslationTextComponent("yadokaris_shp.render.XP", Status_HUD.xp),
-				new TranslationTextComponent("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
-				new TranslationTextComponent("yadokaris_shp.render.Rank", Status_HUD.rank),
-				new TranslationTextComponent("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
-				new TranslationTextComponent("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
-				new TranslationTextComponent("yadokaris_shp.render.FPS", Status_HUD.getFPS()),
-				new TranslationTextComponent("yadokaris_shp.render.CPS", cps),
-				new TranslationTextComponent("yadokaris_shp.render.Ping", ping),
-				new TranslationTextComponent("yadokaris_shp.render.Team", Status_HUD.team)
-		};
-
-		for (Status status : statuses) {
-			if (status == Status.Text) TEXTS[0] = String.format(SHPConfig.text.get(), Status_HUD.playerName);
-			else TEXTS[status.ordinal()] = translations[status.ordinal()].getString();
-		}
-	}
-
-	public static void updateAllTexts() {
-		TranslationTextComponent[] translations = {
-				new TranslationTextComponent("Dummy!"),
-				new TranslationTextComponent("yadokaris_shp.render.KillCountSword", (int)Status_HUD.killCountSword),
-				new TranslationTextComponent("yadokaris_shp.render.KillCountBow", (int)Status_HUD.killCountBow),
-				new TranslationTextComponent("yadokaris_shp.render.AttackingKillCount", (int)Status_HUD.attackingKillCount),
-				new TranslationTextComponent("yadokaris_shp.render.DefendingKillCount", (int)Status_HUD.defendingKillCount),
-				new TranslationTextComponent("yadokaris_shp.render.DeathCount", (int)Status_HUD.deathCount),
-				new TranslationTextComponent("yadokaris_shp.render.Rate", Status_HUD.rate),
-				new TranslationTextComponent("yadokaris_shp.render.TotalRate", Status_HUD.totalRate),
-				new TranslationTextComponent("yadokaris_shp.render.NexusDamage", Status_HUD.nexusDamage),
-				new TranslationTextComponent("yadokaris_shp.render.RepairPoint", Status_HUD.repairPoint),
-				new TranslationTextComponent("yadokaris_shp.render.XP", Status_HUD.xp),
-				new TranslationTextComponent("yadokaris_shp.render.TotalXP", Status_HUD.totalXp),
-				new TranslationTextComponent("yadokaris_shp.render.Rank", Status_HUD.rank),
-				new TranslationTextComponent("yadokaris_shp.render.RankPoint", Status_HUD.rankPoint),
-				new TranslationTextComponent("yadokaris_shp.render.CurrentJob", Status_HUD.currentJob),
-				new TranslationTextComponent("yadokaris_shp.render.FPS", Status_HUD.getFPS()),
-				new TranslationTextComponent("yadokaris_shp.render.CPS", cps),
-				new TranslationTextComponent("yadokaris_shp.render.Ping", ping),
-				new TranslationTextComponent("yadokaris_shp.render.Team", Status_HUD.team)
-		};
-
-		TEXTS[0] = String.format(SHPConfig.text.get(), Status_HUD.playerName);
-		for (int i = 1; i < TEXTS.length; i++) TEXTS[i] = translations[i].getString();
 	}
 }

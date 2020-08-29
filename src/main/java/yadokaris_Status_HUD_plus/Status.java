@@ -1,23 +1,90 @@
 package yadokaris_Status_HUD_plus;
 
+import net.minecraft.util.text.TranslationTextComponent;
+
 public enum Status {
-	Text,
-	KillCountSword,
-	KillCountBow,
-	AttackingKillCount,
-	DefendingKillCount,
-	DeathCount,
-	Rate,
-	TotalRate,
-	NexusDamage,
-	RepairPoint,
-	XP,
-	TotalXP,
-	Rank,
-	RankPoint,
-	CurrentJob,
-	FPS,
-	CPS,
-	Ping,
-	Team
+
+	Text("Text", "Unknown", "Unknown"),
+	KillCountSword("KillCountSword", 0f),
+	KillCountBow("KillCountBow", 0f),
+	AttackingKillCount("AttackingKillCount", 0f),
+	DefendingKillCount("DefendingKillCount", 0f),
+	DeathCount("DeathCount", 0f),
+	Rate("Rate", 0f),
+	TotalRate("TotalRate", 0f),
+	NexusDamage("NexusDamage", 0f),
+	RepairPoint("RepairPoint", 0f),
+	XP("XP", 0f),
+	TotalXP("TotalXP", 0f),
+	Rank("Rank", "Unknown"),
+	RankPoint("RankPoint", 0f),
+	CurrentJob("CurrentJob", "Civilian"),
+	FPS("FPS", "0"),
+	CPS("CPS", 0f),
+	Ping("Ping", "0ms"),
+	Team("Team", "Unknown");
+
+	private final String id;
+	public Object value;
+	private final boolean hasLang;
+	private final Object defaultValue;
+	public String text;
+
+	private Status(String id, Object value) {
+		this.id = id;
+		this.value = value;
+		this.defaultValue = value;
+		this.hasLang = true;
+	}
+
+	private Status(String id, Object value, String text) {
+		this.id = id;
+		this.value = value;
+		this.defaultValue = value;
+		this.text = text;
+		this.hasLang = false;
+	}
+
+	public static Status getStatus(String id) {
+		Status result = null;
+		for (Status s : values()) {
+			if (s.getId().equals(id)) result = s;
+		}
+
+		return result;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getString() {
+		if (!hasLang) return String.format(text, value);
+		else return String.format(new TranslationTextComponent("yadokaris_shp.render." + id).getString().replace("$", "%"), value);
+	}
+
+	public String getDefaultString() {
+		if (!hasLang) return String.format(text, defaultValue);
+		else return String.format(new TranslationTextComponent("yadokaris_shp.render." + id).getString().replace("$", "%"), defaultValue);
+	}
+
+	public void increment() {
+		float f = (float)value;
+		value = ++f;
+	}
+
+	public void decrement() {
+		float f = (float)value;
+		value = --f;
+	}
+
+	public void add(float f) {
+		float vf = (float)value;
+		value = vf + f;
+	}
+
+	public void subtract(float f) {
+		float vf = (float)value;
+		value = vf - f;
+	}
 }
