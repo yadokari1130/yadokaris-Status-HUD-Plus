@@ -2,14 +2,26 @@ package yadokaris_Status_HUD_plus;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -24,7 +36,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.6.10", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
+@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.7", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
 public class Status_HUD {
 
 	private static String propFilePath;
@@ -32,18 +44,16 @@ public class Status_HUD {
 	static Properties prop = new Properties();
 	static String playerName;
 	static EntityPlayer player;
-	static float totalKillCount, totalDeathCount, totalRate, ratekill, CountSword, killCountBow, deathCount, rate, killCountSword, attackingKillCount, defendingKillCount;
-	static int xp, totalXp, rankPoint, nexusDamage, repairPoint;
-	static int color, colorCash, x, y;
-	static boolean[] doShow = new boolean[19];
-	static boolean doRender, isRainbow, doChangeTeamColor;
-	static String currentJob = "Civilian", rank = "UnKnown", team = "UnKnown", text = "";
+	static int color, colorCash;
+	static boolean doRender, isRainbow, doChangeTeamColor, doRenderWhenStart;
+	static String text = "";
 	static double fontSize;
 	private static Field overlayMessageField = null;
-	static final String version = "1.6.10";
+	static final String version = "1.7.1";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;
+	public static float totalKillCount, totalDeathCount;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -61,35 +71,16 @@ public class Status_HUD {
 		else if (color < 0) color = 0;
 		colorCash = color;
 
-		doShow[Status.Text.ordinal()] = conf.getBoolean("doShowText", "render", true, "ステータスの一番上に表示するテキストの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.KillCountSword.ordinal()] = conf.getBoolean("doShowSwordKill", "render", true, "剣キルの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.KillCountBow.ordinal()] = conf.getBoolean("doShowBowKill", "render", true, "弓キルの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.AttackingKillCount.ordinal()] = conf.getBoolean("doShowAttackingKill", "render", true, "ネクサスキルの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.DefendingKillCount.ordinal()] = conf.getBoolean("doShowDefendingKill", "render", true, "防衛キルの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.DeathCount.ordinal()] = conf.getBoolean("doShowDeath", "render", true, "デス数の表示(true) / 非表示(false)を設定します。");
-		doShow[Status.Rate.ordinal()] = conf.getBoolean("doShowRate", "render", true, "K/Dレートの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.TotalRate.ordinal()] = conf.getBoolean("doShowTotalRate", "render", true, "総合K/Dレートの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.NexusDamage.ordinal()] = conf.getBoolean("doShowNexusDamage", "render", true, "ネクサスダメージの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.RepairPoint.ordinal()] = conf.getBoolean("doShowRepairPoint", "render", true, "回復したネクサスポイントの表示(true) / 非表示(false)を表示します。");
-		doShow[Status.XP.ordinal()] = conf.getBoolean("doShowXP", "render", true, "獲得xpの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.TotalXP.ordinal()] = conf.getBoolean("doShowTotalXP", "render", true, "所持xpの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.Rank.ordinal()] = conf.getBoolean("doShowRank", "render", true, "ランクの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.RankPoint.ordinal()] = conf.getBoolean("doShowRankPoint", "render", true, "ランクポイントの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.CurrentJob.ordinal()] = conf.getBoolean("doShowJob", "render", true, "現在の職業の表示(true) / 非表示(false)を設定します。");
-		doShow[Status.FPS.ordinal()] = conf.getBoolean("doShowFPS", "render", true, "FPSの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.CPS.ordinal()] = conf.getBoolean("doShowCPS", "render", true, "CPSの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.Ping.ordinal()] = conf.getBoolean("doShowPing", "render", true, "Pingの表示(true) / 非表示(false)を設定します。");
-		doShow[Status.Team.ordinal()] = conf.getBoolean("doShowTeam", "render", true, "所属チームの表示(true) / 非表示(false)を設定します。");
 		text = conf.getString("text", "render", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。");
-		x = conf.getInt("x", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のx座標を設定します。");
-		y = conf.getInt("y", "render", 2, 0, Integer.MAX_VALUE, "ステータスの画面上のy座標を設定します。");
 		fontSize = conf.getFloat("fontSize", "render", 1, 0, 100, "ステータスの文字サイズを設定します。");
 		doRender = conf.getBoolean("doRenderWhenStart", "render", true, "起動時のステータスの表示(true) / 非表示(false)を設定します。");
+		doRenderWhenStart = doRender;
 		isRainbow = conf.getBoolean("isRainbow", "render", false, "ステータスの文字を虹色にする(true) / しない(false)を設定します。");
 		doChangeTeamColor = conf.getBoolean("doChangeTeamColor", "render", false, "テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。");
 		conf.save();
 
 		propFilePath = conf.getConfigFile().getParent() + "\\Status_HUD_Plus.xml";
+		EditGroupGUI.path = conf.getConfigFile().getParent() + "\\SHPGroups.xml";
 		File propFile = new File(propFilePath);
 
 		if (!propFile.exists()) {
@@ -106,12 +97,53 @@ public class Status_HUD {
 			}
 		}
 
+		Document doc = null;
+		DocumentBuilder builder = null;
+		try {
+			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			try {
+				doc = builder.parse(EditGroupGUI.path);
+			}
+			catch (FileNotFoundException e) {
+				doc = builder.newDocument();
+				e.printStackTrace();
+			}
+			catch (IOException | SAXException e) {
+				e.printStackTrace();
+			}
+		}
+		catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+
+		Element root = doc.getDocumentElement();
+		if (root != null) {
+			NodeList rootList = root.getChildNodes();
+
+			for (int i = 0; i < rootList.getLength(); i++) {
+				NodeList childList = rootList.item(i).getChildNodes();
+				String name = childList.item(0).getTextContent();
+				float x = Float.parseFloat(childList.item(1).getTextContent());
+				float y = Float.parseFloat(childList.item(2).getTextContent());
+				boolean doShowName = Boolean.parseBoolean(childList.item(3).getTextContent());
+				NodeList idList = childList.item(4).getChildNodes();
+				List<String> ids = new ArrayList<>();
+				for (int k = 0; k < idList.getLength(); k++) {
+					ids.add(idList.item(k).getTextContent());
+				}
+
+				Rendering.groups.put(name, new StatusGroup(name, x, y, ids, doShowName));
+			}
+		}
+
 		totalKillCount = Float.valueOf(prop.getProperty("killCount", "0"));
 		totalDeathCount = Float.valueOf(prop.getProperty("deathCount", "0"));
-		totalRate = totalKillCount / (totalDeathCount + 1f);
+		float totalRate = totalKillCount / (totalDeathCount + 1f);
+		Status.TotalRate.value = totalRate;
+		Status.Text.text = text;
 
-		overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "field_73838_g");
-		//overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "overlayMessage");
+		//overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "field_73838_g");
+		overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "overlayMessage");
 	}
 
 	@EventHandler
@@ -128,7 +160,7 @@ public class Status_HUD {
 
 			@Override
 			public void run() {
-				if (doCheck && doShow[Status.RankPoint.ordinal()]) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
+				if(doCheck) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
 			}
 		};
 

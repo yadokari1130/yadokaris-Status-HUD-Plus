@@ -25,17 +25,16 @@ public class DevicePressEvent {
 	@SubscribeEvent
 	public void KeyHandlingEvent(KeyInputEvent event) {
 		if (resetKey.isPressed()) {
-			Status_HUD.killCountSword = 0;
-			Status_HUD.killCountBow = 0;
-			Status_HUD.attackingKillCount = 0;
-			Status_HUD.defendingKillCount = 0;
-			Status_HUD.deathCount = 0;
-			Status_HUD.xp = 0;
-			Status_HUD.nexusDamage = 0;
-			Status_HUD.repairPoint = 0;
-			Status_HUD.rate = 0f;
+			Status.KillCountSword.value = 0;
+			Status.KillCountBow.value = 0;
+			Status.AttackingKillCount.value = 0;
+			Status.DefendingKillCount.value = 0;
+			Status.DeathCount.value = 0;
+			Status.XP.value = 0;
+			Status.NexusDamage.value = 0;
+			Status.RepairPoint.value = 0;
+			Status.Rate.value = 0f;
 			Status_HUD.player.sendMessage(new TextComponentTranslation("yadokaris_shp.render.Reset"));
-			Rendering.updateAllTexts();
 		}
 
 		else if (displayKey.isPressed()) {
@@ -47,7 +46,7 @@ public class DevicePressEvent {
 		else if (settingKey.isPressed()) {
 			EventQueue.invokeLater(() -> {
 				try {
-					new SettingGui().setVisible(true);
+					new SettingGUI().setVisible(true);
 				}
 				catch (Exception e) {
 					e.printStackTrace();

@@ -61,43 +61,40 @@ public class ChatEvent {
 			if (chat.contains("You are currently the rank of")) {
 				for (int i = 0; i < RANKS.size(); i++) {
 					if (chat.indexOf(RANKS.get(i)) > 30) {
-						Status_HUD.rank = RANKS.get(++i);
+						Status.Rank.value = RANKS.get(++i);
 						break;
 					}
 				}
 
-				Status_HUD.rankPoint = Integer.parseInt(chat.replace(Status_HUD.playerName, "").replaceAll("[^0-9]", ""));
-				Rendering.updateTexts(Status.Rank, Status.RankPoint);
+				Status.RankPoint.value = Float.parseFloat(chat.replace(Status_HUD.playerName, "").replaceAll("[^0-9]", ""));
 			}
 
 			// Kill
 			else if (chat.matches(".*" + Status_HUD.playerName + ".*\\([A-Z]{3}\\).*\\([A-Z]{3}\\).*")) {
 				if (chat.contains("killed")) {
-					if (chat.contains("attacking")) Status_HUD.attackingKillCount++;
-					else if (chat.contains("defending")) Status_HUD.defendingKillCount++;
-					Status_HUD.killCountSword++;
+					if (chat.contains("attacking")) Status.AttackingKillCount.increment();
+					else if (chat.contains("defending")) Status.DefendingKillCount.increment();
+					Status.KillCountSword.increment();
 					Status_HUD.totalKillCount++;
-					Status_HUD.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
-					Status_HUD.rate = (Status_HUD.killCountSword + Status_HUD.killCountBow) / (Status_HUD.deathCount + 1f);
+					Status.TotalRate.value = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
+					Status.Rate.value = ((float)(Status.KillCountSword.value) + (float)Status.KillCountBow.value) / ((float)Status.DeathCount.value + 1f);
 					Status_HUD.prop.setProperty("killCount", "" + Status_HUD.totalKillCount);
 				}
 				else if (chat.contains("shot")) {
-					if (chat.contains("attacking")) Status_HUD.attackingKillCount++;
-					else if (chat.contains("defending")) Status_HUD.defendingKillCount++;
-					Status_HUD.killCountBow++;
+					if (chat.contains("attacking")) Status.AttackingKillCount.increment();
+					else if (chat.contains("defending")) Status.DefendingKillCount.increment();
+					Status.KillCountBow.increment();
 					Status_HUD.totalKillCount++;
-					Status_HUD.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
-					Status_HUD.rate = (Status_HUD.killCountSword + Status_HUD.killCountBow) / (Status_HUD.deathCount + 1f);
+					Status.TotalRate.value = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
+					Status.Rate.value = ((float)(Status.KillCountSword.value) + (float)Status.KillCountBow.value) / ((float)Status.DeathCount.value + 1f);
 					Status_HUD.prop.setProperty("killCount", "" + Status_HUD.totalKillCount);
 				}
-				Rendering.updateAllTexts();
 				Status_HUD.writeProperty();
 			}
 
 			//Repair Nexus
 			else if (chat.contains("repaired your nexus with the Handyman class!")) {
-				Status_HUD.repairPoint++;
-				Rendering.updateText(Status.RepairPoint);
+				Status.RepairPoint.increment();
 			}
 		}
 
@@ -106,13 +103,12 @@ public class ChatEvent {
 
 			// ./killの時はカウントしない
 			if (chat.equals("Ouch! Seems like that hurt.")) {
-				Status_HUD.deathCount--;
+				Status.DeathCount.decrement();
 				Status_HUD.totalDeathCount--;
-				Status_HUD.totalRate = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
-				Status_HUD.rate = (Status_HUD.killCountSword + Status_HUD.killCountBow) / (Status_HUD.deathCount + 1f);
+				Status.TotalRate.value = Status_HUD.totalKillCount / (Status_HUD.totalDeathCount + 1f);
+				Status.Rate.value = ((float)(Status.KillCountSword.value) + (float)Status.KillCountBow.value) / ((float)Status.DeathCount.value + 1f);
 				Status_HUD.prop.setProperty("deathCount", "" + Status_HUD.totalDeathCount);
 				Status_HUD.writeProperty();
-				Rendering.updateTexts(Status.DeathCount, Status.Rate, Status.TotalRate);
 			}
 
 			// Job
@@ -120,8 +116,7 @@ public class ChatEvent {
 				for (String job : JOBS) {
 					if (chat.contains(job)) {
 						if (chat.indexOf(job) < chat.indexOf("Selected")) {
-							Status_HUD.currentJob = job;
-							Rendering.updateText(Status.CurrentJob);
+							Status.CurrentJob.value = job;
 						}
 					}
 				}
@@ -129,20 +124,18 @@ public class ChatEvent {
 
 			// XP
 			else if (chat.matches(".*\\+[0-9]* Shotbow Xp")) {
-				int getXP = Integer.parseInt(chat.replaceAll("[^0-9]", ""));
+				float getXP = Float.parseFloat(chat.replaceAll("[^0-9]", ""));
 				if (getXP != 0) {
-					if (Status_HUD.getActionbar().contains(Status_HUD.playerName)) Status_HUD.nexusDamage++;
-					Status_HUD.xp += getXP;
-					Status_HUD.totalXp += getXP;
-					Status_HUD.rankPoint -= (int)((float)getXP / Status_HUD.serverMultiple / Status_HUD.multiple);
-					if (Status_HUD.rankPoint <= 0) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/rank");
+					if (Status_HUD.getActionbar().contains(Status_HUD.playerName)) Status.NexusDamage.increment();
+					Status.XP.add(getXP);
+					Status.TotalXP.add(getXP);
+					Status.RankPoint.subtract((float)getXP / Status_HUD.serverMultiple / Status_HUD.multiple);
+					if ((float)Status.RankPoint.value <= 0) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/rank");
 				}
-				Rendering.updateTexts(Status.NexusDamage, Status.XP, Status.TotalXP, Status.RankPoint);
 			}
 
 			else if (chat.matches(".*You have [0-9]*xp.*")) {
-				Status_HUD.totalXp = Integer.parseInt(chat.replaceAll("[^0-9]", ""));
-				Rendering.updateText(Status.TotalXP);
+				Status.TotalXP.value = Float.parseFloat(chat.replaceAll("[^0-9]", ""));
 			}
 
 			else if (chat.contains("You have joined the")) {
@@ -162,23 +155,20 @@ public class ChatEvent {
 			else if (chat.contains("Current rank:")) {
 				for (int i = 0; i < RANKS.size(); i++) {
 					if (chat.contains(RANKS.get(i))) {
-						Status_HUD.rank = RANKS.get(i);
-						Rendering.updateText(Status.Rank);
+						Status.Rank.value = RANKS.get(i);
 						break;
 					}
 				}
 			}
 
 			else if (chat.contains("Points required:")) {
-				Status_HUD.rankPoint = Integer.parseInt(chat.replaceAll("[^0-9]", ""));
-				Rendering.updateText(Status.RankPoint);
+				Status.RankPoint.value = Float.parseFloat(chat.replaceAll("[^0-9]", ""));
 			}
 
 			else if (chat.contains("team") && isJoin) {
 				for (String team : TEAMS.keySet()) {
 					if (chat.contains(team)) {
-						Status_HUD.team = team;
-						Rendering.updateText(Status.Team);
+						Status.Team.value = team;
 						if (Status_HUD.doRender) Status_HUD.color = TEAMS.get(team);
 						break;
 					}
@@ -186,14 +176,13 @@ public class ChatEvent {
 				isJoin = false;
 
 				Status_HUD.doCheck = true;
-				if (Status_HUD.doShow[Status.RankPoint.ordinal()]) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
+				((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
 			}
 
 			else if (chat.contains("You have been removed from your team") || chat.contains("Reset your password by visiting")) {
-				Status_HUD.team = "UnKnown";
-				Status_HUD.currentJob = "Civilian";
+				Status.Team.value = "UnKnown";
+				Status.CurrentJob.value = "Civilian";
 				Status_HUD.doCheck = false;
-				Rendering.updateTexts(Status.CurrentJob, Status.Team);
 				if (Status_HUD.doRender) Status_HUD.color = Status_HUD.colorCash;
 			}
 
@@ -205,9 +194,8 @@ public class ChatEvent {
 				String total = chat.substring(0, chat.indexOf("|"));
 				String repair = chat.substring(chat.lastIndexOf("|"));
 
-				Status_HUD.nexusDamage = Integer.parseInt(total.replaceAll("[^0-9]", ""));
-				Status_HUD.repairPoint = Integer.parseInt(repair.replaceAll("[^0-9]", ""));
-				Rendering.updateTexts(Status.NexusDamage, Status.RepairPoint);
+				Status.NexusDamage.value = Float.parseFloat(total.replaceAll("[^0-9]", ""));
+				Status.RepairPoint.value = Float.parseFloat(repair.replaceAll("[^0-9]", ""));
 			}
 		}
 	}
@@ -219,8 +207,7 @@ public class ChatEvent {
 			EntityPlayer player = Minecraft.getMinecraft().player;
 			Status_HUD.player = player;
 			Status_HUD.playerName = Status_HUD.player.getName();
-			Rendering.updateText(Status.Text);
-
+			Status.Text.value = player.getName();
 
 			new Thread(() -> {
 				String update = null;
