@@ -49,7 +49,7 @@ public class Status_HUD {
 	static String text = "";
 	static double fontSize;
 	private static Field overlayMessageField = null;
-	static final String version = "1.7.1";
+	static final String version = "1.7.2";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;
@@ -102,7 +102,7 @@ public class Status_HUD {
 		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			try {
-				doc = builder.parse(EditGroupGUI.path);
+				doc = builder.parse(new File(EditGroupGUI.path));
 			}
 			catch (FileNotFoundException e) {
 				doc = builder.newDocument();
@@ -142,8 +142,8 @@ public class Status_HUD {
 		Status.TotalRate.value = totalRate;
 		Status.Text.text = text;
 
-		//overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "field_73838_g");
-		overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "overlayMessage");
+		overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "field_73838_g");
+		//overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "overlayMessage");
 	}
 
 	@EventHandler

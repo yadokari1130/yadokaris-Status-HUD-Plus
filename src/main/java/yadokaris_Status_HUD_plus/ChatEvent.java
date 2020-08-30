@@ -46,7 +46,7 @@ public class ChatEvent {
 	private final List<String> RANKS = new ArrayList<String>(Arrays.asList("Annihilator", "GrandMaster-III",
 			"GrandMaster-II", "GrandMaster-I", "Master-III", "Master-II", "Master-I", "Gold-III", "Gold-II", "Gold-I",
 			"Silver-III", "Silver-II", "Silver-I", "Novice-III", "Novice-II", "Novice-I"));
-	private static boolean isJoin;
+	private static boolean isJoin, isAnnounced;
 
 
 	@SideOnly(Side.CLIENT)
@@ -203,7 +203,7 @@ public class ChatEvent {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onJoinWorld(EntityJoinWorldEvent event) {
-		if (Status_HUD.player == null && Minecraft.getMinecraft().player != null) {
+		if (Minecraft.getMinecraft().player != null) {
 			EntityPlayer player = Minecraft.getMinecraft().player;
 			Status_HUD.player = player;
 			Status_HUD.playerName = Status_HUD.player.getName();
@@ -223,7 +223,7 @@ public class ChatEvent {
 
 				String latest = ((Map<String, String>) map.get("promos")).get("1.12.2-latest");
 
-				if (!latest.equals(Status_HUD.version)) {
+				if (!isAnnounced && !latest.equals(Status_HUD.version)) {
 					new Thread(() -> {
 						try {
 							Thread.sleep(5000);
@@ -241,6 +241,7 @@ public class ChatEvent {
 						player.sendMessage(new TextComponentString(((Map<String, String>) map.get("1.12.2")).get(latest)));
 						player.sendMessage(new TextComponentString("----------------------------------------------------------------------"));
 					}).start();
+					isAnnounced = true;
 				}
 
 				Status_HUD.serverMultiple = Float.parseFloat((String) map.get("serverMultiple"));

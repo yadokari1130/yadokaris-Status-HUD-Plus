@@ -110,7 +110,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 		contentPane.add(comboBoxGroups);
 
 		JTextPane textPane = new JTextPane();
-		textPane.setText("yadokaris_shp.setting.settingName");
+		textPane.setText(new TextComponentTranslation("yadokaris_shp.setting.settingName").getUnformattedComponentText());
 		textPane.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		textPane.setBackground(Color.WHITE);
 		textPane.setBounds(21, 21, 499, 25);

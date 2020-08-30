@@ -22,7 +22,9 @@ public enum Status {
 	FPS("FPS", "0"),
 	CPS("CPS", 0f),
 	Ping("Ping", "0ms"),
-	Team("Team", "Unknown");
+	Team("Team", "Unknown"),
+	Coordinate("Coordinate", "0, 0, 0"),
+	Angle("Angle", 0f);
 
 	private final String id;
 	public Object value;
