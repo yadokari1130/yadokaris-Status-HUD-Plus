@@ -47,7 +47,7 @@ public class Status_HUD {
 	static int color, colorCash;
 	private static Field overlayMessageField = null;
 	private static Field fpsField = null;
-	static final String version = "1.7.1";
+	static final String version = "1.7.2";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;
@@ -83,7 +83,7 @@ public class Status_HUD {
 		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			try {
-				doc = builder.parse(EditGroupGUI.path);
+				doc = builder.parse(new File(EditGroupGUI.path));
 			}
 			catch (FileNotFoundException e) {
 				doc = builder.newDocument();

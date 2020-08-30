@@ -130,6 +130,11 @@ public class Rendering {
 			Status.CPS.value = (float)DevicePressEvent.clicks.size();
 		}
 
+		if (Status_HUD.player != null) {
+			Status.Coordinate.value = String.format("%.3f, %.3f, %.3f", Status_HUD.player.getPosX(), Status_HUD.player.getPosY(), Status_HUD.player.getPosZ());
+			Status.Angle.value = (Status_HUD.player.rotationYawHead % 360f + 360f) % 360f;
+		}
+
 		currentTick++;
 	}
 

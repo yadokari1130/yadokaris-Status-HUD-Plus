@@ -20,6 +20,8 @@
 	"yadokaris_shp.render.CPS": "CPS : $.0f",
 	"yadokaris_shp.render.Ping": "Ping : $s",
 	"yadokaris_shp.render.Team": "Current Team : $s",
+	"yadokaris_shp.render.Coordinate": "Coordinate : $s",
+	"yadokaris_shp.render.Angle": "Facing : $.3f",
 	"yadokaris_shp.render.Reset": "Reset.",
 	"yadokaris_shp.render.Hide": "Hide.",
 	"yadokaris_shp.render.Show": "Show.",
