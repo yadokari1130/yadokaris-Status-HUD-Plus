@@ -49,7 +49,7 @@ public class Status_HUD {
 	static String text = "";
 	static double fontSize;
 	private static Field overlayMessageField = null;
-	static final String version = "1.7.2";
+	static final String version = "1.7.3";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;

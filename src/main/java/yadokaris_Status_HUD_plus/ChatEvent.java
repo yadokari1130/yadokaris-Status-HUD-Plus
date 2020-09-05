@@ -39,7 +39,7 @@ public class ChatEvent {
 		{
 			put("Red", 0xFF0000);
 			put("Green", 0x00FF00);
-			put("Blue", 0x0000FF);
+			put("Blue", 0x03B6FC);
 			put("Yellow", 0xFFFF00);
 		}
 	};
@@ -169,7 +169,7 @@ public class ChatEvent {
 				for (String team : TEAMS.keySet()) {
 					if (chat.contains(team)) {
 						Status.Team.value = team;
-						if (Status_HUD.doRender) Status_HUD.color = TEAMS.get(team);
+						if (Status_HUD.doChangeTeamColor) Status_HUD.color = TEAMS.get(team);
 						break;
 					}
 				}
@@ -179,11 +179,11 @@ public class ChatEvent {
 				((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
 			}
 
-			else if (chat.contains("You have been removed from your team") || chat.contains("Reset your password by visiting")) {
+			else if (chat.contains("You have been removed from your team") || chat.contains("Reset your password by visiting") || chat.contains("Connecting you to al")) {
 				Status.Team.value = "UnKnown";
 				Status.CurrentJob.value = "Civilian";
 				Status_HUD.doCheck = false;
-				if (Status_HUD.doRender) Status_HUD.color = Status_HUD.colorCash;
+				Status_HUD.color = Status_HUD.colorCash;
 			}
 
 			else if (chat.contains("Current Multiplier:")) {
