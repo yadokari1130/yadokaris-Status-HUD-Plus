@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -201,7 +202,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 			try {
 				builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				try {
-					doc = builder.parse(path);
+					doc = builder.parse(new File(path));
 				}
 				catch (FileNotFoundException e) {
 					doc = builder.newDocument();
@@ -233,7 +234,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 			try {
 				Transformer tf = TransformerFactory.newInstance().newTransformer();
 				tf.setOutputProperty("encoding", "UTF-8");
-				tf.transform(new DOMSource(doc), new StreamResult(path));
+				tf.transform(new DOMSource(doc), new StreamResult(new File(path)));
 			}
 			catch (TransformerException e) {
 				JOptionPane.showMessageDialog(new SettingGUI(), new TranslationTextComponent("yadokaris_shp.setting.error").getString());
@@ -254,7 +255,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			try {
-				doc = builder.parse(path);
+				doc = builder.parse(new File(path));
 			}
 			catch (FileNotFoundException e) {
 				doc = builder.newDocument();
@@ -357,7 +358,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 		try {
 			Transformer tf = TransformerFactory.newInstance().newTransformer();
 			tf.setOutputProperty("encoding", "UTF-8");
-			tf.transform(new DOMSource(doc), new StreamResult(path));
+			tf.transform(new DOMSource(doc), new StreamResult(new File(path)));
 		}
 		catch (TransformerException e) {
 			JOptionPane.showMessageDialog(new SettingGUI(), new TranslationTextComponent("yadokaris_shp.setting.error").getString());

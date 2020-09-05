@@ -107,6 +107,11 @@ public class Rendering {
 				}).start();
 			}
 
+			if (groups.isEmpty()) {
+				Minecraft.getInstance().fontRenderer.func_238405_a_(new MatrixStack(), "yadokari's Status HUD Plus v" + Status_HUD.version, 2f, 2f, Status_HUD.color);
+				Minecraft.getInstance().fontRenderer.func_238405_a_(new MatrixStack(), "Please set the display settings", 2f, 12f, Status_HUD.color);
+			}
+
 			for (StatusGroup group : groups.values()) {
 				float showy = group.y - 10f;
 				if (group.doShowName) {
