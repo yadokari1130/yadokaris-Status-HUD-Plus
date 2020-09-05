@@ -9,7 +9,7 @@
                 "1.7": "軽微なプログラム修正、1.16.1に対応\nMinor program modifications, support for 1.16.1",
                 "1.7.1": "表示設定の変更\nChanging display settings",
                 "1.7.2": "座標表示の追加、起動できないバグの修正\nAdded the coordinate display and fixed a bug that prevented starting.",
-                "1.7.3": "保存できないバグ、チームによって色を変える設定が反映されないバグ、/alコマンド実行時に試合を抜けたことにならなかったバグの修正\nFixed a bug that couldn't save, a bug that didn't reflect the setting to change colors depending on the team, and a bug that didn't show that you left the match when executing the /al command."
+                "1.7.3": "configファイルまでのパスに日本語や空白が含まれていた場合保存できないバグの修正、チームによって色を変える設定が反映されないバグの修正、/alコマンド実行時に試合を抜けたことにならないバグの修正、青チーム時の文字の色を少し明るい色に変更、グループが登録されていないときに警告を表示するように変更\nFixed a bug that can't save the game if the path to the config file contains Japanese or white space, fixed a bug that doesn't reflect the setting that changes the color by team, fixed a bug that doesn't show that the game was left out when executing the /al command, changed the color of the text for blue team to a little brighter color, changed a warning to show a warning when a group is not registered."
         },
         "1.12.2": {
                 "1.6.4": "回復したネクサスポイント表示の追加、/dadoコマンド実行時にネクサスに関する情報を更新するように変更、一部の設定が反映されないバグを修正\nAdded the recovered nexus points display, changed to update nexus information when executing /dado command, fixed a bug where some settings were not reflected.",
@@ -22,7 +22,7 @@
                 "1.7": "軽微なプログラム修正、1.16.1に対応\nMinor program modifications, support for 1.16.1",
                 "1.7.1": "表示設定の変更\nChanging display settings",
                 "1.7.2": "座標表示の追加、起動できないバグの修正\nAdded the coordinate display and fixed a bug that prevented starting.",
-                "1.7.3": "保存できないバグ、チームによって色を変える設定が反映されないバグ、/alコマンド実行時に試合を抜けたことにならなかったバグの修正\nFixed a bug that couldn't save, a bug that didn't reflect the setting to change colors depending on the team, and a bug that didn't show that you left the match when executing the /al command."
+                "1.7.3": "configファイルまでのパスに日本語や空白が含まれていた場合保存できないバグの修正、チームによって色を変える設定が反映されないバグの修正、/alコマンド実行時に試合を抜けたことにならないバグの修正、青チーム時の文字の色を少し明るい色に変更、グループが登録されていないときに警告を表示するように変更\nFixed a bug that can't save the game if the path to the config file contains Japanese or white space, fixed a bug that doesn't reflect the setting that changes the color by team, fixed a bug that doesn't show that the game was left out when executing the /al command, changed the color of the text for blue team to a little brighter color, changed a warning to show a warning when a group is not registered."
         }, 
         "1.12": {
                 "1.6": "現在の職業が反映されないバグを修正\nFixed a bug where the current job is not reflected.\n対応バージョンを1.12.xのみに変更\nChanged the supported version to 1.12.x only.",
