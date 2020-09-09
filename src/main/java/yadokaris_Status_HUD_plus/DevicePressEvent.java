@@ -27,14 +27,14 @@ public class DevicePressEvent {
 	@SubscribeEvent
 	public void KeyHandlingEvent(KeyInputEvent event) {
 		if (resetKey.isPressed()) {
-			Status.KillCountSword.value = 0;
-			Status.KillCountBow.value = 0;
-			Status.AttackingKillCount.value = 0;
-			Status.DefendingKillCount.value = 0;
-			Status.DeathCount.value = 0;
-			Status.XP.value = 0;
-			Status.NexusDamage.value = 0;
-			Status.RepairPoint.value = 0;
+			Status.KillCountSword.value = 0f;
+			Status.KillCountBow.value = 0f;
+			Status.AttackingKillCount.value = 0f;
+			Status.DefendingKillCount.value = 0f;
+			Status.DeathCount.value = 0f;
+			Status.XP.value = 0f;
+			Status.NexusDamage.value = 0f;
+			Status.RepairPoint.value = 0f;
 			Status.Rate.value = 0f;
 			Status_HUD.player.sendMessage(new TranslationTextComponent("yadokaris_shp.render.Reset"), null);
 		}
