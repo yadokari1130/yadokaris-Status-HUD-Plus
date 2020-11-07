@@ -164,6 +164,8 @@ public class ChatEvent {
 						break;
 					}
 				}
+
+				Status_HUD.player.sendChatMessage("/myxp");
 			}
 
 			else if (chat.contains("Points required:")) {
@@ -184,7 +186,15 @@ public class ChatEvent {
 				Status_HUD.player.sendChatMessage("/multiplier");
 			}
 
-			else if (chat.contains("You have been removed from your team") || chat.contains("Reset your password by visiting") || chat.contains("Connecting you to al")) {
+			else if (chat.contains("You have been removed from your team") || chat.contains("Connecting you to al")) {
+				Status.Team.value = "UnKnown";
+				Status.CurrentJob.value = "Civilian";
+				Status_HUD.doCheck = false;
+				Status_HUD.color = Status_HUD.colorCash;
+			}
+
+			else if (chat.contains("Earn points towards your next rank by gaining")) {
+				Status_HUD.player.sendChatMessage("/myxp");
 				Status.Team.value = "UnKnown";
 				Status.CurrentJob.value = "Civilian";
 				Status_HUD.doCheck = false;
