@@ -11,9 +11,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -29,7 +31,7 @@ public class Rendering {
 	public static Map<String, StatusGroup> groups = new HashMap<>();
 
 	@SubscribeEvent
-	public void onRender(TickEvent.RenderTickEvent event) {
+	public void onRender(RenderTickEvent event) {
 		GlStateManager.scaled(SHPConfig.fontSize.get().doubleValue(), SHPConfig.fontSize.get().doubleValue(), SHPConfig.fontSize.get().doubleValue());
 
 		if (currentTick == 240) {
@@ -107,20 +109,35 @@ public class Rendering {
 				}).start();
 			}
 
+			FontRenderer font = Minecraft.getInstance().fontRenderer;
 			if (groups.isEmpty()) {
-				Minecraft.getInstance().fontRenderer.func_238405_a_(new MatrixStack(), "yadokari's Status HUD Plus v" + Status_HUD.version, 2f, 2f, Status_HUD.color);
-				Minecraft.getInstance().fontRenderer.func_238405_a_(new MatrixStack(), "Please set the display settings", 2f, 12f, Status_HUD.color);
+				font.func_238405_a_(new MatrixStack(), "yadokari's Status HUD Plus v" + Status_HUD.version, 2f, 2f, Status_HUD.color);
+				font.func_238405_a_(new MatrixStack(), "Please set the display settings", 2f, 12f, Status_HUD.color);
 			}
 
 			for (StatusGroup group : groups.values()) {
 				float showy = group.y - 10f;
 				if (group.doShowName) {
-					showy += 10f;
-					Minecraft.getInstance().fontRenderer.func_238405_a_(new MatrixStack(), group.name, group.x, showy, Status_HUD.color);
+					for (String s : group.name.split("\\$n")) {
+						showy += 10f;
+						font.func_238405_a_(new MatrixStack(), s, group.x, showy, Status_HUD.color);
+					}
 				}
 				for (String id : group.statusIDs) {
-					showy += 10f;
-					Minecraft.getInstance().fontRenderer.func_238405_a_(new MatrixStack(), Status.getStatus(id).getString(), group.x, showy, Status_HUD.color);
+					for (String s : Status.getStatus(id).getString().split("\\$n")) {
+						showy += 10f;
+						font.func_238405_a_(new MatrixStack(), s, group.x, showy, Status_HUD.color);
+					}
+				}
+			}
+
+			if (SHPConfig.doRenderEnchantment.get() && ItemChangeEvent.l > 0) {
+				float showy = Minecraft.getInstance().getMainWindow().getScaledHeight() - 61;
+				if (!Minecraft.getInstance().playerController.shouldDrawHUD()) showy += 14;
+				for (String s : Status.Enchant.getString().split("\\$n")) {
+					showy -= 10f;
+					float showx = (Minecraft.getInstance().getMainWindow().getScaledWidth() - font.getStringWidth(s)) / 2;
+					font.func_238405_a_(new MatrixStack(), s, showx, showy, Status_HUD.color + (ItemChangeEvent.l << 24));
 				}
 			}
 		}

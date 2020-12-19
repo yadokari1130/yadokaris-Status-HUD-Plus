@@ -25,6 +25,7 @@ public class SettingGUI extends JFrame implements ActionListener {
 	private final JPanel contentPane;
 	private final JCheckBox checkBoxIsEnable = new JCheckBox(new TranslationTextComponent("yadokaris_shp.setting.doEnable").getString());
 	private final JCheckBox checkBoxDoChangeTeamColor = new JCheckBox(new TranslationTextComponent("yadokaris_shp.setting.doChangeTeamColor").getString());
+	private final JCheckBox checkBoxDoRenderEnchantment = new JCheckBox(new TranslationTextComponent("yadokaris_shp.setting.doRenderEnchantment").getString());
 	private final JSpinner spinnerSize = new JSpinner();
 	private final JTextField textField = new JTextField();
 	private final JCheckBox checkBoxIsRainbow = new JCheckBox(new TranslationTextComponent("yadokaris_shp.setting.isRainbow").getString());
@@ -70,6 +71,11 @@ public class SettingGUI extends JFrame implements ActionListener {
 		checkBoxDoChangeTeamColor.setBounds(22, 267, 279, 21);
 		contentPane.add(checkBoxDoChangeTeamColor);
 
+		checkBoxDoRenderEnchantment.setSelected(SHPConfig.doRenderEnchantment.get());
+		checkBoxDoRenderEnchantment.setBackground(Color.WHITE);
+		checkBoxDoRenderEnchantment.setBounds(22, 290, 279, 21);
+		contentPane.add(checkBoxDoRenderEnchantment);
+
 		JTextPane textPane = new JTextPane();
 		textPane.setText(new TranslationTextComponent("yadokaris_shp.setting.settingText").getString());
 		textPane.setBounds(22, 52, 450, 21);
@@ -111,6 +117,7 @@ public class SettingGUI extends JFrame implements ActionListener {
 		SHPConfig.fontSize.set((double) spinnerSize.getValue());
 		SHPConfig.isRainbow.set(checkBoxIsRainbow.isSelected());
 		SHPConfig.doChangeTeamColor.set(checkBoxDoChangeTeamColor.isSelected());
+		SHPConfig.doRenderEnchantment.set(checkBoxDoRenderEnchantment.isSelected());
 		if (SHPConfig.doChangeTeamColor.get() && ChatEvent.TEAMS.containsKey(Status.Team.value)) Status_HUD.color = ChatEvent.TEAMS.get(Status.Team.value);
 		else Status_HUD.color = Status_HUD.colorCash;
 		SHPConfig.doRenderWhenStart.set(checkBoxIsEnable.isSelected());

@@ -3,7 +3,7 @@ package yadokaris_Status_HUD_plus;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class SHPConfig {
-	public static ForgeConfigSpec.BooleanValue doRender, isRainbow, doChangeTeamColor, doRenderWhenStart;
+	public static ForgeConfigSpec.BooleanValue doRender, isRainbow, doChangeTeamColor, doRenderWhenStart, doRenderEnchantment;
 	public static ForgeConfigSpec.DoubleValue fontSize;
 	public static ForgeConfigSpec.ConfigValue<String> colors, text;
 
@@ -19,6 +19,7 @@ public class SHPConfig {
 		doRender = doRenderWhenStart;
 		isRainbow = client.comment("ステータスの文字を虹色にする(true) / しない(false)を設定します。").define("yadokaris_shp.isRainbow", false);
 		doChangeTeamColor = client.comment("テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。").define("yadokaris_shp.doChangeTeamColor", false);
+		doRenderEnchantment = client.comment("エンチャント内容を表示する(true) / 表示しない(false)を設定します。").define("yadokaris_shp.doRenderEnchantment", true);
 		client.pop();
 	}
 }

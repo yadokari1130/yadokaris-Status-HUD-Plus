@@ -130,6 +130,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 		contentPane.add(textPane_1);
 
 		for (Status s : Status.values()) {
+			if (!s.doAddStatusGroup) continue;
 			modelStatus.addElement(s.getDefaultString());
 			idMap.put(s.getDefaultString(), s.getId());
 		}

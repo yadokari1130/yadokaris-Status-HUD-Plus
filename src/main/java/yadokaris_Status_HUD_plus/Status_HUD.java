@@ -145,7 +145,6 @@ public class Status_HUD {
 
 		Timer timer = new Timer();
 		TimerTask checkTask = new TimerTask() {
-
 			@Override
 			public void run() {
 				if (doCheck) Status_HUD.player.sendChatMessage("/multiplier");
@@ -153,6 +152,7 @@ public class Status_HUD {
 		};
 
 		timer.scheduleAtFixedRate(checkTask, 1000, 5 * 1000 * 60);
+		timer.scheduleAtFixedRate(new ItemChangeEvent(), 1000, 10);
 
 		//for (Field f: Minecraft.class.getDeclaredFields()) System.out.println(f.getName());
 		//for (Field f: IngameGui.class.getDeclaredFields()) System.out.println(f.getName());
@@ -161,6 +161,8 @@ public class Status_HUD {
 		fpsField = ObfuscationReflectionHelper.findField(Minecraft.class, "field_71470_ab");
 		//overlayMessageField = ObfuscationReflectionHelper.findField(IngameGui.class, "overlayMessage");
 		//fpsField = ObfuscationReflectionHelper.findField(Minecraft.class, "debugFPS");
+
+		Status.Enchant.value = "";
 	}
 
 	public static void writeProperty() {

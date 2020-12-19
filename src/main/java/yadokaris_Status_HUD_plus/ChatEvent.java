@@ -223,6 +223,7 @@ public class ChatEvent {
 			Status_HUD.player = player;
 			Status_HUD.playerName = player.getName().getString();
 			Status.Text.value = player.getName().getString();
+			ItemChangeEvent.highlightingItemStack = player.getHeldItemMainhand();
 
 			new Thread(() -> {
 				String update = null;
