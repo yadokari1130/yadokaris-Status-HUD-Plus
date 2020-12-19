@@ -24,19 +24,22 @@ public enum Status {
 	Ping("Ping", "0ms"),
 	Team("Team", "Unknown"),
 	Coordinate("Coordinate", "0, 0, 0"),
-	Angle("Angle", 0f);
+	Angle("Angle", 0f),
+	Enchant("Enchant", "Enchantment", false);
 
 	private final String id;
 	public Object value;
 	private final boolean hasLang;
 	private final Object defaultValue;
 	public String text;
+	public boolean doAddStatusGroup;
 
 	private Status(String id, Object value) {
 		this.id = id;
 		this.value = value;
 		this.defaultValue = value;
 		this.hasLang = true;
+		this.doAddStatusGroup = true;
 	}
 
 	private Status(String id, Object value, String text) {
@@ -45,6 +48,14 @@ public enum Status {
 		this.defaultValue = value;
 		this.text = text;
 		this.hasLang = false;
+	}
+
+	private Status(String id, Object value, boolean doAddStatusGroup) {
+		this.id = id;
+		this.value = value;
+		this.defaultValue = value;
+		this.hasLang = true;
+		this.doAddStatusGroup = doAddStatusGroup;
 	}
 
 	public static Status getStatus(String id) {

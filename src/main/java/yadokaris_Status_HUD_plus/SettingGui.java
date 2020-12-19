@@ -25,6 +25,7 @@ public class SettingGUI extends JFrame implements ActionListener {
 	private final JPanel contentPane;
 	private final JCheckBox checkBoxIsEnable = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doEnable").getUnformattedComponentText());
 	private final JCheckBox checkBoxDoChangeTeamColor = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doChangeTeamColor").getUnformattedComponentText());
+	private final JCheckBox checkBoxDoRenderEnchantment = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doRenderEnchantment").getUnformattedComponentText());
 	private final JSpinner spinnerSize = new JSpinner();
 	private final JTextField textField = new JTextField();
 	private final JCheckBox checkBoxIsRainbow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isRainbow").getUnformattedComponentText());
@@ -70,6 +71,11 @@ public class SettingGUI extends JFrame implements ActionListener {
 		checkBoxDoChangeTeamColor.setBounds(22, 267, 279, 21);
 		contentPane.add(checkBoxDoChangeTeamColor);
 
+		checkBoxDoRenderEnchantment.setSelected(Status_HUD.doRenderEnchantment);
+		checkBoxDoRenderEnchantment.setBackground(Color.WHITE);
+		checkBoxDoRenderEnchantment.setBounds(22, 290, 279, 21);
+		contentPane.add(checkBoxDoRenderEnchantment);
+
 		JTextPane textPane = new JTextPane();
 		textPane.setText(new TextComponentTranslation("yadokaris_shp.setting.settingText").getUnformattedComponentText());
 		textPane.setBounds(22, 52, 450, 21);
@@ -112,12 +118,14 @@ public class SettingGUI extends JFrame implements ActionListener {
 		Status_HUD.fontSize = (double) spinnerSize.getValue();
 		Status_HUD.isRainbow = checkBoxIsRainbow.isSelected();
 		Status_HUD.doChangeTeamColor = checkBoxDoChangeTeamColor.isSelected();
+		Status_HUD.doRenderEnchantment = checkBoxDoRenderEnchantment.isSelected();
 		if (Status_HUD.doChangeTeamColor && ChatEvent.TEAMS.containsKey(Status.Team.value)) Status_HUD.color = ChatEvent.TEAMS.get(Status.Team.value);
 		else Status_HUD.color = Status_HUD.colorCash;
 
 		Status_HUD.conf.get("render", "fontSize", 1, "ステータスの文字サイズを設定します。", 0, 100).set(Status_HUD.fontSize);
 		Status_HUD.conf.get("render", "isRainbow", false, "ステータスの文字を虹色にする(true) / しない(false)を設定します。").set(Status_HUD.isRainbow);
 		Status_HUD.conf.get("render", "doChangeTeamColor", false, "テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。").set(Status_HUD.doChangeTeamColor);
+		Status_HUD.conf.get("render", "doRenderEnchantment", true, "エンチャント内容を表示する(true) / 表示しない(false)を設定します。").set(Status_HUD.doRenderEnchantment);
 		Status_HUD.conf.get("render", "doRenderWhenStart", true, "起動時のステータスの表示(true) / 非表示(false)を設定します。").set(checkBoxIsEnable.isSelected());
 		Status_HUD.conf.get("render", "color", 0xFF0000, "文字の色を設定します。16進数で指定してください。").set("0x" + Integer.toHexString(Status_HUD.colorCash));
 

@@ -45,7 +45,7 @@ public class Status_HUD {
 	static String playerName;
 	static EntityPlayer player;
 	static int color, colorCash;
-	static boolean doRender, isRainbow, doChangeTeamColor, doRenderWhenStart;
+	static boolean doRender, isRainbow, doChangeTeamColor, doRenderEnchantment, doRenderWhenStart;
 	static String text = "";
 	static double fontSize;
 	private static Field overlayMessageField = null;
@@ -77,6 +77,7 @@ public class Status_HUD {
 		doRenderWhenStart = doRender;
 		isRainbow = conf.getBoolean("isRainbow", "render", false, "ステータスの文字を虹色にする(true) / しない(false)を設定します。");
 		doChangeTeamColor = conf.getBoolean("doChangeTeamColor", "render", false, "テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。");
+		doRenderEnchantment = conf.getBoolean("doRenderEnchantment", "render", true, "エンチャント内容を表示する(true) / 表示しない(false)を設定します。");
 		conf.save();
 
 		propFilePath = conf.getConfigFile().getParent() + "\\Status_HUD_Plus.xml";
@@ -144,6 +145,8 @@ public class Status_HUD {
 
 		overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "field_73838_g");
 		//overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "overlayMessage");
+
+		Status.Enchant.value = "";
 	}
 
 	@EventHandler
@@ -165,6 +168,7 @@ public class Status_HUD {
 		};
 
 		timer.scheduleAtFixedRate(checkTask, 1000, 5 * 1000 * 60);
+		timer.scheduleAtFixedRate(new ItemChangeEvent(), 1000, 10);
 	}
 
 	public static void writeProperty() {

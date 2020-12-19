@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiGameOver;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -103,21 +105,43 @@ public class Rendering {
 				}).start();
 			}
 
+			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+
 			if (groups.isEmpty()) {
-				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("yadokari's Status HUD Plus v" + Status_HUD.version, 2f, 2f, Status_HUD.color);
-				Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("Please set the display settings", 2f, 12f, Status_HUD.color);
+				font.drawStringWithShadow("yadokari's Status HUD Plus v" + Status_HUD.version, 2f, 2f, Status_HUD.color);
+				font.drawStringWithShadow("Please set the display settings", 2f, 12f, Status_HUD.color);
 			}
 
 			for (StatusGroup group : groups.values()) {
 				float showy = group.y - 10f;
 				if (group.doShowName) {
-					showy += 10f;
-					Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(group.name, group.x, showy, Status_HUD.color);
+					for (String s : group.name.split("\\$n")) {
+						showy += 10f;
+						font.drawStringWithShadow(s, group.x, showy, Status_HUD.color);
+					}
 				}
 				for (String id : group.statusIDs) {
-					showy += 10f;
-					Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(Status.getStatus(id).getString(), group.x, showy, Status_HUD.color);
+					for (String s : Status.getStatus(id).getString().split("\\$n")) {
+						showy += 10f;
+						font.drawStringWithShadow(s, group.x, showy, Status_HUD.color);
+					}
 				}
+			}
+
+			if (Status_HUD.doRenderEnchantment && ItemChangeEvent.l > 0) {
+				ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+				float showy = sr.getScaledHeight() - 61;
+				if (!Minecraft.getMinecraft().playerController.shouldDrawHUD()) showy += 14;
+				GlStateManager.pushMatrix();
+				GlStateManager.enableBlend();
+				GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+				for (String s : Status.Enchant.getString().split("\\$n")) {
+					showy -= 10f;
+					float showx = (sr.getScaledWidth() - font.getStringWidth(s)) / 2;
+					font.drawStringWithShadow(s, showx, showy, Status_HUD.color + (ItemChangeEvent.l << 24));
+				}
+                GlStateManager.disableBlend();
+                GlStateManager.popMatrix();
 			}
 		}
 
