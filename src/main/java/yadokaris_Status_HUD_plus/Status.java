@@ -48,6 +48,7 @@ public enum Status {
 		this.defaultValue = value;
 		this.text = text;
 		this.hasLang = false;
+		this.doAddStatusGroup = true;
 	}
 
 	private Status(String id, Object value, boolean doAddStatusGroup) {

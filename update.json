@@ -1,10 +1,10 @@
-{ 
-        "homepage": "https://forum.civa.jp/viewtopic.php?f=3&t=44", 
+{
+        "homepage": "https://forum.civa.jp/viewtopic.php?f=3&t=44",
         "serverMultiple": "1",
-        "promos": { 
-                "1.12.2-latest": "1.7.6",
-                "1.16.1-latest": "1.7.6"
-        }, 
+        "promos": {
+                "1.12.2-latest": "1.7.7",
+                "1.16.1-latest": "1.7.7"
+        },
         "1.16.1": {
                 "1.7": "軽微なプログラム修正、1.16.1に対応\nMinor program modifications, support for 1.16.1",
                 "1.7.1": "表示設定の変更\nChanging display settings",
@@ -12,7 +12,8 @@
                 "1.7.3": "configファイルまでのパスに日本語や空白が含まれていた場合保存できないバグの修正、チームによって色を変える設定が反映されないバグの修正、/alコマンド実行時に試合を抜けたことにならないバグの修正、青チーム時の文字の色を少し明るい色に変更、グループが登録されていないときに警告を表示するように変更\nFixed a bug that can't save the game if the path to the config file contains Japanese or white space, fixed a bug that doesn't reflect the setting that changes the color by team, fixed a bug that doesn't show that the game was left out when executing the /al command, changed the color of the text for blue team to a little brighter color, changed a warning to show a warning when a group is not registered.",
                 "1.7.4": "リセットした際にクラッシュしてしまうバグの修正\nFixed a bug that caused a crash when resetting.",
                 "1.7.5": "Anniロビー接続時に/myxpコマンドを実行して所持XPを取得出来るように変更\nChanged that you can get Possession XP by executing /myxp command when connecting to Annihilation lobby.",
-                "1.7.6": "手に持っているツールのエンチャントを表示する機能を追加\nAdded display of enchantments of the tool in your hand."
+                "1.7.6": "手に持っているツールのエンチャントを表示する機能を追加\nAdded display of enchantments of the tool in your hand.",
+                "1.7.7": "グループ毎に色、表示/非表示の設定を行えるように変更、グループ設定のステータス一覧にテキストが表示されず、設定しても保存されないバグの修正\nChanged so that you can set the color and show/hide settings for each group, fixed a bug in which text was not displayed in the status list of group settings, and settings were not saved."
         },
         "1.12.2": {
                 "1.6.4": "回復したネクサスポイント表示の追加、/dadoコマンド実行時にネクサスに関する情報を更新するように変更、一部の設定が反映されないバグを修正\nAdded the recovered nexus points display, changed to update nexus information when executing /dado command, fixed a bug where some settings were not reflected.",
@@ -28,8 +29,9 @@
                 "1.7.3": "configファイルまでのパスに日本語や空白が含まれていた場合保存できないバグの修正、チームによって色を変える設定が反映されないバグの修正、/alコマンド実行時に試合を抜けたことにならないバグの修正、青チーム時の文字の色を少し明るい色に変更、グループが登録されていないときに警告を表示するように変更\nFixed a bug that can't save the game if the path to the config file contains Japanese or white space, fixed a bug that doesn't reflect the setting that changes the color by team, fixed a bug that doesn't show that the game was left out when executing the /al command, changed the color of the text for blue team to a little brighter color, changed a warning to show a warning when a group is not registered.",
                 "1.7.4": "リセットした際にクラッシュしてしまうバグの修正\nFixed a bug that caused a crash when resetting",
                 "1.7.5": "Anniロビー接続時に/myxpコマンドを実行して所持XPを取得出来るように変更\nChanged that you can get Possession XP by executing /myxp command when connecting to Annihilation lobby.",
-                "1.7.6": "手に持っているツールのエンチャントを表示する機能を追加\nAdded display of enchantments of the tool in your hand."
-        }, 
+                "1.7.6": "手に持っているツールのエンチャントを表示する機能を追加\nAdded display of enchantments of the tool in your hand.",
+                "1.7.7": "グループ毎に色、表示/非表示の設定を行えるように変更、グループ設定のステータス一覧にテキストが表示されず、設定しても保存されないバグの修正\nChanged so that you can set the color and show/hide settings for each group, fixed a bug in which text was not displayed in the status list of group settings, and settings were not saved."
+        },
         "1.12": {
                 "1.6": "現在の職業が反映されないバグを修正\nFixed a bug where the current job is not reflected.\n対応バージョンを1.12.xのみに変更\nChanged the supported version to 1.12.x only.",
                 "1.6.1": "使えない機能があったバグを修正\nFixed a bug that prevented some features from working.",
@@ -39,7 +41,7 @@
         "1.10.2": {
                 "1.0": "MODをリリース\nMOD is released.",
                 "1.1": "設定用GUIの追加、虹色の隠しコードの廃止、いらない機能の削除\nAdded GUI for configuration, removed hidden code for rainbow colors, and removed unnecessary functions.",
-                "1.2": "ランク表示の追加、色の設定のバグを修正\nAdded the rank display, fixed a bug in the color setting.", 
+                "1.2": "ランク表示の追加、色の設定のバグを修正\nAdded the rank display, fixed a bug in the color setting.",
                 "1.2.1": "FPS表示の追加、バグ修正\nAdded the FPS display, fixed bugs.",
                 "1.3": "ネクサスダメージ表示を試験的に追加\nAdded the nexus damage display on a trial basis.",
                 "1.4": "所属チームの表示、チームによって文字の色を変える機能の追加\nAdded the team's name display and the ability to change the color of the text depending on the team.\n1.11~1.12.xに対応\nCompatible with 1.11~1.12.x",
@@ -50,4 +52,4 @@
                 "1.5.3": "/rankコマンド実行時にランク表示を更新するように変更\nChanged to update the rank display when the /rank command is executed.",
                 "1.5.4": "ネクサスダメージが更新されないバグを修正\nFixed a bug that prevented nexus damage from being updated."
         }
-} 
+}

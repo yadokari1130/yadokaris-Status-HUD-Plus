@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.text.TextComponentTranslation;
 
-public class EditGroupGUI extends JFrame implements ActionListener{
+public class EditGroupGUI extends HasColorFrame implements ActionListener{
 
 	private JPanel contentPane;
 	private Map<String, String> idMap = new HashMap<>();
@@ -56,17 +56,20 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 	private JComboBox comboBoxGroups = new JComboBox();
 	private JSpinner spinnerX = new JSpinner();
 	private JSpinner spinnerY = new JSpinner();
-	private JCheckBox checkBoxDoShowName = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doShowGroupName").getUnformattedComponentText());
+	private JCheckBox checkBoxDoShowName = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doShowGroupName").getUnformattedText());
 	private StatusGroup selectedGroup;
-	private String register = new TextComponentTranslation("yadokaris_shp.setting.register").getUnformattedComponentText();
+	private String register = new TextComponentTranslation("yadokaris_shp.setting.register").getUnformattedText();
 	public static String path;
+	private final JCheckBox checkBoxIsRainbow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isRainbow").getUnformattedText());
+	private final JCheckBox checkBoxDoChangeTeamColor = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doChangeTeamColor").getUnformattedText());
+	private final JCheckBox checkBoxDoRender = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doRender").getUnformattedText());
 
 	/**
 	 * Create the frame.
 	 */
 	public EditGroupGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 600, 720);
+		setBounds(100, 100, 600, 799);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -95,6 +98,10 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 				spinnerX.setValue(2f);
 				spinnerY.setValue(2f);
 				checkBoxDoShowName.setSelected(false);
+				checkBoxIsRainbow.setSelected(false);
+				checkBoxDoChangeTeamColor.setSelected(false);
+				checkBoxDoRender.setSelected(true);
+				color = -1;
 			}
 			else {
 				selectedGroup = Rendering.groups.get(modelGroups.getSelectedItem());
@@ -106,12 +113,16 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 				spinnerX.setValue(selectedGroup.x);
 				spinnerY.setValue(selectedGroup.y);
 				checkBoxDoShowName.setSelected(selectedGroup.doShowName);
+				checkBoxIsRainbow.setSelected(selectedGroup.isRainbow);
+				checkBoxDoChangeTeamColor.setSelected(selectedGroup.doChangeTeamColor);
+				checkBoxDoRender.setSelected(selectedGroup.doRender);
+				color = selectedGroup.color;
 			}
 		});
 		contentPane.add(comboBoxGroups);
 
 		JTextPane textPane = new JTextPane();
-		textPane.setText(new TextComponentTranslation("yadokaris_shp.setting.settingName").getUnformattedComponentText());
+		textPane.setText(new TextComponentTranslation("yadokaris_shp.setting.settingName").getUnformattedText());
 		textPane.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		textPane.setBackground(Color.WHITE);
 		textPane.setBounds(21, 21, 499, 25);
@@ -124,7 +135,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 		contentPane.add(textField);
 
 		JTextPane textPane_1 = new JTextPane();
-		textPane_1.setText(new TextComponentTranslation("yadokaris_shp.setting.settingStatus").getUnformattedComponentText());
+		textPane_1.setText(new TextComponentTranslation("yadokaris_shp.setting.settingStatus").getUnformattedText());
 		textPane_1.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		textPane_1.setBackground(Color.WHITE);
 		textPane_1.setBounds(21, 143, 499, 25);
@@ -141,7 +152,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 		comboBoxStatus.setModel(modelStatus);
 		contentPane.add(comboBoxStatus);
 
-		JButton buttonRemove = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingRemove").getUnformattedComponentText());
+		JButton buttonRemove = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingRemove").getUnformattedText());
 		buttonRemove.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		buttonRemove.setBounds(274, 442, 111, 25);
 		buttonRemove.addActionListener(l -> {
@@ -149,7 +160,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 		});
 		contentPane.add(buttonRemove);
 
-		JButton buttonAdd = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingAdd").getUnformattedComponentText());
+		JButton buttonAdd = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingAdd").getUnformattedText());
 		buttonAdd.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		buttonAdd.setBounds(408, 442, 111, 25);
 		buttonAdd.addActionListener(l -> {
@@ -161,42 +172,42 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 		textPane_2.setText("X");
 		textPane_2.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		textPane_2.setBackground(Color.WHITE);
-		textPane_2.setBounds(21, 505, 79, 25);
+		textPane_2.setBounds(21, 573, 79, 25);
 		contentPane.add(textPane_2);
 
 		spinnerX.setModel(new SpinnerNumberModel(new Float(2), null, null, new Float(1)));
 		spinnerX.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
-		spinnerX.setBounds(21, 540, 92, 25);
+		spinnerX.setBounds(21, 608, 92, 25);
 		contentPane.add(spinnerX);
 
 		spinnerY.setModel(new SpinnerNumberModel(new Float(2), null, null, new Float(1)));
 		spinnerY.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
-		spinnerY.setBounds(180, 540, 92, 25);
+		spinnerY.setBounds(180, 608, 92, 25);
 		contentPane.add(spinnerY);
 
 		JTextPane textPane_3 = new JTextPane();
 		textPane_3.setText("Y");
 		textPane_3.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		textPane_3.setBackground(Color.WHITE);
-		textPane_3.setBounds(180, 505, 79, 25);
+		textPane_3.setBounds(180, 573, 79, 25);
 		contentPane.add(textPane_3);
 
 		checkBoxDoShowName.setBackground(Color.WHITE);
 		checkBoxDoShowName.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
-		checkBoxDoShowName.setBounds(21, 607, 498, 25);
+		checkBoxDoShowName.setBounds(21, 661, 498, 25);
+		checkBoxDoRender.setSelected(true);
 		contentPane.add(checkBoxDoShowName);
 
-		JButton buttonSave = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingSave").getUnformattedComponentText());
+		JButton buttonSave = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingSave").getUnformattedText());
 		buttonSave.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
-		buttonSave.setBounds(461, 646, 111, 25);
+		buttonSave.setBounds(461, 725, 111, 25);
 		buttonSave.addActionListener(this);
 		contentPane.add(buttonSave);
 
-		JButton buttonRemoveGroup = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingRemove").getUnformattedComponentText());
+		JButton buttonRemoveGroup = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingRemove").getUnformattedText());
 		buttonRemoveGroup.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		buttonRemoveGroup.setBounds(461, 56, 111, 25);
 		buttonRemoveGroup.addActionListener(l -> {
-
 			if (modelGroups.getSelectedItem().equals(register)) return;
 
 			Document doc = null;
@@ -239,7 +250,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 				tf.transform(new DOMSource(doc), new StreamResult(new File(path)));
 			}
 			catch (TransformerException e) {
-				JOptionPane.showMessageDialog(new SettingGUI(), new TextComponentTranslation("yadokaris_shp.setting.error").getUnformattedComponentText());
+				JOptionPane.showMessageDialog(new SettingGUI(), new TextComponentTranslation("yadokaris_shp.setting.error").getUnformattedText());
 				e.printStackTrace();
 			}
 
@@ -247,6 +258,27 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 			modelGroups.removeElement(group.name);
 		});
 		contentPane.add(buttonRemoveGroup);
+
+		JButton buttonColor = new JButton(new TextComponentTranslation("yadokaris_shp.setting.colorButton").getUnformattedText());
+		buttonColor.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
+		buttonColor.setBounds(428, 609, 144, 27);
+		buttonColor.addActionListener(new ColorSetting(this));
+		contentPane.add(buttonColor);
+
+		checkBoxIsRainbow.setBackground(Color.WHITE);
+		checkBoxIsRainbow.setBounds(21, 486, 279, 21);
+		checkBoxIsRainbow.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
+		contentPane.add(checkBoxIsRainbow);
+
+		checkBoxDoChangeTeamColor.setBackground(Color.WHITE);
+		checkBoxDoChangeTeamColor.setBounds(21, 509, 279, 21);
+		checkBoxDoChangeTeamColor.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
+		contentPane.add(checkBoxDoChangeTeamColor);
+
+		checkBoxDoRender.setBackground(Color.WHITE);
+		checkBoxDoRender.setBounds(21, 532, 279, 21);
+		checkBoxDoRender.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
+		contentPane.add(checkBoxDoRender);
 	}
 
 	@Override
@@ -257,7 +289,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			try {
-				doc = builder.parse(path);
+				doc = builder.parse(new File(path));
 			}
 			catch (FileNotFoundException e) {
 				doc = builder.newDocument();
@@ -278,54 +310,30 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 			doc.appendChild(root);
 		}
 
+		StatusGroup group = null;
+		List<String> ids = new ArrayList<>();
+		for (int i = 0; i < modelGroupStatus.getSize(); i++) ids.add(idMap.get(modelGroupStatus.get(i)));
+
 		if (modelGroups.getSelectedItem().equals(register)) {
-			List<String> ids = new ArrayList<>();
-			for (int i = 0; i < modelGroupStatus.getSize(); i++) ids.add(idMap.get(modelGroupStatus.get(i)));
-			StatusGroup group = new StatusGroup(textField.getText(), (float)spinnerX.getValue(), (float)spinnerY.getValue(), ids, checkBoxDoShowName.isSelected());
+			group = new StatusGroup(textField.getText(), (float)spinnerX.getValue(), (float)spinnerY.getValue(), ids, checkBoxDoShowName.isSelected(), checkBoxIsRainbow.isSelected(), checkBoxDoChangeTeamColor.isSelected(), color, checkBoxDoRender.isSelected());
 			selectedGroup = group;
 
 			Rendering.groups.put(group.name, group);
-
-			Element elementGroup = doc.createElement("group");
-			root.appendChild(elementGroup);
-
-			Element elementName = doc.createElement("name");
-			elementName.appendChild(doc.createTextNode(group.name));
-			elementGroup.appendChild(elementName);
-
-			Element elementX = doc.createElement("x");
-			elementX.appendChild(doc.createTextNode(group.x + ""));
-			elementGroup.appendChild(elementX);
-
-			Element elementY = doc.createElement("y");
-			elementY.appendChild(doc.createTextNode(group.y + ""));
-			elementGroup.appendChild(elementY);
-
-			Element elementDoShowName = doc.createElement("doShowName");
-			elementDoShowName.appendChild(doc.createTextNode(group.doShowName + ""));
-			elementGroup.appendChild(elementDoShowName);
-
-			Element elementIDs = doc.createElement("ids");
-			for (String id : ids) {
-				Element elementID = doc.createElement("id");
-				elementID.appendChild(doc.createTextNode(id));
-				elementIDs.appendChild(elementID);
-			}
-			elementGroup.appendChild(elementIDs);
-
 			modelGroups.addElement(group.name);
 			modelGroups.setSelectedItem(group.name);
 		}
 		else {
-			StatusGroup group = Rendering.groups.get(modelGroups.getSelectedItem());
+			group = Rendering.groups.get(modelGroups.getSelectedItem());
 			Rendering.groups.remove(modelGroups.getSelectedItem());
 
-			List<String> ids = new ArrayList<>();
-			for (int i = 0; i < modelGroupStatus.getSize(); i++) ids.add(idMap.get(modelGroupStatus.get(i)));
 			group.statusIDs = ids;
 			group.x = (float)spinnerX.getValue();
 			group.y = (float)spinnerY.getValue();
 			group.doShowName = checkBoxDoShowName.isSelected();
+			group.isRainbow = checkBoxIsRainbow.isSelected();
+			group.doChangeTeamColor = checkBoxDoChangeTeamColor.isSelected();
+			group.color = color;
+			group.doRender = checkBoxDoRender.isSelected();
 			String oldName = group.name;
 
 			NodeList rootList = root.getChildNodes();
@@ -333,19 +341,7 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 				if (rootList.item(i).getChildNodes().item(0).getTextContent().equals(group.name)) {
 					group.name = textField.getText();
 					Rendering.groups.put(group.name, group);
-					NodeList childList = rootList.item(i).getChildNodes();
-					childList.item(0).setTextContent(group.name);
-					childList.item(1).setTextContent(group.x + "");
-					childList.item(2).setTextContent(group.y + "");
-					childList.item(3).setTextContent(group.doShowName + "");
-					//rootList.item(i).removeChild(childList.item(4));
-					Element elementIDs = doc.createElement("ids");
-					for (String id : ids) {
-						Element elementID = doc.createElement("id");
-						elementID.appendChild(doc.createTextNode(id));
-						elementIDs.appendChild(elementID);
-					}
-					rootList.item(i).replaceChild(elementIDs, childList.item(4)); //appendChild(elementIDs);
+					root.removeChild(rootList.item(i));
 				}
 			}
 
@@ -357,19 +353,61 @@ public class EditGroupGUI extends JFrame implements ActionListener{
 			}
 		}
 
+		Element elementGroup = doc.createElement("group");
+		root.appendChild(elementGroup);
+
+		Element elementName = doc.createElement("name");
+		elementName.appendChild(doc.createTextNode(group.name));
+		elementGroup.appendChild(elementName);
+
+		Element elementX = doc.createElement("x");
+		elementX.appendChild(doc.createTextNode(group.x + ""));
+		elementGroup.appendChild(elementX);
+
+		Element elementY = doc.createElement("y");
+		elementY.appendChild(doc.createTextNode(group.y + ""));
+		elementGroup.appendChild(elementY);
+
+		Element elementDoShowName = doc.createElement("doShowName");
+		elementDoShowName.appendChild(doc.createTextNode(group.doShowName + ""));
+		elementGroup.appendChild(elementDoShowName);
+
+		Element elementIDs = doc.createElement("ids");
+		for (String id : ids) {
+			Element elementID = doc.createElement("id");
+			elementID.appendChild(doc.createTextNode(id));
+			elementIDs.appendChild(elementID);
+		}
+		elementGroup.appendChild(elementIDs);
+
+		Element elementIsRainbow = doc.createElement("isRainbow");
+		elementIsRainbow.appendChild(doc.createTextNode(group.isRainbow + ""));
+		elementGroup.appendChild(elementIsRainbow);
+
+		Element elementDoChangeTeamColor = doc.createElement("doChangeTeamColor");
+		elementDoChangeTeamColor.appendChild(doc.createTextNode(group.doChangeTeamColor + ""));
+		elementGroup.appendChild(elementDoChangeTeamColor);
+
+		Element elementColor = doc.createElement("color");
+		elementColor.appendChild(doc.createTextNode(group.color + ""));
+		elementGroup.appendChild(elementColor);
+
+		Element elementDoRender = doc.createElement("doRender");
+		elementDoRender.appendChild(doc.createTextNode(group.doRender + ""));
+		elementGroup.appendChild(elementDoRender);
+
 		try {
 			Transformer tf = TransformerFactory.newInstance().newTransformer();
 			tf.setOutputProperty("encoding", "UTF-8");
 			tf.transform(new DOMSource(doc), new StreamResult(new File(path)));
 		}
 		catch (TransformerException e) {
-			JOptionPane.showMessageDialog(new SettingGUI(), new TextComponentTranslation("yadokaris_shp.setting.error").getUnformattedComponentText());
+			JOptionPane.showMessageDialog(new SettingGUI(), new TextComponentTranslation("yadokaris_shp.setting.error").getUnformattedText());
 			e.printStackTrace();
 		}
+		((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
 
-		if (Status_HUD.player != null) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
-
-		JOptionPane.showMessageDialog(new SettingGUI(), new TextComponentTranslation("yadokaris_shp.setting.save").getUnformattedComponentText());
+		JOptionPane.showMessageDialog(new SettingGUI(), new TextComponentTranslation("yadokaris_shp.setting.save").getUnformattedText());
 
 	}
 }

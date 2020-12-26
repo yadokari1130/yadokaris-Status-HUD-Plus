@@ -20,15 +20,15 @@ import javax.swing.border.EmptyBorder;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.text.TextComponentTranslation;
 
-public class SettingGUI extends JFrame implements ActionListener {
+public class SettingGUI extends HasColorFrame implements ActionListener {
 
 	private final JPanel contentPane;
-	private final JCheckBox checkBoxIsEnable = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doEnable").getUnformattedComponentText());
-	private final JCheckBox checkBoxDoChangeTeamColor = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doChangeTeamColor").getUnformattedComponentText());
-	private final JCheckBox checkBoxDoRenderEnchantment = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doRenderEnchantment").getUnformattedComponentText());
+	private final JCheckBox checkBoxIsEnable = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doEnable").getUnformattedText());
+	private final JCheckBox checkBoxDoChangeTeamColor = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doChangeTeamColor").getUnformattedText());
+	private final JCheckBox checkBoxDoRenderEnchantment = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doRenderEnchantment").getUnformattedText());
 	private final JSpinner spinnerSize = new JSpinner();
 	private final JTextField textField = new JTextField();
-	private final JCheckBox checkBoxIsRainbow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isRainbow").getUnformattedComponentText());
+	private final JCheckBox checkBoxIsRainbow = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.isRainbow").getUnformattedText());
 
 	public SettingGUI() {
 		setTitle("Status HUD Plus Settings");
@@ -40,9 +40,9 @@ public class SettingGUI extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JButton buttonColor = new JButton(new TextComponentTranslation("yadokaris_shp.setting.colorButton").getUnformattedComponentText());
+		JButton buttonColor = new JButton(new TextComponentTranslation("yadokaris_shp.setting.colorButton").getUnformattedText());
 		buttonColor.setBounds(328, 264, 144, 27);
-		buttonColor.addActionListener(new ColorSetting());
+		buttonColor.addActionListener(new ColorSetting(this));
 		contentPane.add(buttonColor);
 
 		checkBoxIsEnable.setBackground(Color.WHITE);
@@ -56,7 +56,7 @@ public class SettingGUI extends JFrame implements ActionListener {
 		spinnerSize.setBounds(22, 175, 157, 27);
 		contentPane.add(spinnerSize);
 
-		textField.setText(Status_HUD.text);
+		textField.setText(Status.Text.text);
 		textField.setBounds(22, 83, 254, 27);
 		textField.setColumns(10);
 		contentPane.add(textField);
@@ -77,21 +77,21 @@ public class SettingGUI extends JFrame implements ActionListener {
 		contentPane.add(checkBoxDoRenderEnchantment);
 
 		JTextPane textPane = new JTextPane();
-		textPane.setText(new TextComponentTranslation("yadokaris_shp.setting.settingText").getUnformattedComponentText());
+		textPane.setText(new TextComponentTranslation("yadokaris_shp.setting.settingText").getUnformattedText());
 		textPane.setBounds(22, 52, 450, 21);
 		contentPane.add(textPane);
 
-		JButton buttonSave = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingSave").getUnformattedComponentText());
+		JButton buttonSave = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingSave").getUnformattedText());
 		buttonSave.setBounds(366, 424, 106, 27);
 		buttonSave.addActionListener(this);
 		contentPane.add(buttonSave);
 
 		JTextPane textPane_2 = new JTextPane();
-		textPane_2.setText(new TextComponentTranslation("yadokaris_shp.setting.settingFontSize").getUnformattedComponentText());
+		textPane_2.setText(new TextComponentTranslation("yadokaris_shp.setting.settingFontSize").getUnformattedText());
 		textPane_2.setBounds(22, 144, 123, 21);
 		contentPane.add(textPane_2);
 
-		JButton buttonEdit = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingEdit").getUnformattedComponentText());
+		JButton buttonEdit = new JButton(new TextComponentTranslation("yadokaris_shp.setting.settingEdit").getUnformattedText());
 		buttonEdit.setBounds(22, 371, 106, 27);
 		buttonEdit.addActionListener(l -> {
 			EventQueue.invokeLater(() -> {
@@ -106,7 +106,7 @@ public class SettingGUI extends JFrame implements ActionListener {
 		contentPane.add(buttonEdit);
 
 		JTextPane textPane_1 = new JTextPane();
-		textPane_1.setText(new TextComponentTranslation("yadokaris_shp.setting.settingGroup").getUnformattedComponentText());
+		textPane_1.setText(new TextComponentTranslation("yadokaris_shp.setting.settingGroup").getUnformattedText());
 		textPane_1.setBounds(22, 340, 450, 21);
 		contentPane.add(textPane_1);
 	}
@@ -114,20 +114,20 @@ public class SettingGUI extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 
-		Status_HUD.text = textField.getText();
+		Status.Text.text = textField.getText();
 		Status_HUD.fontSize = (double) spinnerSize.getValue();
 		Status_HUD.isRainbow = checkBoxIsRainbow.isSelected();
 		Status_HUD.doChangeTeamColor = checkBoxDoChangeTeamColor.isSelected();
 		Status_HUD.doRenderEnchantment = checkBoxDoRenderEnchantment.isSelected();
-		if (Status_HUD.doChangeTeamColor && ChatEvent.TEAMS.containsKey(Status.Team.value)) Status_HUD.color = ChatEvent.TEAMS.get(Status.Team.value);
-		else Status_HUD.color = Status_HUD.colorCash;
+		if (color != -1) Status_HUD.color = color;
 
 		Status_HUD.conf.get("render", "fontSize", 1, "ステータスの文字サイズを設定します。", 0, 100).set(Status_HUD.fontSize);
+		Status_HUD.conf.get("render", "text", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。").set(Status.Text.text);
 		Status_HUD.conf.get("render", "isRainbow", false, "ステータスの文字を虹色にする(true) / しない(false)を設定します。").set(Status_HUD.isRainbow);
 		Status_HUD.conf.get("render", "doChangeTeamColor", false, "テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。").set(Status_HUD.doChangeTeamColor);
 		Status_HUD.conf.get("render", "doRenderEnchantment", true, "エンチャント内容を表示する(true) / 表示しない(false)を設定します。").set(Status_HUD.doRenderEnchantment);
 		Status_HUD.conf.get("render", "doRenderWhenStart", true, "起動時のステータスの表示(true) / 非表示(false)を設定します。").set(checkBoxIsEnable.isSelected());
-		Status_HUD.conf.get("render", "color", 0xFF0000, "文字の色を設定します。16進数で指定してください。").set("0x" + Integer.toHexString(Status_HUD.colorCash));
+		Status_HUD.conf.get("render", "color", 0xFFFFFF, "文字の色を設定します。16進数で指定してください。").set("0x" + Integer.toHexString(color));
 
 		Status_HUD.conf.save();
 		if (Status_HUD.player != null) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");

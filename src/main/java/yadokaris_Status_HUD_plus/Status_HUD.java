@@ -36,7 +36,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.7.6", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
+@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.7.7", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
 public class Status_HUD {
 
 	private static String propFilePath;
@@ -44,12 +44,11 @@ public class Status_HUD {
 	static Properties prop = new Properties();
 	static String playerName;
 	static EntityPlayer player;
-	static int color, colorCash;
+	static int color;
 	static boolean doRender, isRainbow, doChangeTeamColor, doRenderEnchantment, doRenderWhenStart;
-	static String text = "";
 	static double fontSize;
 	private static Field overlayMessageField = null;
-	static final String version = "1.7.6";
+	static final String version = "1.7.7";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;
@@ -69,9 +68,8 @@ public class Status_HUD {
 		}
 		if (color > 16777215) color = 16777215;
 		else if (color < 0) color = 0;
-		colorCash = color;
 
-		text = conf.getString("text", "render", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。");
+		Status.Text.text = conf.getString("text", "render", "%sのステータス", "ステータスの一番上に表示するテキストを設定します。自分のプレイヤー名を使いたい場合は%sが自動的にプレイヤー名に置き換わります。");
 		fontSize = conf.getFloat("fontSize", "render", 1, 0, 100, "ステータスの文字サイズを設定します。");
 		doRender = conf.getBoolean("doRenderWhenStart", "render", true, "起動時のステータスの表示(true) / 非表示(false)を設定します。");
 		doRenderWhenStart = doRender;
@@ -132,8 +130,12 @@ public class Status_HUD {
 				for (int k = 0; k < idList.getLength(); k++) {
 					ids.add(idList.item(k).getTextContent());
 				}
+				boolean isRainbow = Boolean.parseBoolean(childList.item(5) == null ? "false" : childList.item(5).getTextContent());
+				boolean doChangeTeamColor = Boolean.parseBoolean(childList.item(6) == null ? "false" : childList.item(6).getTextContent());
+				int color = Integer.parseInt(childList.item(7) == null ? "-1" : childList.item(7).getTextContent());
+				boolean doRender = Boolean.parseBoolean(childList.item(8) == null ? "true" : childList.item(8).getTextContent());
 
-				Rendering.groups.put(name, new StatusGroup(name, x, y, ids, doShowName));
+				Rendering.groups.put(name, new StatusGroup(name, x, y, ids, doShowName, isRainbow, doChangeTeamColor, color, doRender));
 			}
 		}
 
@@ -141,7 +143,6 @@ public class Status_HUD {
 		totalDeathCount = Float.valueOf(prop.getProperty("deathCount", "0"));
 		float totalRate = totalKillCount / (totalDeathCount + 1f);
 		Status.TotalRate.value = totalRate;
-		Status.Text.text = text;
 
 		overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "field_73838_g");
 		//overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "overlayMessage");

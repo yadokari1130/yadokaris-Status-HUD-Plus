@@ -169,7 +169,6 @@ public class ChatEvent {
 				for (String team : TEAMS.keySet()) {
 					if (chat.contains(team)) {
 						Status.Team.value = team;
-						if (Status_HUD.doChangeTeamColor) Status_HUD.color = TEAMS.get(team);
 						break;
 					}
 				}
@@ -183,7 +182,6 @@ public class ChatEvent {
 				Status.Team.value = "UnKnown";
 				Status.CurrentJob.value = "Civilian";
 				Status_HUD.doCheck = false;
-				Status_HUD.color = Status_HUD.colorCash;
 			}
 
 			else if (chat.contains("Earn points towards your next rank by gaining")) {
@@ -191,7 +189,6 @@ public class ChatEvent {
 				Status.Team.value = "UnKnown";
 				Status.CurrentJob.value = "Civilian";
 				Status_HUD.doCheck = false;
-				Status_HUD.color = Status_HUD.colorCash;
 			}
 
 			else if (chat.contains("Current Multiplier:")) {
