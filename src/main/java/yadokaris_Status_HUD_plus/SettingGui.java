@@ -20,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.loading.FMLPaths;
 
-public class SettingGUI extends JFrame implements ActionListener {
+public class SettingGUI extends HasColorFrame implements ActionListener {
 
 	private final JPanel contentPane;
 	private final JCheckBox checkBoxIsEnable = new JCheckBox(new TranslationTextComponent("yadokaris_shp.setting.doEnable").getString());
@@ -42,7 +42,7 @@ public class SettingGUI extends JFrame implements ActionListener {
 
 		JButton buttonColor = new JButton(new TranslationTextComponent("yadokaris_shp.setting.colorButton").getString());
 		buttonColor.setBounds(328, 264, 144, 27);
-		buttonColor.addActionListener(new ColorSetting());
+		buttonColor.addActionListener(new ColorSetting(this));
 		contentPane.add(buttonColor);
 
 		checkBoxIsEnable.setBackground(Color.WHITE);
@@ -114,14 +114,14 @@ public class SettingGUI extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		SHPConfig.text.set(textField.getText());
+		Status.Text.text = textField.getText();
 		SHPConfig.fontSize.set((double) spinnerSize.getValue());
 		SHPConfig.isRainbow.set(checkBoxIsRainbow.isSelected());
 		SHPConfig.doChangeTeamColor.set(checkBoxDoChangeTeamColor.isSelected());
 		SHPConfig.doRenderEnchantment.set(checkBoxDoRenderEnchantment.isSelected());
-		if (SHPConfig.doChangeTeamColor.get() && ChatEvent.TEAMS.containsKey(Status.Team.value)) Status_HUD.color = ChatEvent.TEAMS.get(Status.Team.value);
-		else Status_HUD.color = Status_HUD.colorCash;
 		SHPConfig.doRenderWhenStart.set(checkBoxIsEnable.isSelected());
-		SHPConfig.colors.set("0x" + Integer.toHexString(Status_HUD.colorCash));
+		if (color != -1) Status_HUD.color = color;
+		SHPConfig.colors.set("0x" + Integer.toHexString(Status_HUD.color));
 
 		Config.saveConfig(FMLPaths.CONFIGDIR.get().resolve("yadokaris_shp.toml").toString());
 		if (Status_HUD.player != null) Status_HUD.player.sendChatMessage("/multiplier");

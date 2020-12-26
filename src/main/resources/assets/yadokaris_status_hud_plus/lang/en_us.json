@@ -30,6 +30,7 @@
 	"yadokaris_shp.setting.isRainbow": "Is rainbow",
 	"yadokaris_shp.setting.doChangeTeamColor": "Do change text color by current team",
 	"yadokaris_shp.setting.doRenderEnchantment": "Do show Enchantment on Hotbar",
+	"yadokaris_shp.setting.doRender": "Do show this Group",
 	"yadokaris_shp.setting.doShowGroupName": "Do show Group Name",
 	"yadokaris_shp.setting.register": "Register new Group",
 	"yadokaris_shp.setting.settingText": "Text of display",

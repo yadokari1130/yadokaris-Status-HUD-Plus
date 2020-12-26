@@ -36,7 +36,7 @@ public class ChatEvent {
 			"Farmer", "Handyman", "Healer", "Hunter", "IceMan", "Immobilizer", "Lumberjack", "Mercenary", "Miner",
 			"Ninja", "Pyro", "RiftWalker", "RobinHood", "Scorpio", "Scout", "Sniper", "Spider", "Spy", "Succubus",
 			"Swapper", "Thor", "Tinkerer", "Transporter", "Vampire", "Warrior", "Wizard"));
-	static final Map<String, Integer> TEAMS = new HashMap<String, Integer>() {
+	public static final Map<String, Integer> TEAMS = new HashMap<String, Integer>() {
 		{
 			put("Red", 0xFF0000);
 			put("Green", 0x00FF00);
@@ -176,7 +176,6 @@ public class ChatEvent {
 				for (String team : TEAMS.keySet()) {
 					if (chat.contains(team)) {
 						Status.Team.value = team;
-						if (SHPConfig.doChangeTeamColor.get()) Status_HUD.color = TEAMS.get(team);
 						break;
 					}
 				}
@@ -190,7 +189,6 @@ public class ChatEvent {
 				Status.Team.value = "UnKnown";
 				Status.CurrentJob.value = "Civilian";
 				Status_HUD.doCheck = false;
-				Status_HUD.color = Status_HUD.colorCash;
 			}
 
 			else if (chat.contains("Earn points towards your next rank by gaining")) {
@@ -198,7 +196,6 @@ public class ChatEvent {
 				Status.Team.value = "UnKnown";
 				Status.CurrentJob.value = "Civilian";
 				Status_HUD.doCheck = false;
-				Status_HUD.color = Status_HUD.colorCash;
 			}
 
 			else if (chat.contains("Current Multiplier:")) {

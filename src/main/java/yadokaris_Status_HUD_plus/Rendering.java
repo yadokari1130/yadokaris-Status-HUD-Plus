@@ -29,6 +29,7 @@ public class Rendering {
 	private static int currentTick;
 	private static long deathTime = System.currentTimeMillis();
 	public static Map<String, StatusGroup> groups = new HashMap<>();
+	int rainbow = 0;
 
 	@SubscribeEvent
 	public void onRender(RenderTickEvent event) {
@@ -77,7 +78,7 @@ public class Rendering {
 		}
 
 		if (Minecraft.getInstance().currentScreen == null && SHPConfig.doRender.get()) {
-			if (SHPConfig.isRainbow.get() && currentTick % 5 == 0) {
+			if (currentTick % 5 == 0) {
 				new Thread(() -> {
 					// Rainbow
 					switch (plusColor) {
@@ -105,7 +106,7 @@ public class Rendering {
 					if (green.length() < 2) green = "0" + green;
 					if (blue.length() < 2) blue = "0" + blue;
 
-					Status_HUD.color = Integer.parseInt(red + green + blue, 16);
+					rainbow = Integer.parseInt(red + green + blue, 16);
 				}).start();
 			}
 
@@ -116,28 +117,43 @@ public class Rendering {
 			}
 
 			for (StatusGroup group : groups.values()) {
+				if (!group.doRender) continue;
 				float showy = group.y - 10f;
+				int color = 0;
+				if (group.isRainbow) color = rainbow;
+				else if (group.doChangeTeamColor && ChatEvent.TEAMS.containsKey(Status.Team.value)) color = ChatEvent.TEAMS.get(Status.Team.value);
+				else if (group.color == -1) {
+					if (SHPConfig.isRainbow.get()) color = rainbow;
+					else if (SHPConfig.doChangeTeamColor.get() && ChatEvent.TEAMS.containsKey(Status.Team.value)) color = ChatEvent.TEAMS.get(Status.Team.value);
+					else color = Status_HUD.color;
+				}
+				else color = group.color;
+
 				if (group.doShowName) {
 					for (String s : group.name.split("\\$n")) {
 						showy += 10f;
-						font.func_238405_a_(new MatrixStack(), s, group.x, showy, Status_HUD.color);
+						font.func_238405_a_(new MatrixStack(), s, group.x, showy, color);
 					}
 				}
 				for (String id : group.statusIDs) {
 					for (String s : Status.getStatus(id).getString().split("\\$n")) {
 						showy += 10f;
-						font.func_238405_a_(new MatrixStack(), s, group.x, showy, Status_HUD.color);
+						font.func_238405_a_(new MatrixStack(), s, group.x, showy, color);
 					}
 				}
 			}
 
+			int color = 0;
+			if (SHPConfig.isRainbow.get()) color = rainbow;
+			else if (SHPConfig.doChangeTeamColor.get() && ChatEvent.TEAMS.containsKey(Status.Team.value)) color = ChatEvent.TEAMS.get(Status.Team.value);
+			else color = Status_HUD.color;
 			if (SHPConfig.doRenderEnchantment.get() && ItemChangeEvent.l > 0) {
 				float showy = Minecraft.getInstance().getMainWindow().getScaledHeight() - 61;
 				if (!Minecraft.getInstance().playerController.shouldDrawHUD()) showy += 14;
 				for (String s : Status.Enchant.getString().split("\\$n")) {
 					showy -= 10f;
 					float showx = (Minecraft.getInstance().getMainWindow().getScaledWidth() - font.getStringWidth(s)) / 2;
-					font.func_238405_a_(new MatrixStack(), s, showx, showy, Status_HUD.color + (ItemChangeEvent.l << 24));
+					font.func_238405_a_(new MatrixStack(), s, showx, showy, color + (ItemChangeEvent.l << 24));
 				}
 			}
 		}

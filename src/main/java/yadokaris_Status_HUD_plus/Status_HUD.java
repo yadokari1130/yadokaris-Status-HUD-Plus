@@ -44,10 +44,10 @@ public class Status_HUD {
 	static Properties prop = new Properties();
 	static String playerName;
 	static ClientPlayerEntity player;
-	static int color, colorCash;
+	public static int color;
 	private static Field overlayMessageField = null;
 	private static Field fpsField = null;
-	static final String version = "1.7.6";
+	static final String version = "1.7.7";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;
@@ -77,6 +77,23 @@ public class Status_HUD {
 				e.printStackTrace();
 			}
 		}
+
+		totalKillCount = Float.valueOf(prop.getProperty("killCount", "0"));
+		totalDeathCount = Float.valueOf(prop.getProperty("deathCount", "0"));
+		float totalRate = totalKillCount / (totalDeathCount + 1f);
+		Status.TotalRate.value = totalRate;
+		Status.Text.text = SHPConfig.text.get();
+
+		String colors = SHPConfig.colors.get();
+
+		try {
+			color = Integer.decode(colors);
+		}
+		catch (NumberFormatException e) {
+			color = 0;
+		}
+		if (color > 16777215) color = 16777215;
+		else if (color < 0) color = 0;
 
 		Document doc = null;
 		DocumentBuilder builder = null;
@@ -112,28 +129,14 @@ public class Status_HUD {
 				for (int k = 0; k < idList.getLength(); k++) {
 					ids.add(idList.item(k).getTextContent());
 				}
+				boolean isRainbow = Boolean.parseBoolean(childList.item(5) == null ? "false" : childList.item(5).getTextContent());
+				boolean doChangeTeamColor = Boolean.parseBoolean(childList.item(6) == null ? "false" : childList.item(6).getTextContent());
+				int color = Integer.parseInt(childList.item(7) == null ? "-1" : childList.item(7).getTextContent());
+				boolean doRender = Boolean.parseBoolean(childList.item(8) == null ? "true" : childList.item(8).getTextContent());
 
-				Rendering.groups.put(name, new StatusGroup(name, x, y, ids, doShowName));
+				Rendering.groups.put(name, new StatusGroup(name, x, y, ids, doShowName, isRainbow, doChangeTeamColor, color, doRender));
 			}
 		}
-
-		totalKillCount = Float.valueOf(prop.getProperty("killCount", "0"));
-		totalDeathCount = Float.valueOf(prop.getProperty("deathCount", "0"));
-		float totalRate = totalKillCount / (totalDeathCount + 1f);
-		Status.TotalRate.value = totalRate;
-		Status.Text.text = SHPConfig.text.get();
-
-		String colors = SHPConfig.colors.get();
-
-		try {
-			color = Integer.decode(colors);
-		}
-		catch (NumberFormatException e) {
-			color = 0;
-		}
-		if (color > 16777215) color = 16777215;
-		else if (color < 0) color = 0;
-		colorCash = color;
 
 		ClientRegistry.registerKeyBinding(DevicePressEvent.resetKey);
 		ClientRegistry.registerKeyBinding(DevicePressEvent.displayKey);

@@ -8,10 +8,16 @@ import javax.swing.JColorChooser;
 
 public class ColorSetting implements ActionListener {
 
+	private final HasColorFrame frame;
+
+	public ColorSetting(HasColorFrame frame) {
+		this.frame = frame;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent event) {
 
-		Color color = new JColorChooser().showDialog(new SettingGUI(), "Color", Color.white);
+		Color color = new JColorChooser().showDialog(frame, "Color", Color.white);
 
 		if (color != null) {
 			String red = Integer.toHexString(color.getRed());
@@ -21,8 +27,10 @@ public class ColorSetting implements ActionListener {
 			if (green.length() < 2) green = "0" + green;
 			if (blue.length() < 2) blue = "0" + blue;
 
-			Status_HUD.color = Integer.parseInt(red + green + blue, 16);
-			Status_HUD.colorCash = Status_HUD.color;
+			frame.color = Integer.parseInt(red + green + blue, 16);
+		}
+		else {
+			frame.color = -1;
 		}
 	}
 }

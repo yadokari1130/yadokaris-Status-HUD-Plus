@@ -30,6 +30,7 @@
 	"yadokaris_shp.setting.isRainbow": "レインボーにするか",
 	"yadokaris_shp.setting.doChangeTeamColor": "文字の色をチームの色にするか",
 	"yadokaris_shp.setting.doRenderEnchantment": "ホットバーの上にエンチャント内容を表示するか",
+	"yadokaris_shp.setting.doRender": "このグループを表示するか",
 	"yadokaris_shp.setting.doShowGroupName": "グループ名を表示するか",
 	"yadokaris_shp.setting.register": "新規登録",
 	"yadokaris_shp.setting.settingText": "テキストの設定",
