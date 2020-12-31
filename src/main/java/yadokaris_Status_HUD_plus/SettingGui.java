@@ -127,7 +127,7 @@ public class SettingGUI extends HasColorFrame implements ActionListener {
 		Status_HUD.conf.get("render", "doChangeTeamColor", false, "テキストの色を所属チームに合わせて変える(true) / 変えない(false)を設定します。").set(Status_HUD.doChangeTeamColor);
 		Status_HUD.conf.get("render", "doRenderEnchantment", true, "エンチャント内容を表示する(true) / 表示しない(false)を設定します。").set(Status_HUD.doRenderEnchantment);
 		Status_HUD.conf.get("render", "doRenderWhenStart", true, "起動時のステータスの表示(true) / 非表示(false)を設定します。").set(checkBoxIsEnable.isSelected());
-		Status_HUD.conf.get("render", "color", 0xFFFFFF, "文字の色を設定します。16進数で指定してください。").set("0x" + Integer.toHexString(color));
+		Status_HUD.conf.get("render", "color", 0xFFFFFF, "文字の色を設定します。16進数で指定してください。").set("0x" + Integer.toHexString(Status_HUD.color));
 
 		Status_HUD.conf.save();
 		if (Status_HUD.player != null) ((EntityPlayerSP)Status_HUD.player).sendChatMessage("/multiplier");
