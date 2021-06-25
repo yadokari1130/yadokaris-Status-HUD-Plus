@@ -26,6 +26,7 @@ import org.xml.sax.SAXException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -36,7 +37,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = "1.7.8", updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
+@Mod(modid = "yadokaris_status_hud_plus", name = "yadokari's Status HUD Plus", version = Status_HUD.version, updateJSON = "https://raw.githubusercontent.com/yadokari1130/yadokaris-Status-HUD-Plus/master/update.json")
 public class Status_HUD {
 
 	private static String propFilePath;
@@ -48,7 +49,8 @@ public class Status_HUD {
 	static boolean doRender, isRainbow, doChangeTeamColor, doRenderEnchantment, doRenderWhenStart;
 	static double fontSize;
 	private static Field overlayMessageField = null;
-	static final String version = "1.7.8";
+	private static Field visibleField = null;
+	static final String version = "1.7.9";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;
@@ -144,8 +146,12 @@ public class Status_HUD {
 		float totalRate = totalKillCount / (totalDeathCount + 1f);
 		Status.TotalRate.value = totalRate;
 
+		//for (Field f : GuiPlayerTabOverlay.class.getDeclaredFields()) System.out.println(f.getName());
+
 		overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "field_73838_g");
+		visibleField = ReflectionHelper.findField(GuiPlayerTabOverlay.class, "field_175254_k");
 		//overlayMessageField = ReflectionHelper.findField(GuiIngame.class, "overlayMessage");
+		//visibleField = ReflectionHelper.findField(GuiPlayerTabOverlay.class, "isBeingRendered");
 
 		Status.Enchant.value = "";
 	}
@@ -189,6 +195,16 @@ public class Status_HUD {
 		catch (IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Get Message Overlay faild");
+		}
+	}
+
+	public static boolean getVisible() {
+		try {
+			return visibleField.getBoolean(Minecraft.getMinecraft().ingameGUI.getTabList());
+		}
+		catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Get Visible faild");
 		}
 	}
 }

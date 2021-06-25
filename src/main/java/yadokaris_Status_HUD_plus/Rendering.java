@@ -176,6 +176,8 @@ public class Rendering {
 			Status.Angle.value = (Status_HUD.player.rotationYawHead % 360f + 360f) % 360f;
 		}
 
+		Status_HUD.doRender = !(Minecraft.getMinecraft().gameSettings.showDebugInfo || Status_HUD.getVisible());
+
 		currentTick++;
 	}
 
@@ -198,6 +200,4 @@ public class Rendering {
 		}
 		else isDeath = false;
 	}
-
-
 }

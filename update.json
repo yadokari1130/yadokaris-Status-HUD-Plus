@@ -2,8 +2,8 @@
         "homepage": "https://forum.civa.jp/viewtopic.php?f=3&t=44",
         "serverMultiple": "1",
         "promos": {
-                "1.12.2-latest": "1.7.8",
-                "1.16.1-latest": "1.7.7"
+                "1.12.2-latest": "1.7.9",
+                "1.16.1-latest": "1.7.9"
         },
         "1.16.1": {
                 "1.7": "軽微なプログラム修正、1.16.1に対応\nMinor program modifications, support for 1.16.1",
@@ -13,7 +13,8 @@
                 "1.7.4": "リセットした際にクラッシュしてしまうバグの修正\nFixed a bug that caused a crash when resetting.",
                 "1.7.5": "Anniロビー接続時に/myxpコマンドを実行して所持XPを取得出来るように変更\nChanged that you can get Possession XP by executing /myxp command when connecting to Annihilation lobby.",
                 "1.7.6": "手に持っているツールのエンチャントを表示する機能を追加\nAdded display of enchantments of the tool in your hand.",
-                "1.7.7": "グループ毎に色、表示/非表示の設定を行えるように変更、グループ設定のステータス一覧にテキストが表示されず、設定しても保存されないバグの修正\nChanged so that you can set the color and show/hide settings for each group, fixed a bug in which text was not displayed in the status list of group settings, and settings were not saved."
+                "1.7.7": "グループ毎に色、表示/非表示の設定を行えるように変更、グループ設定のステータス一覧にテキストが表示されず、設定しても保存されないバグの修正\nChanged so that you can set the color and show/hide settings for each group, fixed a bug in which text was not displayed in the status list of group settings, and settings were not saved.",
+                "1.7.9": "デバッグ情報、プレイヤーリストを表示している際はテキストを非表示にするように変更\nChanged to hide text when displaying debug information and player list."
         },
         "1.12.2": {
                 "1.6.4": "回復したネクサスポイント表示の追加、/dadoコマンド実行時にネクサスに関する情報を更新するように変更、一部の設定が反映されないバグを修正\nAdded the recovered nexus points display, changed to update nexus information when executing /dado command, fixed a bug where some settings were not reflected.",
@@ -31,7 +32,8 @@
                 "1.7.5": "Anniロビー接続時に/myxpコマンドを実行して所持XPを取得出来るように変更\nChanged that you can get Possession XP by executing /myxp command when connecting to Annihilation lobby.",
                 "1.7.6": "手に持っているツールのエンチャントを表示する機能を追加\nAdded display of enchantments of the tool in your hand.",
                 "1.7.7": "グループ毎に色、表示/非表示の設定を行えるように変更、グループ設定のステータス一覧にテキストが表示されず、設定しても保存されないバグの修正\nChanged so that you can set the color and show/hide settings for each group, fixed a bug in which text was not displayed in the status list of group settings, and settings were not saved.",
-                "1.7.8": "基本の色を選択せずに設定を変更した場合、それまでの色の設定が消えるバグの修正\nFixed a bug where changing settings without selecting a base color would erase all previous color settings."
+                "1.7.8": "基本の色を選択せずに設定を変更した場合、それまでの色の設定が消えるバグの修正\nFixed a bug where changing settings without selecting a base color would erase all previous color settings.",
+                "1.7.9": "デバッグ情報、プレイヤーリストを表示している際はテキストを非表示にするように変更\nChanged to hide text when displaying debug information and player list."
         },
         "1.12": {
                 "1.6": "現在の職業が反映されないバグを修正\nFixed a bug where the current job is not reflected.\n対応バージョンを1.12.xのみに変更\nChanged the supported version to 1.12.x only.",
