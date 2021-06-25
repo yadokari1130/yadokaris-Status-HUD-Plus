@@ -173,6 +173,8 @@ public class Rendering {
 			Status.Angle.value = (Status_HUD.player.rotationYawHead % 360f + 360f) % 360f;
 		}
 
+		SHPConfig.doRender.set(!(Minecraft.getInstance().gameSettings.showDebugInfo || Status_HUD.getVisible()));
+
 		currentTick++;
 	}
 

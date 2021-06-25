@@ -28,6 +28,7 @@ import org.xml.sax.SAXException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.IngameGui;
+import net.minecraft.client.gui.overlay.PlayerTabOverlayGui;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -47,7 +48,8 @@ public class Status_HUD {
 	public static int color;
 	private static Field overlayMessageField = null;
 	private static Field fpsField = null;
-	static final String version = "1.7.7";
+	private static Field visibleField = null;
+	static final String version = "1.7.9";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;
@@ -162,6 +164,7 @@ public class Status_HUD {
 
 		overlayMessageField = ObfuscationReflectionHelper.findField(IngameGui.class, "field_73838_g");
 		fpsField = ObfuscationReflectionHelper.findField(Minecraft.class, "field_71470_ab");
+		visibleField = ObfuscationReflectionHelper.findField(PlayerTabOverlayGui.class, "field_175254_k");
 		//overlayMessageField = ObfuscationReflectionHelper.findField(IngameGui.class, "overlayMessage");
 		//fpsField = ObfuscationReflectionHelper.findField(Minecraft.class, "debugFPS");
 
@@ -195,6 +198,16 @@ public class Status_HUD {
 		catch (IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Get FPS faild");
+		}
+	}
+
+	public static boolean getVisible() {
+		try {
+			return visibleField.getBoolean(Minecraft.getInstance().ingameGUI.getTabList());
+		}
+		catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Get Visible faild");
 		}
 	}
 }
