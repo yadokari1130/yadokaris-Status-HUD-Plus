@@ -26,6 +26,7 @@ public class Rendering {
 	private static long deathTime = System.currentTimeMillis();
 	public static Map<String, StatusGroup> groups = new HashMap<>();
 	int rainbow = 0;
+	private static boolean isRenderedDebug = false;
 
 	@SubscribeEvent
 	public void onRender(TickEvent.RenderTickEvent event) {
@@ -73,7 +74,7 @@ public class Rendering {
 			else Status.Ping.value = "0ms";
 		}
 
-		if (Minecraft.getMinecraft().currentScreen == null && Status_HUD.doRender) {
+		if (Minecraft.getMinecraft().currentScreen == null && Status_HUD.doRender && !isRenderedDebug) {
 			if (currentTick % 5 == 0) {
 				new Thread(() -> {
 					// Rainbow
@@ -176,7 +177,7 @@ public class Rendering {
 			Status.Angle.value = (Status_HUD.player.rotationYawHead % 360f + 360f) % 360f;
 		}
 
-		Status_HUD.doRender = !(Minecraft.getMinecraft().gameSettings.showDebugInfo || Status_HUD.getVisible());
+		isRenderedDebug = Minecraft.getMinecraft().gameSettings.showDebugInfo || Status_HUD.getVisible();
 
 		currentTick++;
 	}
