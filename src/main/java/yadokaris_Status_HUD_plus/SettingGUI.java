@@ -21,7 +21,8 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.text.TextComponentTranslation;
 
 public class SettingGUI extends HasColorFrame implements ActionListener {
-
+	
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPane;
 	private final JCheckBox checkBoxIsEnable = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doEnable").getUnformattedText());
 	private final JCheckBox checkBoxDoChangeTeamColor = new JCheckBox(new TextComponentTranslation("yadokaris_shp.setting.doChangeTeamColor").getUnformattedText());

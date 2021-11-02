@@ -48,7 +48,6 @@ public class ChatEvent {
 			"Silver-III", "Silver-II", "Silver-I", "Novice-III", "Novice-II", "Novice-I"));
 	private static boolean isJoin, isAnnounced;
 
-
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onChatReceived(ClientChatReceivedEvent event) {
