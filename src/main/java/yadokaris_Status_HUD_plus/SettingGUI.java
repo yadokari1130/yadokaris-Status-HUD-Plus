@@ -22,6 +22,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 public class SettingGUI extends HasColorFrame implements ActionListener {
 
+	private static final long serialVersionUID = -4919436647821859260L;
 	private final JPanel contentPane;
 	private final JCheckBox checkBoxIsEnable = new JCheckBox(new TranslationTextComponent("yadokaris_shp.setting.doEnable").getString());
 	private final JCheckBox checkBoxDoChangeTeamColor = new JCheckBox(new TranslationTextComponent("yadokaris_shp.setting.doChangeTeamColor").getString());

@@ -49,7 +49,7 @@ public class Status_HUD {
 	private static Field overlayMessageField = null;
 	private static Field fpsField = null;
 	private static Field visibleField = null;
-	static final String version = "1.7.10";
+	static final String version = "1.7.11";
 	static final String osName = System.getProperty("os.name").toLowerCase();
 	static float multiple = 1, serverMultiple = 1;
 	static boolean doCheck = false;
@@ -152,7 +152,7 @@ public class Status_HUD {
 		TimerTask checkTask = new TimerTask() {
 			@Override
 			public void run() {
-				if (doCheck) Status_HUD.player.sendChatMessage("/multiplier");
+				if (doCheck && SHPConfig.doRender.get()) Status_HUD.player.sendChatMessage("/multiplier");
 			}
 		};
 

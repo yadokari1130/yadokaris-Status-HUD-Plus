@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 
 public class HasColorFrame extends JFrame{
 
+	private static final long serialVersionUID = 6683443663107919741L;
 	int color = -1;
 
 }
